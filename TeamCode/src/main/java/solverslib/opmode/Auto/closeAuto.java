@@ -226,6 +226,7 @@ public class closeAuto extends CommandOpMode{
 
         drawCurrent();
         telemetry.addData("randomization:", randomizationMotif.toString());
+        telemetry.update();
     }
 
     @Override
