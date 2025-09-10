@@ -22,6 +22,7 @@ public class TeleOpMainLIB extends CommandOpMode {
 
     public ElapsedTime gameTimer;
 
+    public ElapsedTime elapsedtime;
     private final Robot robot = Robot.getInstance();
 
 
@@ -34,6 +35,8 @@ public class TeleOpMainLIB extends CommandOpMode {
         super.reset();
 
         robot.init(hardwareMap);
+        elapsedtime = new ElapsedTime();
+        elapsedtime.reset();
 
         register(robot.intake);
 
@@ -78,6 +81,8 @@ public class TeleOpMainLIB extends CommandOpMode {
 
         telemetry.addData("Status", "Running");
         telemetry.addData("right_horizontal: ", robot.spindex.getPosition());
+        telemetry.addData("loop times", elapsedtime.milliseconds());
+        elapsedtime.reset();
 
         telemetry.update();
 

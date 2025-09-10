@@ -63,6 +63,7 @@ public class Robot {
 
         spindex = hardwareMap.get(ServoImplEx.class, "spindex");
 
+
 //        light1 = hardwareMap.get(Servo.class, "light1");
 //        light2 = hardwareMap.get(Servo.class, "light2");
 //
