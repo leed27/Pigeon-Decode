@@ -25,27 +25,6 @@ public class limelighttest extends LinearOpMode {
 
         limelight.pipelineSwitch(1); // pipleline 1 is our AprilTags pipeline
 
-//        LLResult result = limelight.getLatestResult();
-//
-//        List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults(); // fiducials are special markers (like AprilTags)
-//        for (LLResultTypes.FiducialResult fiducial : fiducials) {
-//            int id = fiducial.getFiducialId(); // The ID number of the fiducial
-//            if(id == 21){
-//                randomizationMotif = Globals.RandomizationMotif.GREEN_LEFT;
-//            }else if(id == 22){
-//                randomizationMotif = Globals.RandomizationMotif.GREEN_MIDDLE;
-//            }else if(id == 23){
-//                randomizationMotif = Globals.RandomizationMotif.GREEN_RIGHT;
-//            }else{
-//                //failsafe
-//                randomizationMotif = Globals.RandomizationMotif.GREEN_LEFT;
-//            }
-//        }
-
-//        telemetry.addData("randomization:", randomizationMotif.toString());
-//        telemetry.update();
-
-
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
@@ -56,6 +35,7 @@ public class limelighttest extends LinearOpMode {
                 List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults(); // fiducials are special markers (like AprilTags)
                 for (LLResultTypes.FiducialResult fiducial : fiducials) {
                     int id = fiducial.getFiducialId(); // The ID number of the fiducial
+                    //check for null before looking at the ID, otherwise error pops up
                     if(id == 21){
                         randomizationMotif = Globals.RandomizationMotif.GREEN_LEFT;
                     }else if(id == 22){

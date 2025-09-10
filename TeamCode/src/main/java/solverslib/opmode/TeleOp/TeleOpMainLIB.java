@@ -14,8 +14,6 @@ import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
-import solverslib.commandbase.commands.GrabSpecimen;
-import solverslib.commandbase.commands.ScoreSpecimen;
 import solverslib.hardware.Robot;
 
 @TeleOp(name = "TeleOp")
@@ -26,7 +24,6 @@ public class TeleOpMainLIB extends CommandOpMode {
 
     private final Robot robot = Robot.getInstance();
 
-    private boolean endgame = false;
 
     @Override
     public void initialize(){
@@ -48,105 +45,19 @@ public class TeleOpMainLIB extends CommandOpMode {
         /// ALL CONTROLS
 
         driver.getGamepadButton(GamepadKeys.Button.TRIANGLE).whenPressed(
-                new ConditionalCommand(
-                        new SequentialCommandGroup(
-                                new InstantCommand(() -> robot.intake.setSlideTarget(SLIDES_LONG)),
-                                new WaitCommand(1000),
-                                new InstantCommand(() -> robot.intake.clawDown(true))
-                        ),
-                        //only runs the second section if the robot is in endgame
-                        new InstantCommand(() -> robot.endgame.setSlideTarget(6800)),
-                        (() -> !endgame)
-                )
+                new InstantCommand(() -> robot.intake.moveSpindex(1))
 
         );
 
         driver.getGamepadButton(GamepadKeys.Button.CIRCLE).whenPressed(
-                new ConditionalCommand(
-                    new SequentialCommandGroup(
-                            new InstantCommand(() -> robot.intake.setSlideTarget(SLIDES_MEDIUM)),
-                            new WaitCommand(1000),
-                            new InstantCommand(() -> robot.intake.clawDown(true))
-                    ),
-                    //only runs the second section if the robot is in endgame
-                    new InstantCommand(() -> robot.endgame.setSlideTarget(850)),
-                    (() -> !endgame)
-                )
+                new InstantCommand(() -> robot.intake.moveSpindex(2))
         );
 
         driver.getGamepadButton(GamepadKeys.Button.CROSS).whenPressed(
-                new ConditionalCommand(
-                    new SequentialCommandGroup(
-                            new InstantCommand(() -> robot.intake.setSlideTarget(SLIDES_SHORT)),
-                            new WaitCommand(1000),
-                            new InstantCommand(() -> robot.intake.clawDown(true))
-                    ),
-                        //only runs the second section if the robot is in endgame
-                        new InstantCommand(() -> robot.endgame.setSlideTarget(8900)),
-                        (() -> !endgame)
-                )
-        );
-
-        driver.getGamepadButton(GamepadKeys.Button.SQUARE).whenPressed(
-                new SequentialCommandGroup(
-                        new InstantCommand(() -> robot.intake.rotateClaw(INTAKE_NOTROTATED)),
-                        new WaitCommand(500),
-                        new InstantCommand(() -> robot.intake.clawDown(false)),
-                        new WaitCommand(500),
-                        new InstantCommand(() -> robot.intake.setSlideTarget(SLIDES_IN))
-
-                )
-        );
-
-        driver.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
-                new InstantCommand(() -> robot.intake.rotateClaw(INTAKE_ROTATED))
-        );
-
-        driver.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(
-                new InstantCommand(() -> robot.intake.rotateClaw(INTAKE_NOTROTATED))
+                new InstantCommand(() -> robot.intake.moveSpindex(3))
         );
 
 
-        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenPressed(
-                new ConditionalCommand(
-                    new InstantCommand(() -> robot.intake.rotateClaw(INTAKE_OPEN)),
-                    new InstantCommand(() -> robot.intake.setSlideTarget(SLIDES_IN)),
-                    (() -> !endgame)
-                )
-        );
-
-        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(
-                new ConditionalCommand(
-                    new InstantCommand(() -> robot.intake.rotateClaw(INTAKE_CLOSE)),
-                    new InstantCommand(() -> robot.endgame.balance()),
-                    (() -> !endgame)
-                )
-        );
-
-
-        /// the cleanest way to format for now, apparently new release in sept that makes this neater
-        new Trigger(() -> driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5).whenActive(
-                new GrabSpecimen(robot)
-        );
-
-        new Trigger(() -> driver.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5).whenActive(
-                new ScoreSpecimen(robot)
-        );
-
-
-        driver.getGamepadButton(GamepadKeys.Button.TOUCHPAD).whenPressed(
-                new ConditionalCommand(
-                        //if the condition (!endgame) is true then run this:
-                        new SequentialCommandGroup(
-                                new InstantCommand(() -> robot.flip_floor.setPosition(0)),
-                                new InstantCommand(() -> robot.right_swing.setPosition(0.7)),
-                                new InstantCommand(() -> endgame = true)
-                        ),
-                        //else run this:
-                        new InstantCommand(() -> endgame = false),
-                        (() -> !endgame)
-                )
-        );
 
 
         super.run();
@@ -166,10 +77,7 @@ public class TeleOpMainLIB extends CommandOpMode {
         super.run();
 
         telemetry.addData("Status", "Running");
-        telemetry.addData("right_horizontal: ", robot.right_horizontal.getCurrentPosition());
-        telemetry.addData("left_horizontal: ", robot.left_horizontal.getCurrentPosition());
-        telemetry.addData("right_hang: ", robot.right_hang.getCurrentPosition());
-        telemetry.addData("left_hang: ", robot.left_hang.getCurrentPosition());
+        telemetry.addData("right_horizontal: ", robot.spindex.getPosition());
 
         telemetry.update();
 
@@ -182,8 +90,8 @@ public class TeleOpMainLIB extends CommandOpMode {
         }
     }
 
-    @Override
-    public void end() {
-        autoEndPose = robot.follower.getPose();
-    }
+//    @Override
+//    public void end() {
+//        autoEndPose = robot.follower.getPose();
+//    }
 }

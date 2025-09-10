@@ -27,8 +27,6 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import java.util.List;
 
-import solverslib.commandbase.commands.GrabSpecimen;
-import solverslib.commandbase.commands.ScoreSpecimen;
 import solverslib.hardware.Robot;
 
 @Autonomous(name = "closeAuto", group = "auto")
@@ -96,9 +94,9 @@ public class closeAuto extends CommandOpMode{
         return new SequentialCommandGroup(
                 //shoots thingy
                 new SequentialCommandGroup(
-                    new InstantCommand(() -> robot.outtake.armUp()),
-                    new WaitCommand(250),
-                    new InstantCommand(() -> robot.outtake.rotateClaw(OUTTAKE_ROTATED)),
+//                    new InstantCommand(() -> robot.outtake.armUp()),
+//                    new WaitCommand(250),
+//                    new InstantCommand(() -> robot.outtake.rotateClaw(OUTTAKE_ROTATED)),
                     new WaitCommand(150)
                 )
         );
@@ -108,11 +106,11 @@ public class closeAuto extends CommandOpMode{
         return new SequentialCommandGroup(
                 new FollowPathCommand(robot.follower, grabTopBlue, false),
                 //start intake
-                new InstantCommand(() -> robot.outtake.armUp()),
+//                new InstantCommand(() -> robot.outtake.armUp()),
                 new FollowPathCommand(robot.follower, collectTopBlue, false),
-                new WaitCommand(250),
+                new WaitCommand(250)
                 //stop intake
-                new InstantCommand(() -> robot.outtake.armUp())
+//                new InstantCommand(() -> robot.outtake.armUp())
         );
     }
 
@@ -162,7 +160,7 @@ public class closeAuto extends CommandOpMode{
 
 
         // Initialize subsystems
-        register(robot.outtake, robot.intake);
+        register(robot.intake);
 
         robot.initHasMovement();
 
