@@ -14,7 +14,15 @@ public class Globals {
         GREEN_RIGHT
     }
 
+    public enum GoalColor{
+        BLUE_GOAL,
+        RED_GOAL
+    }
+
+
     public static RandomizationMotif randomizationMotif;
+
+    public static GoalColor goals;
 
     public static OpModeType opModeType;
 
