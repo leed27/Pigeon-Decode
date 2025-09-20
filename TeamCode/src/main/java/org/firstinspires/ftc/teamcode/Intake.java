@@ -1,11 +1,6 @@
-package solverslib.commandbase;
-
-import static solverslib.hardware.Globals.*;
+package org.firstinspires.ftc.teamcode;
 
 import com.seattlesolvers.solverslib.command.SubsystemBase;
-import com.seattlesolvers.solverslib.controller.PIDFController;
-
-import solverslib.hardware.Robot;
 
 public class Intake extends SubsystemBase {
     private final Robot robot = Robot.getInstance();

@@ -20,6 +20,10 @@ dependencies {
     implementation 'org.firstinspires.ftc:FtcCommon:11.0.0'
     implementation 'org.firstinspires.ftc:Vision:11.0.0'
 
+    // SolversLib
+    implementation "org.solverslib:core:SNAPSHOT-7cdcc66" // core
+    implementation "org.solverslib:pedroPathing:SNAPSHOT-7cdcc66" // pedroPathing
+
     // Pedro Pathing
     implementation 'com.pedropathing:ftc:2.0.0'
     implementation 'com.pedropathing:telemetry:0.0.6'

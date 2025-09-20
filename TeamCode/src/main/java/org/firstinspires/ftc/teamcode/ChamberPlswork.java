@@ -1,3 +1,5 @@
+package org.firstinspires.ftc.teamcode;
+
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
@@ -10,7 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-import pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 
 /**
@@ -23,7 +25,7 @@ import pedroPathing.Constants;
  * @version 2.0, 11/28/2024
  */
 
-@Autonomous(name = "\u2757 ChamberPlswork \u2757", group = "Auton")
+@Autonomous(name = "\u2757 org.firstinspires.ftc.teamcode.ChamberPlswork \u2757", group = "Auton")
 public class ChamberPlswork extends OpMode {
 
     public MotorMech2 slides;

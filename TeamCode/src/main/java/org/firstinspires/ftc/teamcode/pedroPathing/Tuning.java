@@ -1,11 +1,11 @@
-package pedroPathing;
+package org.firstinspires.ftc.teamcode.pedroPathing;
 
-import static pedroPathing.Tuning.changes;
-import static pedroPathing.Tuning.drawCurrent;
-import static pedroPathing.Tuning.drawCurrentAndHistory;
-import static pedroPathing.Tuning.follower;
-import static pedroPathing.Tuning.stopRobot;
-import static pedroPathing.Tuning.telemetryM;
+import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.changes;
+import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.drawCurrent;
+import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.drawCurrentAndHistory;
+import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.follower;
+import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.stopRobot;
+import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.telemetryM;
 
 import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.configurables.annotations.Configurable;
@@ -718,7 +718,7 @@ class LateralZeroPowerAccelerationTuner extends OpMode {
 
 /**
  * This is the Translational PIDF Tuner OpMode. It will keep the robot in place.
- * The user should push the robot laterally to test the PIDF and adjust the PIDF values accordingly.
+ * The user should push the robot laterally to org.firstinspires.ftc.teamcode.test the PIDF and adjust the PIDF values accordingly.
  *
  * @author Baron Henderson - 20077 The Indubitables
  * @author Anyi Lin - 10158 Scott's Bots
@@ -774,14 +774,14 @@ class TranslationalTuner extends OpMode {
             }
         }
 
-        telemetryM.debug("Push the robot laterally to test the Translational PIDF(s).");
+        telemetryM.debug("Push the robot laterally to org.firstinspires.ftc.teamcode.test the Translational PIDF(s).");
         telemetryM.update(telemetry);
     }
 }
 
 /**
  * This is the Heading PIDF Tuner OpMode. It will keep the robot in place.
- * The user should try to turn the robot to test the PIDF and adjust the PIDF values accordingly.
+ * The user should try to turn the robot to org.firstinspires.ftc.teamcode.test the PIDF and adjust the PIDF values accordingly.
  * It will try to keep the robot at a constant heading while the user tries to turn it.
  *
  * @author Baron Henderson - 20077 The Indubitables
@@ -844,7 +844,7 @@ class HeadingTuner extends OpMode {
             }
         }
 
-        telemetryM.debug("Turn the robot manually to test the Heading PIDF(s).");
+        telemetryM.debug("Turn the robot manually to org.firstinspires.ftc.teamcode.test the Heading PIDF(s).");
         telemetryM.update(telemetry);
     }
 }
@@ -928,7 +928,7 @@ class DriveTuner extends OpMode {
 
 /**
  * This is the Line Test Tuner OpMode. It will drive the robot forward and back
- * The user should push the robot laterally and angular to test out the drive, heading, and translational PIDFs.
+ * The user should push the robot laterally and angular to org.firstinspires.ftc.teamcode.test out the drive, heading, and translational PIDFs.
  *
  * @author Baron Henderson - 20077 The Indubitables
  * @author Anyi Lin - 10158 Scott's Bots
@@ -1153,7 +1153,7 @@ class Circle extends OpMode {
     public void init_loop() {
         telemetryM.debug("This will run in a roughly circular shape of radius " + RADIUS + ", starting on the right-most edge. ");
         telemetryM.debug("So, make sure you have enough space to the left, front, and back to run the OpMode.");
-        telemetryM.debug("It will also continuously face the center of the circle to test your heading and centripetal correction.");
+        telemetryM.debug("It will also continuously face the center of the circle to org.firstinspires.ftc.teamcode.test your heading and centripetal correction.");
         telemetryM.update(telemetry);
         follower.update();
         drawCurrent();

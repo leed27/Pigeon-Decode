@@ -1,3 +1,4 @@
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -9,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
-@TeleOp(name= "\u2B50 TeleOpMain \u2B50", group="Linear Opmode")
+@TeleOp(name= "\u2B50 org.firstinspires.ftc.teamcode.TeleOpMain \u2B50", group="Linear Opmode")
 public class TeleOpMain extends LinearOpMode {
 
     // Declare OpMode members.

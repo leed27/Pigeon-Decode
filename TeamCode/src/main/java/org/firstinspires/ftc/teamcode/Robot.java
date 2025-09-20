@@ -1,13 +1,8 @@
-package solverslib.hardware;
-
-import static solverslib.hardware.Globals.*;
+package org.firstinspires.ftc.teamcode;
 
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.Pose;
 import com.pedropathing.localization.PoseTracker;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
@@ -16,10 +11,6 @@ import com.seattlesolvers.solverslib.hardware.motors.Motor;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
 import java.util.List;
-
-import pedroPathing.Constants;
-
-import solverslib.commandbase.Intake;
 
 public class Robot {
 
@@ -92,7 +83,7 @@ public class Robot {
 
         }
 
-        intake = new Intake();
+        intake = new org.firstinspires.ftc.teamcode.Intake();
 
 //        if(opModeType.equals(OpModeType.TELEOP)) {
 //            follower.startTeleopDrive();

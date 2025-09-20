@@ -1,5 +1,7 @@
-import static solverslib.hardware.Globals.randomizationMotif;
-import static solverslib.hardware.Globals.goals;
+package org.firstinspires.ftc.teamcode;
+
+import static org.firstinspires.ftc.teamcode.Globals.randomizationMotif;
+import static org.firstinspires.ftc.teamcode.Globals.goals;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
@@ -9,9 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import java.util.List;
 
-import solverslib.hardware.Globals;
-
-@TeleOp(name= "\u2B50 limelight test \u2B50", group="Linear Opmode")
+@TeleOp(name= "\u2B50 limelight org.firstinspires.ftc.teamcode.test \u2B50", group="Linear Opmode")
 
 public class limelighttest extends LinearOpMode {
 

@@ -1,20 +1,14 @@
-package solverslib.opmode.TeleOp;
+package org.firstinspires.ftc.teamcode;
 
-import static solverslib.hardware.Globals.*;
+import static org.firstinspires.ftc.teamcode.Globals.*;
 
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
-import com.seattlesolvers.solverslib.command.ConditionalCommand;
 import com.seattlesolvers.solverslib.command.InstantCommand;
-import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
-import com.seattlesolvers.solverslib.command.WaitCommand;
-import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
-
-import solverslib.hardware.Robot;
 
 @TeleOp(name = "TeleOp")
 public class TeleOpMainLIB extends CommandOpMode {
