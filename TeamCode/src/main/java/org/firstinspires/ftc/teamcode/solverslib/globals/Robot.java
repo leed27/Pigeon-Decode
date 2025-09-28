@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.solverslib.globals;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.PoseTracker;
@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
+
+import org.firstinspires.ftc.teamcode.Intake;
 
 import java.util.List;
 
@@ -90,7 +92,7 @@ public class Robot {
 //
 //            follower.setStartingPose(autoEndPose);
 //        } else{
-//            follower.setStartingPose(new Pose(0, 0, 0));
+//            //follower.setStartingPose(new Pose(0, 0, 0));
 //        }
     }
 

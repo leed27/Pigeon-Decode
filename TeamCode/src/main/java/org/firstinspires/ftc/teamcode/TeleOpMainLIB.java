@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.Globals.*;
+import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -9,6 +9,8 @@ import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
+
+import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
 @TeleOp(name = "TeleOp")
 public class TeleOpMainLIB extends CommandOpMode {
@@ -54,6 +56,29 @@ public class TeleOpMainLIB extends CommandOpMode {
                 new InstantCommand(() -> robot.intake.moveSpindex(3))
         );
 
+        /// pedro position lock
+//        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenPressed(
+//                new InstantCommand(() -> robot.follower.holdPoint(robot.follower.getPose()))
+//        );
+
+        /// pedro heading lock
+//        if(headingLock) {
+//            double targetHeading = Math.toRadians(180);
+//
+//            double headingError = targetHeading - currentHeading;
+//            headingError = Math.IEEEremainder(headingError, 2 * Math.PI);
+//
+//            if (Math.abs(headingError) < Math.toRadians(2)) {
+//                headingCorrection = 0;
+//            } else {
+//                headingCorrection = headingPIDController.calculate(headingError);
+//            }
+//
+//            follower.setTeleOpMovementVectors(-gamepad1.getLeftY(), gamepad1.getLeftX(), headingCorrection);
+//
+//        } else {
+//            follower.setTeleOpMovementVectors(-gamepad1.getLeftY(), gamepad1.getLeftX(), gamepad1.getRightX());
+//        }
 
 
 

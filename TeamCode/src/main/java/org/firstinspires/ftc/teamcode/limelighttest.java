@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.Globals.randomizationMotif;
-import static org.firstinspires.ftc.teamcode.Globals.goals;
+import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.randomizationMotif;
+import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.goals;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.solverslib.globals.Globals;
 
 import java.util.List;
 

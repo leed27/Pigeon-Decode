@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.solverslib.globals;
 
 import com.pedropathing.geometry.Pose;
 

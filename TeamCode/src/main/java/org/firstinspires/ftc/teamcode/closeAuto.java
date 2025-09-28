@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.drawCurrent;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.drawCurrentAndHistory;
-import static org.firstinspires.ftc.teamcode.Globals.*;
+import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.draw;
+import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.drawOnlyCurrent;
+import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
@@ -20,6 +20,8 @@ import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
+
+import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
 import java.util.List;
 
@@ -216,9 +218,9 @@ public class closeAuto extends CommandOpMode{
 //            new InstantCommand(() -> robot.outtake.closeClaw());
 //        }
 
-        drawCurrent();
         telemetry.addData("randomization:", randomizationMotif.toString());
         telemetry.update();
+        drawOnlyCurrent();
     }
 
     @Override
@@ -236,8 +238,8 @@ public class closeAuto extends CommandOpMode{
 
         telemetry.update(); // DO NOT REMOVE! Needed for telemetry
 
-//        // Pathing telemetry
-        drawCurrentAndHistory();
+//        // Drawing path on panels?
+        draw();
 
 
         // DO NOT REMOVE! Removing this will return stale data since bulk caching is on Manual mode
