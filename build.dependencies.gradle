@@ -2,11 +2,18 @@ repositories {
     mavenCentral()
     google() // Needed for androidx
 
-//    maven {
-//        url = 'https://maven.pedropathing.com'
-//    }
+    maven {
+        url = 'https://maven.pedropathing.com'
+    }
     maven {
         url = 'https://mymaven.bylazar.com/releases'
+    }
+
+    maven {
+        url "https://repo.dairy.foundation/releases"
+    }
+    maven {
+        url "https://repo.dairy.foundation/snapshots"
     }
 }
 
@@ -25,6 +32,7 @@ dependencies {
     implementation "org.solverslib:pedroPathing:SNAPSHOT-7cdcc66" // pedroPathing
 
     // Pedro Pathing
+    //2.0.2 is current, 2.0.0 is latest supported by solverslib
     implementation 'com.pedropathing:ftc:2.0.2'
     implementation 'com.pedropathing:telemetry:1.0.0'
 

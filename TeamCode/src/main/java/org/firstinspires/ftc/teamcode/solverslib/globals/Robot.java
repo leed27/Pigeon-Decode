@@ -49,21 +49,21 @@ public class Robot {
 
     /// run only after robot instance has been made
     public void init(HardwareMap hardwareMap) {
-//        rightFront = new MotorEx(hardwareMap, "rightFront", Motor.GoBILDA.RPM_435);
-//        leftFront = new MotorEx(hardwareMap, "leftFront", Motor.GoBILDA.RPM_435);
-//        rightRear = new MotorEx(hardwareMap, "rightRear", Motor.GoBILDA.RPM_435);
-//        leftRear = new MotorEx(hardwareMap, "leftRear", Motor.GoBILDA.RPM_435);
+        rightFront = new MotorEx(hardwareMap, "rightFront", Motor.GoBILDA.RPM_435);
+        leftFront = new MotorEx(hardwareMap, "leftFront", Motor.GoBILDA.RPM_435);
+        rightRear = new MotorEx(hardwareMap, "rightRear", Motor.GoBILDA.RPM_435);
+        leftRear = new MotorEx(hardwareMap, "leftRear", Motor.GoBILDA.RPM_435);
 
-        spindex = hardwareMap.get(ServoImplEx.class, "spindex");
+        //spindex = hardwareMap.get(ServoImplEx.class, "spindex");
 
 
 //        light1 = hardwareMap.get(Servo.class, "light1");
 //        light2 = hardwareMap.get(Servo.class, "light2");
 //
-//        rightFront.setInverted(true);
-//        rightRear.setInverted(true);
-//        leftFront.setInverted(true);
-//        leftRear.setInverted(true);
+        rightFront.setInverted(true);
+        rightRear.setInverted(true);
+        leftFront.setInverted(true);
+        leftRear.setInverted(true);
 //
 //        slidesEncoder = new Motor(hardwareMap, "left_horizontal").encoder;
 //
@@ -85,7 +85,7 @@ public class Robot {
 
         }
 
-        intake = new org.firstinspires.ftc.teamcode.Intake();
+        //intake = new org.firstinspires.ftc.teamcode.Intake();
 
 //        if(opModeType.equals(OpModeType.TELEOP)) {
 //            follower.startTeleopDrive();
@@ -98,6 +98,6 @@ public class Robot {
 
     /// RUN WHATEVER IS IN THE INIT METHODS IN THE SUBSYSTEMS!!
     public void initHasMovement() {
-        intake.init();
+        //intake.init();
     }
 }

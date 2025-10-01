@@ -7,16 +7,18 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@TeleOp(name = "TeleOp")
+@TeleOp(name = "YES")
 public class TeleOpMainLIB extends CommandOpMode {
     public GamepadEx driver;
 
     public ElapsedTime gameTimer;
+    private MecanumDrive drive;
 
     public ElapsedTime elapsedtime;
     private final Robot robot = Robot.getInstance();
@@ -34,27 +36,29 @@ public class TeleOpMainLIB extends CommandOpMode {
         elapsedtime = new ElapsedTime();
         elapsedtime.reset();
 
-        register(robot.intake);
+        //register(robot.intake);
 
         driver = new GamepadEx(gamepad1);
+        drive = new MecanumDrive(robot.leftFront, robot.rightFront, robot.leftRear, robot.rightRear);
+
 
         /// IF THERE NEEDS TO BE MOVEMENT DURING INIT STAGE, UNCOMMENT
         //robot.initHasMovement();
 
         /// ALL CONTROLS
 
-        driver.getGamepadButton(GamepadKeys.Button.TRIANGLE).whenPressed(
-                new InstantCommand(() -> robot.intake.moveSpindex(1))
-
-        );
-
-        driver.getGamepadButton(GamepadKeys.Button.CIRCLE).whenPressed(
-                new InstantCommand(() -> robot.intake.moveSpindex(2))
-        );
-
-        driver.getGamepadButton(GamepadKeys.Button.CROSS).whenPressed(
-                new InstantCommand(() -> robot.intake.moveSpindex(3))
-        );
+//        driver.getGamepadButton(GamepadKeys.Button.TRIANGLE).whenPressed(
+//                new InstantCommand(() -> robot.intake.moveSpindex(1))
+//
+//        );
+//
+//        driver.getGamepadButton(GamepadKeys.Button.CIRCLE).whenPressed(
+//                new InstantCommand(() -> robot.intake.moveSpindex(2))
+//        );
+//
+//        driver.getGamepadButton(GamepadKeys.Button.CROSS).whenPressed(
+//                new InstantCommand(() -> robot.intake.moveSpindex(3))
+//        );
 
         /// pedro position lock
 //        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenPressed(
@@ -98,8 +102,14 @@ public class TeleOpMainLIB extends CommandOpMode {
         // DO NOT REMOVE! Runs FTCLib Command Scheudler
         super.run();
 
+        drive.driveRobotCentric(
+                driver.getLeftX(),
+                driver.getLeftY(),
+                driver.getRightX()
+        );
+
         telemetry.addData("Status", "Running");
-        telemetry.addData("right_horizontal: ", robot.spindex.getPosition());
+        //telemetry.addData("right_horizontal: ", robot.spindex.getPosition());
         telemetry.addData("loop times", elapsedtime.milliseconds());
         elapsedtime.reset();
 
