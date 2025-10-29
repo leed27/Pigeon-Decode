@@ -1,33 +1,58 @@
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.goals;
+import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.randomizationMotif;
+
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-@TeleOp(name = "test")
+import org.firstinspires.ftc.teamcode.solverslib.globals.Globals;
+
+import java.util.List;
+
+@TeleOp(name= "test", group="Linear Opmode")
+
 public class test extends LinearOpMode {
+    private DcMotor motor, motor2;
 
-    Servo servo;
 
     @Override
-    public void runOpMode() throws InterruptedException {
-        servo = hardwareMap.get(Servo.class, "servo");
+    public void runOpMode() {
+        motor = hardwareMap.get(DcMotor.class, "shooter");
+        motor2 = hardwareMap.get(DcMotor.class, "shooter2");
 
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+        // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        servo.setPosition(0);
-        servo.setPosition(1);
 
-        while(opModeIsActive()){
+        if (opModeIsActive()) {
+            while (opModeIsActive()) {
+                if(gamepad1.square){
+                    motor.setPower(1);
+                }else if(gamepad1.triangle){
+                    motor2.setPower(1);
+                }else if(gamepad1.left_bumper){
+                    motor.setPower(1);
+                    motor2.setPower(1);
+                }else if(gamepad1.right_bumper){
+                    motor.setPower(0.3);
+                    motor2.setPower(0.3);
+                }
 
-            double currentPos = servo.getPosition();
-            telemetry.addLine();
-            telemetry.addData("Current position: ", currentPos);
-            telemetry.addData("Current position: ", 0);
-            telemetry.addData("Current position: ", 1);
-
-            telemetry.update();
-
+                else{
+                    motor.setPower(0);
+                    motor2.setPower(0);
+                }
+            }
         }
 
     }
+
 }
