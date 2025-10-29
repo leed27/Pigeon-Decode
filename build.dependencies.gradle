@@ -28,12 +28,11 @@ dependencies {
     implementation 'org.firstinspires.ftc:Vision:11.0.0'
 
     // SolversLib
-    implementation "org.solverslib:core:SNAPSHOT-7cdcc66" // core
-    implementation "org.solverslib:pedroPathing:SNAPSHOT-7cdcc66" // pedroPathing
+    implementation "org.solverslib:core:0.3.3" // core
+    implementation "org.solverslib:pedroPathing:0.3.3" // pedroPathing
 
     // Pedro Pathing
-    //2.0.2 is current, 2.0.0 is latest supported by solverslib
-    implementation 'com.pedropathing:ftc:2.0.2'
+    implementation 'com.pedropathing:ftc:2.0.3'
     implementation 'com.pedropathing:telemetry:1.0.0'
 
     // Panels Dashboard (latest: 1.0.2, working: 1.0.0)

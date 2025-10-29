@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.solverslib.globals.Globals;
 
 import java.util.List;
 
-@TeleOp(name= "\u2B50 limelight org.firstinspires.ftc.teamcode.test \u2B50", group="Linear Opmode")
+@TeleOp(name= "limelight", group="Linear Opmode")
 
 public class limelighttest extends LinearOpMode {
 
@@ -24,7 +24,7 @@ public class limelighttest extends LinearOpMode {
     public void runOpMode() {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
-        limelight.start(); // This tells Limelight to start looking!
+        //limelight.start(); // This tells Limelight to start looking!
 
         limelight.pipelineSwitch(1); // pipleline 1 is our AprilTags pipeline
 
@@ -51,50 +51,56 @@ public class limelighttest extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+        limelight.start();
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
                 LLResult result = limelight.getLatestResult();
+                if(result != null){
 
-                List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults(); // fiducials are special markers (like AprilTags)
-                for (LLResultTypes.FiducialResult fiducial : fiducials) {
-                    int id = fiducial.getFiducialId();
-                    // The ID number of the fiducial
-                    try {
-                        if(id==20) {
-                            goals = Globals.GoalColor.BLUE_GOAL;
-                            telemetry.addData("goal color", "blue!");
-                        } else if (id == 21) {
-                            randomizationMotif = Globals.RandomizationMotif.GREEN_LEFT;
-                            telemetry.addData("randomization:", randomizationMotif.toString());
-                            telemetry.update();
-                        } else if (id == 22) {
-                            randomizationMotif = Globals.RandomizationMotif.GREEN_MIDDLE;
-                            telemetry.addData("randomization:", randomizationMotif.toString());
-                            telemetry.update();
-                        } else if (id == 23) {
-                            randomizationMotif = Globals.RandomizationMotif.GREEN_RIGHT;
-                            telemetry.addData("randomization :", randomizationMotif.toString());
-                            telemetry.update();
-                        } else if (id == 24){
-                            goals = Globals.GoalColor.RED_GOAL;
-                            telemetry.addData("goal color", "red!");
-                        }else {
-                            //failsafe
-                            randomizationMotif = Globals.RandomizationMotif.GREEN_LEFT;
-                            telemetry.addData("FAILSAFE! :", randomizationMotif.toString());
-                            telemetry.update();
-                        }
-                    } catch (NullPointerException e) {
-                        randomizationMotif = Globals.RandomizationMotif.GREEN_LEFT;
-                        telemetry.addData("NULL! :", randomizationMotif.toString());
-                        telemetry.update();
-                    }
+                        List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults(); // fiducials are special markers (like AprilTags)
+                        for (LLResultTypes.FiducialResult fiducial : fiducials) {
+                            int id = fiducial.getFiducialId();
+                            // The ID number of the fiducial
+                                if(id==20) {
+                                    goals = Globals.GoalColor.BLUE_GOAL;
+                                    telemetry.addData("goal color", "blue!");
+                                } else if (id == 21) {
+                                    randomizationMotif = Globals.RandomizationMotif.GREEN_LEFT;
+                                    telemetry.addData("randomization:", randomizationMotif.toString());
+                                    telemetry.update();
+                                } else if (id == 22) {
+                                    randomizationMotif = Globals.RandomizationMotif.GREEN_MIDDLE;
+                                    telemetry.addData("randomization:", randomizationMotif.toString());
+                                    telemetry.update();
+                                } else if (id == 23) {
+                                    randomizationMotif = Globals.RandomizationMotif.GREEN_RIGHT;
+                                    telemetry.addData("randomization :", randomizationMotif.toString());
+                                    telemetry.update();
+                                } else if (id == 24){
+                                    goals = Globals.GoalColor.RED_GOAL;
+                                    telemetry.addData("goal color", "red!");
+                                }else {
+                                    //failsafe
+                                    randomizationMotif = Globals.RandomizationMotif.GREEN_LEFT;
+                                    telemetry.addData("FAILSAFE! :", randomizationMotif.toString());
+                                    telemetry.update();
+                                }
+                            }
+
+                    }else{
+                    telemetry.addData("none! :", randomizationMotif.toString());
                 }
+
+                telemetry.addData("what! :", "asd");
+                telemetry.update();
+                }
+
+
 
             }
         }
 
-    }
+
 
 }

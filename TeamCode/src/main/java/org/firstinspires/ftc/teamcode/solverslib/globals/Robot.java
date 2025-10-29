@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
+import com.seattlesolvers.solverslib.hardware.ServoEx;
+import com.seattlesolvers.solverslib.hardware.SimpleServo;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 
@@ -18,15 +20,16 @@ public class Robot {
 
     public MotorEx leftFront, leftRear, rightRear, rightFront; //drivetrain wheels
 
-    public MotorEx intakeMotor, shooterMotor;
+    public MotorEx leftShooter, rightShooter;
 
     public ServoImplEx spindex;
 
     //try out may be cool
     public Motor.Encoder slidesEncoder;
 
-    public Servo light1, light2;
+    //public ServoEx kickServo;
 
+    public Servo kickServo;
     public Follower follower;
     public PoseTracker poseUpdater;
 
@@ -54,6 +57,12 @@ public class Robot {
         rightRear = new MotorEx(hardwareMap, "rightRear", Motor.GoBILDA.RPM_435);
         leftRear = new MotorEx(hardwareMap, "leftRear", Motor.GoBILDA.RPM_435);
 
+        leftShooter = new MotorEx(hardwareMap, "motor");
+        rightShooter = new MotorEx(hardwareMap, "motor2");
+//        kickServo = new ServoEx(
+//                hardwareMap, "kickServo", 0, 300
+//        );
+        kickServo = hardwareMap.get(Servo.class, "kickServo");
         //spindex = hardwareMap.get(ServoImplEx.class, "spindex");
 
 
@@ -64,6 +73,10 @@ public class Robot {
         rightRear.setInverted(true);
         leftFront.setInverted(true);
         leftRear.setInverted(true);
+
+        leftShooter.setInverted(true);
+        leftShooter.setRunMode(Motor.RunMode.RawPower);
+        rightShooter.setRunMode(Motor.RunMode.RawPower);
 //
 //        slidesEncoder = new Motor(hardwareMap, "left_horizontal").encoder;
 //
@@ -99,5 +112,6 @@ public class Robot {
     /// RUN WHATEVER IS IN THE INIT METHODS IN THE SUBSYSTEMS!!
     public void initHasMovement() {
         //intake.init();
+        //kickServo.setPosition(0.5);
     }
 }
