@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.tests;
 
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.randomizationMotif;
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.goals;

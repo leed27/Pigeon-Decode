@@ -156,7 +156,7 @@ public class closeAuto extends CommandOpMode{
 
 
         // Initialize subsystems
-        register(robot.intake);
+        //register(robot.intake);
 
         robot.initHasMovement();
 

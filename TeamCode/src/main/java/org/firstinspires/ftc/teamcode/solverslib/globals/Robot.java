@@ -7,10 +7,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
-import com.seattlesolvers.solverslib.hardware.ServoEx;
 import com.seattlesolvers.solverslib.hardware.SimpleServo;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
+import com.seattlesolvers.solverslib.hardware.motors.MotorGroup;
+import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
 
 import org.firstinspires.ftc.teamcode.Intake;
 
@@ -21,15 +22,17 @@ public class Robot {
     public MotorEx leftFront, leftRear, rightRear, rightFront; //drivetrain wheels
 
     public MotorEx leftShooter, rightShooter;
+    public MotorEx intake;
 
     public ServoImplEx spindex;
 
-    //try out may be cool
-    public Motor.Encoder slidesEncoder;
+    public MotorGroup launchMotors;
+    public Motor.Encoder launchEncoder;
+
 
     //public ServoEx kickServo;
 
-    public Servo kickServo;
+    public ServoEx hoodServo;
     public Follower follower;
     public PoseTracker poseUpdater;
 
@@ -37,7 +40,7 @@ public class Robot {
     public List<LynxModule> allHubs;
     public LynxModule ControlHub;
 
-    public Intake intake;
+    //public Intake intake;
 
     private static Robot instance = new Robot();
     public boolean enabled;
@@ -57,13 +60,17 @@ public class Robot {
         rightRear = new MotorEx(hardwareMap, "rightRear", Motor.GoBILDA.RPM_435);
         leftRear = new MotorEx(hardwareMap, "leftRear", Motor.GoBILDA.RPM_435);
 
-        leftShooter = new MotorEx(hardwareMap, "motor");
-        rightShooter = new MotorEx(hardwareMap, "motor2");
+        leftShooter = new MotorEx(hardwareMap, "shooterLeft");
+        rightShooter = new MotorEx(hardwareMap, "shooterRight");
 //        kickServo = new ServoEx(
 //                hardwareMap, "kickServo", 0, 300
 //        );
-        kickServo = hardwareMap.get(Servo.class, "kickServo");
-        //spindex = hardwareMap.get(ServoImplEx.class, "spindex");
+
+        intake = new MotorEx(hardwareMap, "intake", Motor.GoBILDA.RPM_312);
+        intake.setInverted(true);
+
+        hoodServo = new ServoEx(hardwareMap, "hoodServo");
+        // spindex = hardwareMap.get(ServoImplEx.class, "spindex");
 
 
 //        light1 = hardwareMap.get(Servo.class, "light1");
@@ -77,6 +84,17 @@ public class Robot {
         leftShooter.setInverted(true);
         leftShooter.setRunMode(Motor.RunMode.RawPower);
         rightShooter.setRunMode(Motor.RunMode.RawPower);
+
+//        launchMotors = new MotorGroup(
+//                new MotorEx(hardwareMap, "shooterLeft") //left launch
+//                        .setCachingTolerance(0.01)
+//                        .setInverted(true),
+//                new MotorEx(hardwareMap, "shooterRight") //right launch
+//                        .setCachingTolerance(0.01)
+//        );
+//
+//        launchEncoder = new Motor(hardwareMap, "shooterRight").encoder;
+//        launchEncoder.setDirection(Motor.Direction.REVERSE);
 //
 //        slidesEncoder = new Motor(hardwareMap, "left_horizontal").encoder;
 //
