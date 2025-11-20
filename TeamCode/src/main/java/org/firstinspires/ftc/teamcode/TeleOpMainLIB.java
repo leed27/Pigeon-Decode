@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.ConditionalCommand;
 import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
@@ -55,42 +56,62 @@ public class TeleOpMainLIB extends CommandOpMode {
         /// ALL CONTROLS
 
         driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(
-                new InstantCommand(() -> robot.intake.set(1))
+
+                new ParallelCommandGroup(
+                new InstantCommand(() -> robot.leftIntake.set(1)),
+                    new InstantCommand(() -> robot.rightIntake.set(1))
 
 
-                );
+
+                ));
         driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
-                new InstantCommand(() -> robot.intake.set(0))
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> robot.leftIntake.set(0)),
+                        new InstantCommand(() -> robot.rightIntake.set(0))
 
 
-        );
+
+                ));
+
+
+
 
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenHeld(
-                new InstantCommand(() -> robot.intake.set(-1))
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> robot.leftIntake.set(-1)),
+                        new InstantCommand(() -> robot.rightIntake.set(-1))
 
 
-        );
+
+                ));
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
-                new InstantCommand(() -> robot.intake.set(0))
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> robot.leftIntake.set(0)),
+                        new InstantCommand(() -> robot.rightIntake.set(0))
 
 
-        );
+
+                ));
 
 
 
 
         driver2.getGamepadButton(GamepadKeys.Button.TRIANGLE).whenHeld(
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.leftShooter.set(speed)),
-                        new InstantCommand(() -> robot.rightShooter.set(speed))
+//                        new InstantCommand(() -> robot.leftShooter.set(speed)),
+//                        new InstantCommand(() -> robot.rightShooter.set(speed))
+                        new InstantCommand(() -> robot.leftShooter.setVelocity(3000)),
+                        new InstantCommand(() -> robot.rightShooter.setVelocity(3000))
                 )
 
         );
 
         driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenHeld(
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.leftShooter.set(FAR_SPEED)),
-                        new InstantCommand(() -> robot.rightShooter.set(FAR_SPEED))
+//                        new InstantCommand(() -> robot.leftShooter.set(FAR_SPEED)),
+//                        new InstantCommand(() -> robot.rightShooter.set(FAR_SPEED))
+                        new InstantCommand(() -> robot.leftShooter.setVelocity(2000)),
+                        new InstantCommand(() -> robot.rightShooter.setVelocity(2000))
                 )
 
         );
@@ -139,14 +160,36 @@ public class TeleOpMainLIB extends CommandOpMode {
                 new InstantCommand(() -> robot.hoodServo.set(0.5))
         );
 
+        driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> robot.leftShooter.setVelocity(2000)),
+                        new InstantCommand(() -> robot.rightShooter.setVelocity(2000)),
+                        new ConditionalCommand(
+                                new ParallelCommandGroup(
+                                new InstantCommand(() -> robot.leftIntake.set(1)),
+                                new InstantCommand(() -> robot.rightIntake.set(1))
+                        ),
+                                new ParallelCommandGroup(
+                                        new InstantCommand(() -> robot.leftIntake.set(0)),
+                                        new InstantCommand(() -> robot.rightIntake.set(0))
+                                ),
+                                () -> (robot.leftShooter.getVelocity() > 1000)
+                                )
+                )
 
-//        new Trigger(() -> driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5).whenActive(
-//                new SequentialCommandGroup(
-//                        new InstantCommand(() -> robot.kickServo.setPosition(0.5)),
-//                        new WaitCommand(300),
-//                        new InstantCommand(() -> robot.kickServo.setPosition(0.94))
-//                )
-//        );
+        );
+
+        driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> robot.leftShooter.setVelocity(0)),
+                        new InstantCommand(() -> robot.rightShooter.setVelocity(0)),
+                        new InstantCommand(() -> robot.leftIntake.set(0)),
+                        new InstantCommand(() -> robot.rightIntake.set(0))
+                )
+
+        );
+
+
 
 
         /// pedro position lock
@@ -173,6 +216,9 @@ public class TeleOpMainLIB extends CommandOpMode {
 //            follower.setTeleOpMovementVectors(-gamepad1.getLeftY(), gamepad1.getLeftX(), gamepad1.getRightX());
 //        }
 
+//        robot.lightLeft.setPosition(0.277);
+//        robot.lightRight.setPosition(0.277); //red
+
 
 
         super.run();
@@ -190,6 +236,8 @@ public class TeleOpMainLIB extends CommandOpMode {
 
 
 
+
+
         // DO NOT REMOVE! Runs FTCLib Command Scheudler
         super.run();
 
@@ -199,10 +247,23 @@ public class TeleOpMainLIB extends CommandOpMode {
                 driver.getRightX()
         );
 
+
+
+        if(robot.leftShooter.getVelocity() > 1100){
+
+            robot.lightLeft.setPosition(0.5);
+            robot.lightRight.setPosition(0.5); //green
+        }else{
+            robot.lightLeft.setPosition(0.28);
+            robot.lightRight.setPosition(0.28); //red
+        }
+
         telemetry.addData("Status", "Running");
         //telemetry.addData("right_horizontal: ", robot.spindex.getPosition());
         telemetry.addData("loop times", elapsedtime.milliseconds());
         telemetry.addData("servo", robot.hoodServo.get());
+        telemetry.addData("servo23", robot.lightLeft.getPosition());
+        telemetry.addData("motor speed", robot.leftShooter.getVelocity());
         elapsedtime.reset();
 
         telemetry.update();

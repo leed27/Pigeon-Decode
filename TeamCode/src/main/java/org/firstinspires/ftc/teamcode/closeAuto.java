@@ -128,84 +128,85 @@ public class closeAuto extends CommandOpMode{
         robot.init(hardwareMap);
 
 
-        Limelight3A limelight;
-
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
-        limelight.start(); // This tells Limelight to start looking!
-
-        limelight.pipelineSwitch(1); // pipleline 1 is our AprilTags pipeline
-
-        LLResult result = limelight.getLatestResult();
-
-        List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults(); // fiducials are special markers (like AprilTags)
-        for (LLResultTypes.FiducialResult fiducial : fiducials) {
-            int id = fiducial.getFiducialId(); // The ID number of the fiducial
-            if(id == 21){
-                randomizationMotif = RandomizationMotif.GREEN_LEFT;
-            }else if(id == 22){
-                randomizationMotif = RandomizationMotif.GREEN_MIDDLE;
-            }else if(id == 23){
-                randomizationMotif = RandomizationMotif.GREEN_RIGHT;
-            }else{
-                //failsafe
-                randomizationMotif = RandomizationMotif.GREEN_LEFT;
-            }
-        }
-
-
+//        Limelight3A limelight;
+//
+//        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+//        limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
+//        limelight.start(); // This tells Limelight to start looking!
+//
+//        limelight.pipelineSwitch(1); // pipleline 1 is our AprilTags pipeline
+//
+//        LLResult result = limelight.getLatestResult();
+//
+//        List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults(); // fiducials are special markers (like AprilTags)
+//        for (LLResultTypes.FiducialResult fiducial : fiducials) {
+//            int id = fiducial.getFiducialId(); // The ID number of the fiducial
+//            if(id == 21){
+//                randomizationMotif = RandomizationMotif.GREEN_LEFT;
+//            }else if(id == 22){
+//                randomizationMotif = RandomizationMotif.GREEN_MIDDLE;
+//            }else if(id == 23){
+//                randomizationMotif = RandomizationMotif.GREEN_RIGHT;
+//            }else{
+//                //failsafe
+//                randomizationMotif = RandomizationMotif.GREEN_LEFT;
+//            }
+//        }
+//
+//
 
         // Initialize subsystems
         //register(robot.intake);
 
         robot.initHasMovement();
 
+
         robot.follower.setMaxPower(1);
 
         generatePath();
 
-        //different paths for each auto
-        if(randomizationMotif == RandomizationMotif.GREEN_LEFT){
-            schedule(
-                    // DO NOT REMOVE: updates follower to follow path
-                    new RunCommand(() -> robot.follower.update()),
-
-                    new SequentialCommandGroup(
-                            // Specimen 1
-                            scorePreload(),
-
-                            grabTopBlue(),
-
-                            scoreTopBlue()
-                    )
-            );
-        }else if(randomizationMotif == RandomizationMotif.GREEN_MIDDLE){
-            schedule(
-                    // DO NOT REMOVE: updates follower to follow path
-                    new RunCommand(() -> robot.follower.update()),
-
-                    new SequentialCommandGroup(
-                            // Specimen 1
-                            scorePreload()//,
-
-                            //grabMiddleBlue(),
-                            //scoreMiddleBlue()
-                    )
-            );
-        }else{
-            schedule(
-                    // DO NOT REMOVE: updates follower to follow path
-                    new RunCommand(() -> robot.follower.update()),
-
-                    new SequentialCommandGroup(
-                            // Specimen 1
-                            scorePreload()//,
-
-                            //grabBottomBlue(),
-                            //scoreBottomBlue()
-                    )
-            );
-        }
+//        //different paths for each auto
+//        if(randomizationMotif == RandomizationMotif.GREEN_LEFT){
+//            schedule(
+//                    // DO NOT REMOVE: updates follower to follow path
+//                    new RunCommand(() -> robot.follower.update()),
+//
+//                    new SequentialCommandGroup(
+//                            // Specimen 1
+//                            scorePreload(),
+//
+//                            grabTopBlue(),
+//
+//                            scoreTopBlue()
+//                    )
+//            );
+//        }else if(randomizationMotif == RandomizationMotif.GREEN_MIDDLE){
+//            schedule(
+//                    // DO NOT REMOVE: updates follower to follow path
+//                    new RunCommand(() -> robot.follower.update()),
+//
+//                    new SequentialCommandGroup(
+//                            // Specimen 1
+//                            scorePreload()//,
+//
+//                            //grabMiddleBlue(),
+//                            //scoreMiddleBlue()
+//                    )
+//            );
+//        }else{
+//            schedule(
+//                    // DO NOT REMOVE: updates follower to follow path
+//                    new RunCommand(() -> robot.follower.update()),
+//
+//                    new SequentialCommandGroup(
+//                            // Specimen 1
+//                            scorePreload()//,
+//
+//                            //grabBottomBlue(),
+//                            //scoreBottomBlue()
+//                    )
+//            );
+//        }
 
 
 
@@ -218,9 +219,9 @@ public class closeAuto extends CommandOpMode{
 //            new InstantCommand(() -> robot.outtake.closeClaw());
 //        }
 
-        telemetry.addData("randomization:", randomizationMotif.toString());
+        //telemetry.addData("randomization:", randomizationMotif.toString());
         telemetry.update();
-        drawOnlyCurrent();
+        //drawOnlyCurrent();
     }
 
     @Override

@@ -14,6 +14,7 @@ import com.seattlesolvers.solverslib.hardware.motors.MotorGroup;
 import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
 
 import org.firstinspires.ftc.teamcode.Intake;
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import java.util.List;
 
@@ -22,17 +23,13 @@ public class Robot {
     public MotorEx leftFront, leftRear, rightRear, rightFront; //drivetrain wheels
 
     public MotorEx leftShooter, rightShooter;
-    public MotorEx intake;
-
-    public ServoImplEx spindex;
+    public MotorEx leftIntake, rightIntake;
 
     public MotorGroup launchMotors;
     public Motor.Encoder launchEncoder;
 
-
-    //public ServoEx kickServo;
-
-    public ServoEx hoodServo;
+    public ServoEx hoodServo, stopperServo;
+    public Servo lightLeft, lightRight;
     public Follower follower;
     public PoseTracker poseUpdater;
 
@@ -66,15 +63,18 @@ public class Robot {
 //                hardwareMap, "kickServo", 0, 300
 //        );
 
-        intake = new MotorEx(hardwareMap, "intake", Motor.GoBILDA.RPM_312);
-        intake.setInverted(true);
+        rightIntake = new MotorEx(hardwareMap, "rightIntake", Motor.GoBILDA.RPM_1150);
+
+        leftIntake = new MotorEx(hardwareMap, "leftIntake", Motor.GoBILDA.RPM_1150);
+        leftIntake.setInverted(true);
 
         hoodServo = new ServoEx(hardwareMap, "hoodServo");
-        // spindex = hardwareMap.get(ServoImplEx.class, "spindex");
+        stopperServo = new ServoEx(hardwareMap, "stopperServo");
 
 
-//        light1 = hardwareMap.get(Servo.class, "light1");
-//        light2 = hardwareMap.get(Servo.class, "light2");
+        lightLeft = hardwareMap.get(Servo.class, "lightLeft");
+        lightRight = hardwareMap.get(Servo.class, "lightRight");
+
 //
         rightFront.setInverted(true);
         rightRear.setInverted(true);
@@ -84,6 +84,9 @@ public class Robot {
         leftShooter.setInverted(true);
         leftShooter.setRunMode(Motor.RunMode.RawPower);
         rightShooter.setRunMode(Motor.RunMode.RawPower);
+
+        leftShooter.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        rightShooter.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
 //        launchMotors = new MotorGroup(
 //                new MotorEx(hardwareMap, "shooterLeft") //left launch
@@ -98,7 +101,7 @@ public class Robot {
 //
 //        slidesEncoder = new Motor(hardwareMap, "left_horizontal").encoder;
 //
-//        follower = Constants.createFollower(hardwareMap);
+        follower = Constants.createFollower(hardwareMap);
 
         //poseUpdater = new PoseTracker(hardwareMap);
 
