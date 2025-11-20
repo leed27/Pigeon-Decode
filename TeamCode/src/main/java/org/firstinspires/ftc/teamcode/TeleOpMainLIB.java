@@ -34,6 +34,7 @@ public class TeleOpMainLIB extends CommandOpMode {
     double speed = 1;
 
     public ElapsedTime elapsedtime;
+    public double targetSpeed = 1150;
     private final Robot robot = Robot.getInstance();
 
 
@@ -193,7 +194,7 @@ public class TeleOpMainLIB extends CommandOpMode {
 
 
 
-        if(robot.leftShooter.getVelocity() > 1100){
+        if(robot.leftShooter.getVelocity() > targetSpeed){
 
             robot.lightLeft.setPosition(0.5);
             robot.lightRight.setPosition(0.5); //green
