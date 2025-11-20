@@ -1,22 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.draw;
-import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.drawOnlyCurrent;
-import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
+import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.OpModeType;
+import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.autoEndPose;
+import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.opModeType;
+import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.shootClosePose;
 
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
-//import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
-import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.PerpetualCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
@@ -26,29 +23,27 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShoot;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-import java.util.List;
-
 @Autonomous(name = "closeAuto", group = "auto")
-public class closeAuto extends CommandOpMode{
+public class closeAutoRed extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
 
     //private final ArrayList<PathChain> paths = new ArrayList<>();
 
     // ALL PATHS
-    private final Pose startPose = new Pose(24, 128, Math.toRadians(143));
+    private  Pose startPose = new Pose(24, 128, Math.toRadians(143)).mirror();
     /// blue paths
-    private final Pose blueTopPilePose = new Pose(48,84, Math.toRadians(180));
+    private  Pose blueTopPilePose = new Pose(48,84, Math.toRadians(180)).mirror();
 
-    private final Pose blueTopPilePoseControl = new Pose(49, 134);
-    private final Pose blueTopPileForwardPose = new Pose(17, 84, Math.toRadians(180));
-    private final Pose blueMiddlePilePose = new Pose(48, 60, Math.toRadians(180));
-    private final Pose blueMiddlePileForwardPose = new Pose(17, 60, Math.toRadians(180));
-    private final Pose blueBottomPilePose = new Pose(48, 36);
-    private final Pose blueBottomPileForwardPose = new Pose(17, 36, Math.toRadians(180));
-    private final Pose blueTopShootPose = new Pose(51,96, Math.toRadians(135));
+    private  Pose blueTopPilePoseControl = new Pose(49, 134).mirror();
+    private  Pose blueTopPileForwardPose = new Pose(17, 84, Math.toRadians(180)).mirror();
+    private  Pose blueMiddlePilePose = new Pose(48, 60, Math.toRadians(180)).mirror();
+    private  Pose blueMiddlePileForwardPose = new Pose(17, 60, Math.toRadians(180)).mirror();
+    private  Pose blueBottomPilePose = new Pose(48, 36).mirror();
+    private  Pose blueBottomPileForwardPose = new Pose(17, 36, Math.toRadians(180)).mirror();
+    private  Pose blueTopShootPose = new Pose(51,96, Math.toRadians(135)).mirror();
 
-    private final Pose blueBottomShootPose =  new Pose(55, 15, Math.toRadians(120));
+    private  Pose blueBottomShootPose =  new Pose(55, 15, Math.toRadians(120)).mirror();
     private Path grabTopBlue;
     private PathChain shootPreloads, collectTopBlue, shootTopBlue, grabMiddleBlue, collectMiddleBlue, shootMiddleBlue;
 
@@ -164,6 +159,7 @@ public class closeAuto extends CommandOpMode{
 
         // Initialize subsystems
         register(robot.intake, robot.outtake);
+
 
         //robot.initHasMovement();
         generatePath();

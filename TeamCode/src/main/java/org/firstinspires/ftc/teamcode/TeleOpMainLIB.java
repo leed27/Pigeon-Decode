@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
 import com.bylazar.gamepad.*;
+import com.pedropathing.geometry.BezierCurve;
+import com.pedropathing.geometry.BezierLine;
+import com.pedropathing.paths.Path;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -17,7 +20,9 @@ import com.seattlesolvers.solverslib.command.button.Trigger;
 import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
+import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
+import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShoot;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
 @TeleOp(name = "Pigeon Teleop")
@@ -44,10 +49,10 @@ public class TeleOpMainLIB extends CommandOpMode {
         elapsedtime = new ElapsedTime();
         elapsedtime.reset();
 
-        //register(robot.intake);
+        register(robot.intake, robot.outtake);
         driver = new GamepadEx(gamepad1);
         driver2 = new GamepadEx(gamepad2);
-        drive = new MecanumDrive(robot.leftFront, robot.rightFront, robot.leftRear, robot.rightRear);
+        //drive = new MecanumDrive(robot.leftFront, robot.rightFront, robot.leftRear, robot.rightRear);
 
 
         /// IF THERE NEEDS TO BE MOVEMENT DURING INIT STAGE, UNCOMMENT
@@ -56,97 +61,24 @@ public class TeleOpMainLIB extends CommandOpMode {
         /// ALL CONTROLS
 
         driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(
+                new InstantCommand(() -> robot.intake.start())
 
-                new ParallelCommandGroup(
-                new InstantCommand(() -> robot.leftIntake.set(1)),
-                    new InstantCommand(() -> robot.rightIntake.set(1))
-
-
-
-                ));
+        );
         driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.leftIntake.set(0)),
-                        new InstantCommand(() -> robot.rightIntake.set(0))
+                new InstantCommand(() -> robot.intake.stop())
 
-
-
-                ));
-
-
-
+                );
 
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenHeld(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.leftIntake.set(-1)),
-                        new InstantCommand(() -> robot.rightIntake.set(-1))
+                new InstantCommand(() -> robot.intake.reverse())
 
-
-
-                ));
+        );
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.leftIntake.set(0)),
-                        new InstantCommand(() -> robot.rightIntake.set(0))
-
-
-
-                ));
-
-
-
-
-        driver2.getGamepadButton(GamepadKeys.Button.TRIANGLE).whenHeld(
-                new ParallelCommandGroup(
-//                        new InstantCommand(() -> robot.leftShooter.set(speed)),
-//                        new InstantCommand(() -> robot.rightShooter.set(speed))
-                        new InstantCommand(() -> robot.leftShooter.setVelocity(3000)),
-                        new InstantCommand(() -> robot.rightShooter.setVelocity(3000))
-                )
+                new InstantCommand(() -> robot.intake.stop())
 
         );
 
-        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenHeld(
-                new ParallelCommandGroup(
-//                        new InstantCommand(() -> robot.leftShooter.set(FAR_SPEED)),
-//                        new InstantCommand(() -> robot.rightShooter.set(FAR_SPEED))
-                        new InstantCommand(() -> robot.leftShooter.setVelocity(2000)),
-                        new InstantCommand(() -> robot.rightShooter.setVelocity(2000))
-                )
 
-        );
-
-        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenReleased(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.leftShooter.set(0)),
-                        new InstantCommand(() -> robot.rightShooter.set(0))
-                )
-
-        );
-//
-        driver2.getGamepadButton(GamepadKeys.Button.CIRCLE).whenHeld(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.leftShooter.set(CLOSE_SPEED)),
-                        new InstantCommand(() -> robot.rightShooter.set(CLOSE_SPEED))
-                )
-
-        );
-
-        driver2.getGamepadButton(GamepadKeys.Button.CIRCLE).whenReleased(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.leftShooter.set(0)),
-                        new InstantCommand(() -> robot.rightShooter.set(0))
-                )
-
-        );
-
-        driver2.getGamepadButton(GamepadKeys.Button.TRIANGLE).whenReleased(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.leftShooter.set(0)),
-                        new InstantCommand(() -> robot.rightShooter.set(0))
-                )
-
-        );
 
         driver2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
                 new InstantCommand(() -> robot.hoodServo.set(robot.hoodServo.get() - 0.1) )
@@ -160,31 +92,49 @@ public class TeleOpMainLIB extends CommandOpMode {
                 new InstantCommand(() -> robot.hoodServo.set(0.5))
         );
 
+
+        //auto shooting
         driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.leftShooter.setVelocity(2000)),
-                        new InstantCommand(() -> robot.rightShooter.setVelocity(2000)),
-                        new ConditionalCommand(
-                                new ParallelCommandGroup(
-                                new InstantCommand(() -> robot.leftIntake.set(1)),
-                                new InstantCommand(() -> robot.rightIntake.set(1))
-                        ),
-                                new ParallelCommandGroup(
-                                        new InstantCommand(() -> robot.leftIntake.set(0)),
-                                        new InstantCommand(() -> robot.rightIntake.set(0))
-                                ),
-                                () -> (robot.leftShooter.getVelocity() > 1000)
-                                )
-                )
+                new AutoShoot()
+//                new ParallelCommandGroup(
+//                        new InstantCommand(() -> robot.outtake.shootClose()),
+//                        new ConditionalCommand(
+//                                new InstantCommand(() -> robot.intake.start()
+//                        ),
+//                                new InstantCommand(() -> robot.intake.stop()),
+//                                () -> (robot.leftShooter.getVelocity() > 1000)
+//                                )
+//                )
 
         );
 
         driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.leftShooter.setVelocity(0)),
-                        new InstantCommand(() -> robot.rightShooter.setVelocity(0)),
-                        new InstantCommand(() -> robot.leftIntake.set(0)),
-                        new InstantCommand(() -> robot.rightIntake.set(0))
+                        new InstantCommand(() -> robot.outtake.stop()),
+                        new InstantCommand(() -> robot.intake.stop())
+                )
+
+        );
+
+        new Trigger(() -> driver2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5).whenActive(
+                new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), shootClosePose)), true)
+        );
+
+        //position lock
+        new Trigger(() -> driver2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5).whenActive(
+                new InstantCommand(() -> robot.follower.holdPoint(robot.follower.getPose()))
+        );
+
+        /// EXPERIMENTAL PIDF SHOOTER
+        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(
+                        new InstantCommand(() -> robot.outtake.setFlywheel(2, false)) // provide velocity in m/s?
+
+        );
+
+        driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> robot.outtake.stop()),
+                        new InstantCommand(() -> robot.intake.stop())
                 )
 
         );
@@ -192,10 +142,6 @@ public class TeleOpMainLIB extends CommandOpMode {
 
 
 
-        /// pedro position lock
-//        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenPressed(
-//                new InstantCommand(() -> robot.follower.holdPoint(robot.follower.getPose()))
-//        );
 
         /// pedro heading lock
 //        if(headingLock) {
@@ -216,8 +162,6 @@ public class TeleOpMainLIB extends CommandOpMode {
 //            follower.setTeleOpMovementVectors(-gamepad1.getLeftY(), gamepad1.getLeftX(), gamepad1.getRightX());
 //        }
 
-//        robot.lightLeft.setPosition(0.277);
-//        robot.lightRight.setPosition(0.277); //red
 
 
 
@@ -241,11 +185,11 @@ public class TeleOpMainLIB extends CommandOpMode {
         // DO NOT REMOVE! Runs FTCLib Command Scheudler
         super.run();
 
-        drive.driveRobotCentric(
-                driver.getLeftX(),
-                driver.getLeftY(),
-                driver.getRightX()
-        );
+//        drive.driveRobotCentric(
+//                driver.getLeftX(),
+//                driver.getLeftY(),
+//                driver.getRightX()
+//        );
 
 
 
@@ -258,9 +202,16 @@ public class TeleOpMainLIB extends CommandOpMode {
             robot.lightRight.setPosition(0.28); //red
         }
 
+
+        //joystick override
+        if ((gamepad1.left_stick_y != 0 || gamepad1.left_stick_x != 0 || gamepad1.right_stick_x != 0 || gamepad1.right_stick_y != 0) && robot.follower.isBusy()) {
+            robot.follower.breakFollowing();
+            robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+            robot.follower.startTeleopDrive();
+        }
+
         telemetry.addData("Status", "Running");
-        //telemetry.addData("right_horizontal: ", robot.spindex.getPosition());
-        telemetry.addData("loop times", elapsedtime.milliseconds());
+        //telemetry.addData("loop times", elapsedtime.milliseconds());
         telemetry.addData("servo", robot.hoodServo.get());
         telemetry.addData("servo23", robot.lightLeft.getPosition());
         telemetry.addData("motor speed", robot.leftShooter.getVelocity());
@@ -277,8 +228,8 @@ public class TeleOpMainLIB extends CommandOpMode {
         }
     }
 
-//    @Override
-//    public void end() {
-//        autoEndPose = robot.follower.getPose();
-//    }
+    @Override
+    public void end() {
+        autoEndPose = robot.follower.getPose();
+    }
 }

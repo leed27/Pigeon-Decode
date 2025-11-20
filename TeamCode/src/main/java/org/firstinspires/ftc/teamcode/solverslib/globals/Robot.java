@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.solverslib.globals;
 
+import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
+
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.PoseTracker;
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -14,6 +16,7 @@ import com.seattlesolvers.solverslib.hardware.motors.MotorGroup;
 import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
 
 import org.firstinspires.ftc.teamcode.Intake;
+import org.firstinspires.ftc.teamcode.Outtake;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import java.util.List;
@@ -37,8 +40,8 @@ public class Robot {
     public List<LynxModule> allHubs;
     public LynxModule ControlHub;
 
-    //public Intake intake;
-
+    public Intake intake;
+    public Outtake outtake;
     private static Robot instance = new Robot();
     public boolean enabled;
 
@@ -88,16 +91,16 @@ public class Robot {
         leftShooter.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         rightShooter.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
-//        launchMotors = new MotorGroup(
-//                new MotorEx(hardwareMap, "shooterLeft") //left launch
-//                        .setCachingTolerance(0.01)
-//                        .setInverted(true),
-//                new MotorEx(hardwareMap, "shooterRight") //right launch
-//                        .setCachingTolerance(0.01)
-//        );
+        launchMotors = new MotorGroup(
+                new MotorEx(hardwareMap, "shooterLeft") //left launch
+                        .setCachingTolerance(0.01)
+                        .setInverted(true),
+                new MotorEx(hardwareMap, "shooterRight") //right launch
+                        .setCachingTolerance(0.01)
+        );
 //
-//        launchEncoder = new Motor(hardwareMap, "shooterRight").encoder;
-//        launchEncoder.setDirection(Motor.Direction.REVERSE);
+        launchEncoder = new Motor(hardwareMap, "shooterRight").encoder;
+        //launchEncoder.setDirection(Motor.Direction.REVERSE);
 //
 //        slidesEncoder = new Motor(hardwareMap, "left_horizontal").encoder;
 //
@@ -119,19 +122,21 @@ public class Robot {
 
         }
 
-        //intake = new org.firstinspires.ftc.teamcode.Intake();
+        intake = new org.firstinspires.ftc.teamcode.Intake();
+        outtake = new org.firstinspires.ftc.teamcode.Outtake();
 
-//        if(opModeType.equals(OpModeType.TELEOP)) {
-//            follower.startTeleopDrive();
-//
-//            follower.setStartingPose(autoEndPose);
-//        } else{
-//            //follower.setStartingPose(new Pose(0, 0, 0));
-//        }
+        if(opModeType.equals(OpModeType.TELEOP)) {
+            follower.startTeleopDrive();
+
+            follower.setStartingPose(autoEndPose);
+        } else{
+            //follower.setStartingPose(new Pose(0, 0, 0));
+        }
     }
 
     /// RUN WHATEVER IS IN THE INIT METHODS IN THE SUBSYSTEMS!!
     public void initHasMovement() {
+        outtake.init();
         //intake.init();
         //kickServo.setPosition(0.5);
     }

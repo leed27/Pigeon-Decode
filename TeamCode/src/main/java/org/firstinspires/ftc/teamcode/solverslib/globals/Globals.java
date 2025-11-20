@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.solverslib.globals;
 
 
 import com.pedropathing.geometry.Pose;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 public class Globals {
     public enum OpModeType {
@@ -29,9 +30,10 @@ public class Globals {
 
     public static OpModeType opModeType;
 
-    public static Pose autoEndPose = new Pose(0, 0, Math.toRadians(0));
+    public static Pose autoEndPose = new Pose(8, 32, Math.toRadians(0)); //RIGHT ABOVE THE RED TAPE HP ZONE TAPE FACING BLUE
+    public static Pose shootClosePose = new Pose(37, 116, Math.toRadians(130));
 
-    //public static PIDFCoefficients FLYWHEEL_PIDF_COEFFICIENTS = new PIDFCoefficients(0.01, 0, 0, 0.00052);
+    public static PIDFCoefficients FLYWHEEL_PIDF_COEFFICIENTS = new PIDFCoefficients(0.01, 0, 0, 0.00052);
     public static double LAUNCHER_MAX_VELOCITY = 2500; // Ticks/second (NOT MEASURED YET)
 
 

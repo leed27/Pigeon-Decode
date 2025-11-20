@@ -10,15 +10,24 @@ public class Intake extends SubsystemBase {
     public void init(){
     }
 
-//    public void moveSpindex(int slot){
-//        if(slot == 1){
-//            robot.spindex.setPosition(0.5);
-//        }else if(slot == 2){
-//            robot.spindex.setPosition(0.25);
-//        }else{
-//            robot.spindex.setPosition(0);
-//        }
-//    }
+    public void start(){
+        robot.leftIntake.set(1);
+        robot.rightIntake.set(1);
+    }
+
+    public void stop(){
+        robot.leftIntake.set(0);
+        robot.rightIntake.set(0);
+    }
+
+    public void reverse(){
+        robot.leftIntake.set(-1);
+        robot.rightIntake.set(-1);
+    }
+
+
+
+
 
 
     //periodic runs in a loop
