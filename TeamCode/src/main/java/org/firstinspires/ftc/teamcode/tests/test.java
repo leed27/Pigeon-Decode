@@ -15,15 +15,15 @@ public class test extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-//        motor = hardwareMap.get(DcMotor.class, "shooter");
+        motor = hardwareMap.get(DcMotor.class, "shooter");
 //        motor2 = hardwareMap.get(DcMotor.class, "shooter2");
 
-        lightLeft = hardwareMap.get(Servo.class, "lightLeft");
-        lightRight = hardwareMap.get(Servo.class, "lightRight");
-
-
-        lightLeft.setPosition(0.3);
-        lightRight.setPosition(0.3);
+//        lightLeft = hardwareMap.get(Servo.class, "lightLeft");
+//        lightRight = hardwareMap.get(Servo.class, "lightRight");
+//
+//
+//        lightLeft.setPosition(0.3);
+//        lightRight.setPosition(0.3);
         //motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
@@ -33,8 +33,12 @@ public class test extends LinearOpMode {
         if (opModeIsActive()) {
             while (opModeIsActive()) {
 
-                lightLeft.setPosition(0.3);
-                lightRight.setPosition(0.3);
+                if(gamepad1.square){
+                    motor.setPower(1);
+                }
+
+//                lightLeft.setPosition(0.3);
+//                lightRight.setPosition(0.3);
 //                if(gamepad1.square){
 //                    motor.setPower(1);
 //                }else if(gamepad1.triangle){

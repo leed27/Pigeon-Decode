@@ -53,8 +53,7 @@ public class TeleOpMainLIB extends CommandOpMode {
         register(robot.intake, robot.outtake);
         driver = new GamepadEx(gamepad1);
         driver2 = new GamepadEx(gamepad2);
-        //robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
-        drive = new MecanumDrive(robot.leftFront, robot.rightFront, robot.leftRear, robot.rightRear);
+        //drive = new MecanumDrive(robot.leftFront, robot.rightFront, robot.leftRear, robot.rightRear);
 
 
         /// IF THERE NEEDS TO BE MOVEMENT DURING INIT STAGE, UNCOMMENT
@@ -156,19 +155,6 @@ public class TeleOpMainLIB extends CommandOpMode {
                 new InstantCommand(() -> robot.follower.holdPoint(robot.follower.getPose()))
         );
 
-        /// EXPERIMENTAL PIDF SHOOTER
-//        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(
-//                        new InstantCommand(() -> robot.outtake.setFlywheel(2, false)) // provide velocity in m/s?
-//
-//        );
-//
-//        driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
-//                new ParallelCommandGroup(
-//                        new InstantCommand(() -> robot.outtake.stop()),
-//                        new InstantCommand(() -> robot.intake.stop())
-//                )
-//
-//        );
 
 
 
@@ -216,11 +202,11 @@ public class TeleOpMainLIB extends CommandOpMode {
         // DO NOT REMOVE! Runs FTCLib Command Scheudler
         super.run();
 
-        drive.driveRobotCentric(
-                driver.getLeftX(),
-                driver.getLeftY(),
-                driver.getRightX()
-        );
+//        drive.driveRobotCentric(
+//                driver.getLeftX(),
+//                driver.getLeftY(),
+//                driver.getRightX()
+//        );
 
 
 
@@ -233,13 +219,14 @@ public class TeleOpMainLIB extends CommandOpMode {
             robot.lightRight.setPosition(0.28); //red
         }
 
+        robot.follower.setTeleOpDrive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, true);
 
         //joystick override
-//        if ((gamepad1.left_stick_y != 0 || gamepad1.left_stick_x != 0 || gamepad1.right_stick_x != 0 || gamepad1.right_stick_y != 0) && robot.follower.isBusy()) {
-//            robot.follower.breakFollowing();
-//            robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
-//            robot.follower.startTeleopDrive();
-//        }
+        if ((gamepad1.left_stick_y != 0 || gamepad1.left_stick_x != 0 || gamepad1.right_stick_x != 0 || gamepad1.right_stick_y != 0) && robot.follower.isBusy()) {
+            robot.follower.breakFollowing();
+            robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+            robot.follower.startTeleopDrive();
+        }
 
         telemetry.addData("Status", "Running");
         //telemetry.addData("loop times", elapsedtime.milliseconds());

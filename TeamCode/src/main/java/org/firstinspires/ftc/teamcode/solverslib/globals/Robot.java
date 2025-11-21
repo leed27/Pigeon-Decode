@@ -123,7 +123,7 @@ public class Robot {
         outtake = new org.firstinspires.ftc.teamcode.Outtake();
 
         if(opModeType.equals(OpModeType.TELEOP)) {
-            //follower.startTeleopDrive();
+            follower.startTeleopDrive();
 
             follower.setStartingPose(autoEndPose);
         } else{

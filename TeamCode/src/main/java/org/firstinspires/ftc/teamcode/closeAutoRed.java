@@ -23,7 +23,7 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShoot;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@Autonomous(name = "closeAutoRed", group = "auto")
+@Autonomous(name = "closeAutoBlue", group = "auto")
 public class closeAutoRed extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
