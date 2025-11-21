@@ -134,8 +134,8 @@ public class closeAuto extends CommandOpMode{
 
     public SequentialCommandGroup grabTopBlue() {
         return new SequentialCommandGroup(
-                //new InstantCommand(() -> robot.follower.setMaxPower(.8)),
                 new FollowPathCommand(robot.follower, grabTopBlue, false),
+                new InstantCommand(() -> robot.follower.setMaxPower(.4)),
                 //start intake
                 new InstantCommand(() -> robot.intake.start()),
                 new FollowPathCommand(robot.follower, collectTopBlue, false),
@@ -163,8 +163,8 @@ public class closeAuto extends CommandOpMode{
 
     public SequentialCommandGroup grabMiddleBlue() {
         return new SequentialCommandGroup(
-                //new InstantCommand(() -> robot.follower.setMaxPower(.8)),
                 new FollowPathCommand(robot.follower, grabMiddleBlue, false),
+                new InstantCommand(() -> robot.follower.setMaxPower(.4)),
                 //start intake
                 new InstantCommand(() -> robot.intake.start()),
                 new FollowPathCommand(robot.follower, collectMiddleBlue, false),
@@ -191,8 +191,8 @@ public class closeAuto extends CommandOpMode{
 
     public SequentialCommandGroup grabBottomBlue() {
         return new SequentialCommandGroup(
-                //new InstantCommand(() -> robot.follower.setMaxPower(.8)),
                 new FollowPathCommand(robot.follower, grabEndBlue, false),
+                new InstantCommand(() -> robot.follower.setMaxPower(.4)),
                 //start intake
                 new InstantCommand(() -> robot.intake.start()),
                 new FollowPathCommand(robot.follower, collectEndBlue, false),
@@ -230,6 +230,7 @@ public class closeAuto extends CommandOpMode{
     @Override
     public void initialize() {
         opModeType = OpModeType.AUTO;
+        goalColor = GoalColor.RED_GOAL;
         timer = new ElapsedTime();
         timer.reset();
 
@@ -296,51 +297,6 @@ public class closeAuto extends CommandOpMode{
                             parkAndStuff()
                     )
             );
-
-
-//        //different paths for each auto
-//        if(randomizationMotif == RandomizationMotif.GREEN_LEFT){
-//            schedule(
-//                    // DO NOT REMOVE: updates follower to follow path
-//                    new RunCommand(() -> robot.follower.update()),
-//
-//                    new SequentialCommandGroup(
-//                            // Specimen 1
-//                            scorePreload(),
-//
-//                            grabTopBlue(),
-//
-//                            scoreTopBlue()
-//                    )
-//            );
-//        }else if(randomizationMotif == RandomizationMotif.GREEN_MIDDLE){
-//            schedule(
-//                    // DO NOT REMOVE: updates follower to follow path
-//                    new RunCommand(() -> robot.follower.update()),
-//
-//                    new SequentialCommandGroup(
-//                            // Specimen 1
-//                            scorePreload()//,
-//
-//                            //grabMiddleBlue(),
-//                            //scoreMiddleBlue()
-//                    )
-//            );
-//        }else{
-//            schedule(
-//                    // DO NOT REMOVE: updates follower to follow path
-//                    new RunCommand(() -> robot.follower.update()),
-//
-//                    new SequentialCommandGroup(
-//                            // Specimen 1
-//                            scorePreload()//,
-//
-//                            //grabBottomBlue(),
-//                            //scoreBottomBlue()
-//                    )
-//            );
-//        }
-
 
 
 

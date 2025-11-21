@@ -28,12 +28,16 @@ public class Globals {
     public static boolean shooterReady = false;
     public static int test = 0;
 
-    public static GoalColor goals;
+    public static GoalColor goalColor;
 
     public static OpModeType opModeType;
 
     public static Pose autoEndPose = new Pose(8, 32, Math.toRadians(0)); //RIGHT ABOVE THE RED TAPE HP ZONE TAPE FACING BLUE
-    public static Pose shootClosePose = new Pose(37, 116, Math.toRadians(130));
+
+    public static Pose redParkPose = new Pose(38.5,33, Math.toRadians(90));
+    public static Pose blueParkPose = redParkPose.mirror();
+
+    public static Pose blueShootClose = new Pose(51,96, Math.toRadians(144));
 
     public static PIDFCoefficients FLYWHEEL_PIDF_COEFFICIENTS = new PIDFCoefficients(0.01, 0, 0, 0.00052);
     public static double LAUNCHER_MAX_VELOCITY = 2500; // Ticks/second (NOT MEASURED YET)

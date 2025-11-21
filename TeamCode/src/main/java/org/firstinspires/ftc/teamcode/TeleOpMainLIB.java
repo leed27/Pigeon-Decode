@@ -141,13 +141,29 @@ public class TeleOpMainLIB extends CommandOpMode {
         );
 
         driver2.getGamepadButton(GamepadKeys.Button.TOUCHPAD).whenPressed(
-                new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), shootClosePose)), true)
+                new ConditionalCommand(
+                        new ConditionalCommand(
+                                new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), redParkPose)), true),
+                                new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), blueParkPose)), true),
+                                () -> goalColor == GoalColor.RED_GOAL
+                        )
+                        , new InstantCommand(() -> {
+                            gamepad2.rumble(200);
+                }),
+                        () -> goalColor != null
+                )
+
 
 
         );
 
         new Trigger(() -> driver2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5).whenActive(
-                new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), shootClosePose)), true)
+                new ConditionalCommand(
+                        new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), blueShootClose.mirror())), true),
+                        new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), blueShootClose)), true),
+                        () -> goalColor == GoalColor.RED_GOAL
+                )
+
         );
 
         //position lock
@@ -219,7 +235,7 @@ public class TeleOpMainLIB extends CommandOpMode {
             robot.lightRight.setPosition(0.28); //red
         }
 
-        robot.follower.setTeleOpDrive(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x, true);
+        robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
 
         //joystick override
         if ((gamepad1.left_stick_y != 0 || gamepad1.left_stick_x != 0 || gamepad1.right_stick_x != 0 || gamepad1.right_stick_y != 0) && robot.follower.isBusy()) {
@@ -239,6 +255,7 @@ public class TeleOpMainLIB extends CommandOpMode {
         elapsedtime.reset();
 
         telemetry.update();
+        robot.follower.update();
 
         // DO NOT REMOVE! Removing this will return stale data since bulk caching is on Manual mode
         // Also only clearing the control hub to decrease loop times
