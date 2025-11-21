@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Outtake extends SubsystemBase {
     private final Robot robot = Robot.getInstance();
-    private final PIDFController flywheelController = new PIDFController(FLYWHEEL_PIDF_COEFFICIENTS);
+    //private final PIDFController flywheelController = new PIDFController(FLYWHEEL_PIDF_COEFFICIENTS);
 
     private double targetHoodAngle = 90-15;//MIN_HOOD_ANGLE;
     private double targetFlywheelVelocity = 0.0;
@@ -31,12 +31,21 @@ public class Outtake extends SubsystemBase {
         launcherVel.add(6.48, 2000.0);
         launcherVel.add(10.0, 2100.0);
         launcherVel.createLUT();
-        flywheelController.setTolerance(41);
+        //flywheelController.setTolerance(41);
     }
 
     public void shootClose(){
-        robot.leftShooter.setVelocity(2000);
-        robot.rightShooter.setVelocity(2000);
+        if(robot.leftShooter.getVelocity() > 1250 && robot.rightShooter.getVelocity() > 1250){
+            robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
+            robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
+            shooterReady = true;
+        }else{
+//            robot.leftShooter.setVelocity(1300);
+//            robot.rightShooter.setVelocity(1300);
+            robot.leftShooter.set(1);
+            robot.rightShooter.set(1);
+            shooterReady = false;
+        }
     }
 
     public void stop(){
@@ -47,38 +56,38 @@ public class Outtake extends SubsystemBase {
 
 
     //pidf stuff
-    public double getFlywheelTarget() {
-        return flywheelController.getSetPoint();
-    }
-
-    public void setFlywheel(double vel, boolean setActiveControl) {
-        flywheelController.setSetPoint(Math.min(launcherVel.get(vel), LAUNCHER_MAX_VELOCITY));
-        targetFlywheelVelocity = vel;
-        //activeControl = setActiveControl;
-    }
-    private void updateFlywheel() {
-        //if (activeControl) {
-        if (getFlywheelTarget() == 0) {
-            robot.launchMotors.set(0);
-        }else{
-            flywheelController.setF(FLYWHEEL_PIDF_COEFFICIENTS.f / (12 / 12));
-            robot.launchMotors.set(
-                    flywheelController.calculate(robot.launchEncoder.getCorrectedVelocity())
-            );
-        }
-
-        //} else {
-
-//            else {
-//                robot.launchMotors.set(LAUNCHER_DEFAULT_ON_SPEED);
-//            }
-        //}
-        //robot.profiler.end("Launcher Update");
-    }
-
-    public boolean shooterReady(){
-        return flywheelController.atSetPoint();
-    }
+//    public double getFlywheelTarget() {
+//        return flywheelController.getSetPoint();
+//    }
+//
+//    public void setFlywheel(double vel, boolean setActiveControl) {
+//        flywheelController.setSetPoint(Math.min(launcherVel.get(vel), LAUNCHER_MAX_VELOCITY));
+//        targetFlywheelVelocity = vel;
+//        //activeControl = setActiveControl;
+//    }
+//    private void updateFlywheel() {
+//        //if (activeControl) {
+//        if (getFlywheelTarget() == 0) {
+//            robot.launchMotors.set(0);
+//        }else{
+//            flywheelController.setF(FLYWHEEL_PIDF_COEFFICIENTS.f / (12 / 12));
+//            robot.launchMotors.set(
+//                    flywheelController.calculate(robot.launchEncoder.getCorrectedVelocity())
+//            );
+//        }
+//
+//        //} else {
+//
+////            else {
+////                robot.launchMotors.set(LAUNCHER_DEFAULT_ON_SPEED);
+////            }
+//        //}
+//        //robot.profiler.end("Launcher Update");
+//    }
+//
+//    public boolean shooterReady(){
+//        return flywheelController.atSetPoint();
+//    }
 
 
 
@@ -86,6 +95,6 @@ public class Outtake extends SubsystemBase {
     //periodic runs in a loop
     @Override
     public void periodic(){
-        updateFlywheel();
+        //updateFlywheel();
     }
 }

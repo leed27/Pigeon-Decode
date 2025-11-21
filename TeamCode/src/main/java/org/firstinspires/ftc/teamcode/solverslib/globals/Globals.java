@@ -25,6 +25,8 @@ public class Globals {
     public static RandomizationMotif randomizationMotif;
     public static double FAR_SPEED = 0.8;
     public static double CLOSE_SPEED = 0.5;
+    public static boolean shooterReady = false;
+    public static int test = 0;
 
     public static GoalColor goals;
 

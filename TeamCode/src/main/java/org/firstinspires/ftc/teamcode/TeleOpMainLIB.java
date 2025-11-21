@@ -34,7 +34,7 @@ public class TeleOpMainLIB extends CommandOpMode {
     double speed = 1;
 
     public ElapsedTime elapsedtime;
-    public double targetSpeed = 1150;
+    public double targetSpeed = 1200;
     private final Robot robot = Robot.getInstance();
 
 
@@ -53,7 +53,8 @@ public class TeleOpMainLIB extends CommandOpMode {
         register(robot.intake, robot.outtake);
         driver = new GamepadEx(gamepad1);
         driver2 = new GamepadEx(gamepad2);
-        //drive = new MecanumDrive(robot.leftFront, robot.rightFront, robot.leftRear, robot.rightRear);
+        //robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+        drive = new MecanumDrive(robot.leftFront, robot.rightFront, robot.leftRear, robot.rightRear);
 
 
         /// IF THERE NEEDS TO BE MOVEMENT DURING INIT STAGE, UNCOMMENT
@@ -61,59 +62,88 @@ public class TeleOpMainLIB extends CommandOpMode {
 
         /// ALL CONTROLS
 
-        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(
-                new InstantCommand(() -> robot.intake.start())
-
-        );
-        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
-                new InstantCommand(() -> robot.intake.stop())
-
-                );
-
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenHeld(
-                new InstantCommand(() -> robot.intake.reverse())
+                new InstantCommand(() -> robot.intake.start())
 
         );
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
                 new InstantCommand(() -> robot.intake.stop())
 
+                );
+
+        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(
+                new InstantCommand(() -> robot.intake.reverse())
+
+        );
+        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
+                new InstantCommand(() -> robot.intake.stop())
+
         );
 
 
 
-        driver2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
-                new InstantCommand(() -> robot.hoodServo.set(robot.hoodServo.get() - 0.1) )
-        );
-
-        driver2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
-                new InstantCommand(() -> robot.hoodServo.set(robot.hoodServo.get() + 0.1))
-        );
+//        driver2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
+//                new InstantCommand(() -> robot.hoodServo.set(robot.hoodServo.get() - 0.1) )
+//        );
+//
+//        driver2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
+//                new InstantCommand(() -> robot.hoodServo.set(robot.hoodServo.get() + 0.1))
+//        );
 
         driver2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
                 new InstantCommand(() -> robot.hoodServo.set(0.5))
         );
 
+//        driver.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
+//                new InstantCommand(() -> robot.stopperServo.set(0.5))
+//        );
+//
+//        driver.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
+//                new InstantCommand(() -> robot.stopperServo.set(robot.stopperServo.get() - 0.1))
+//        );
+//
+//        driver.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
+//                new InstantCommand(() -> robot.stopperServo.set(robot.stopperServo.get() + 0.1))
+//        );
+
 
         //auto shooting
-        driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(
-                new AutoShoot()
-//                new ParallelCommandGroup(
-//                        new InstantCommand(() -> robot.outtake.shootClose()),
-//                        new ConditionalCommand(
-//                                new InstantCommand(() -> robot.intake.start()
-//                        ),
-//                                new InstantCommand(() -> robot.intake.stop()),
-//                                () -> (robot.leftShooter.getVelocity() > 1000)
-//                                )
-//                )
+        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(
+
+                new ParallelCommandGroup(
+//                        new InstantCommand(() -> robot.leftShooter.set(1)),
+//                        new InstantCommand(() -> robot.rightShooter.set(1)),
+                        new AutoShoot()
+                )
 
         );
 
-        driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
+        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
                 new ParallelCommandGroup(
                         new InstantCommand(() -> robot.outtake.stop()),
                         new InstantCommand(() -> robot.intake.stop())
                 )
+
+        );
+
+        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whileHeld(
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> robot.leftShooter.set(1)),
+                        new InstantCommand(() -> robot.rightShooter.set(1)))
+
+
+                        );
+
+        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenReleased(
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> robot.outtake.stop())
+                )
+
+        );
+
+        driver2.getGamepadButton(GamepadKeys.Button.TOUCHPAD).whenPressed(
+                new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), shootClosePose)), true)
+
 
         );
 
@@ -127,18 +157,18 @@ public class TeleOpMainLIB extends CommandOpMode {
         );
 
         /// EXPERIMENTAL PIDF SHOOTER
-        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(
-                        new InstantCommand(() -> robot.outtake.setFlywheel(2, false)) // provide velocity in m/s?
-
-        );
-
-        driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.outtake.stop()),
-                        new InstantCommand(() -> robot.intake.stop())
-                )
-
-        );
+//        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(
+//                        new InstantCommand(() -> robot.outtake.setFlywheel(2, false)) // provide velocity in m/s?
+//
+//        );
+//
+//        driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
+//                new ParallelCommandGroup(
+//                        new InstantCommand(() -> robot.outtake.stop()),
+//                        new InstantCommand(() -> robot.intake.stop())
+//                )
+//
+//        );
 
 
 
@@ -186,11 +216,11 @@ public class TeleOpMainLIB extends CommandOpMode {
         // DO NOT REMOVE! Runs FTCLib Command Scheudler
         super.run();
 
-//        drive.driveRobotCentric(
-//                driver.getLeftX(),
-//                driver.getLeftY(),
-//                driver.getRightX()
-//        );
+        drive.driveRobotCentric(
+                driver.getLeftX(),
+                driver.getLeftY(),
+                driver.getRightX()
+        );
 
 
 
@@ -205,17 +235,20 @@ public class TeleOpMainLIB extends CommandOpMode {
 
 
         //joystick override
-        if ((gamepad1.left_stick_y != 0 || gamepad1.left_stick_x != 0 || gamepad1.right_stick_x != 0 || gamepad1.right_stick_y != 0) && robot.follower.isBusy()) {
-            robot.follower.breakFollowing();
-            robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
-            robot.follower.startTeleopDrive();
-        }
+//        if ((gamepad1.left_stick_y != 0 || gamepad1.left_stick_x != 0 || gamepad1.right_stick_x != 0 || gamepad1.right_stick_y != 0) && robot.follower.isBusy()) {
+//            robot.follower.breakFollowing();
+//            robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+//            robot.follower.startTeleopDrive();
+//        }
 
         telemetry.addData("Status", "Running");
         //telemetry.addData("loop times", elapsedtime.milliseconds());
         telemetry.addData("servo", robot.hoodServo.get());
+        telemetry.addData("follower busy", robot.follower.isBusy());
         telemetry.addData("servo23", robot.lightLeft.getPosition());
         telemetry.addData("motor speed", robot.leftShooter.getVelocity());
+        telemetry.addData("motor speed right", robot.rightShooter.getVelocity());
+        telemetry.addData("digaierg right", shooterReady);
         elapsedtime.reset();
 
         telemetry.update();

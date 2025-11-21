@@ -62,9 +62,6 @@ public class Robot {
 
         leftShooter = new MotorEx(hardwareMap, "shooterLeft");
         rightShooter = new MotorEx(hardwareMap, "shooterRight");
-//        kickServo = new ServoEx(
-//                hardwareMap, "kickServo", 0, 300
-//        );
 
         rightIntake = new MotorEx(hardwareMap, "rightIntake", Motor.GoBILDA.RPM_1150);
 
@@ -126,7 +123,7 @@ public class Robot {
         outtake = new org.firstinspires.ftc.teamcode.Outtake();
 
         if(opModeType.equals(OpModeType.TELEOP)) {
-            follower.startTeleopDrive();
+            //follower.startTeleopDrive();
 
             follower.setStartingPose(autoEndPose);
         } else{
