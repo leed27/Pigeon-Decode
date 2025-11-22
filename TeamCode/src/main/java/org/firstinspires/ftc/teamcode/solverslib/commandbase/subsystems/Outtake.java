@@ -1,15 +1,11 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems;
 
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
 import com.seattlesolvers.solverslib.command.SubsystemBase;
-import com.seattlesolvers.solverslib.controller.PIDFController;
 import com.seattlesolvers.solverslib.util.InterpLUT;
 
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class Outtake extends SubsystemBase {
     private final Robot robot = Robot.getInstance();

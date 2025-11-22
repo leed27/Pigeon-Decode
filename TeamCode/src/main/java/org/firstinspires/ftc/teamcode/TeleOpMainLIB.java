@@ -36,7 +36,6 @@ public class TeleOpMainLIB extends CommandOpMode {
     double speed = 1;
 
     public ElapsedTime elapsedtime;
-    public double targetSpeed = 1200;
     private final Robot robot = Robot.getInstance();
 
 
@@ -83,32 +82,12 @@ public class TeleOpMainLIB extends CommandOpMode {
 
 
 
-//        driver2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
-//                new InstantCommand(() -> robot.hoodServo.set(robot.hoodServo.get() - 0.1) )
-//        );
-//
-//        driver2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
-//                new InstantCommand(() -> robot.hoodServo.set(robot.hoodServo.get() + 0.1))
-//        );
-
         driver2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
                 new InstantCommand(() -> robot.hoodServo.set(0.5))
         );
 
-//        driver.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
-//                new InstantCommand(() -> robot.stopperServo.set(0.5))
-//        );
-//
-//        driver.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
-//                new InstantCommand(() -> robot.stopperServo.set(robot.stopperServo.get() - 0.1))
-//        );
-//
-//        driver.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
-//                new InstantCommand(() -> robot.stopperServo.set(robot.stopperServo.get() + 0.1))
-//        );
 
-
-        //auto shooting
+        /// REGULAR SHOOTING
         driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(
 
                 new ParallelCommandGroup(
@@ -127,6 +106,7 @@ public class TeleOpMainLIB extends CommandOpMode {
 
         );
 
+        /// FAR SHOOTING
         driver2.getGamepadButton(GamepadKeys.Button.CIRCLE).whileHeld(
 
                 new ParallelCommandGroup(
@@ -145,6 +125,8 @@ public class TeleOpMainLIB extends CommandOpMode {
 
         );
 
+
+        /// CLOSE SHOOTING
         driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whileHeld(
 
                 new ParallelCommandGroup(
@@ -164,6 +146,7 @@ public class TeleOpMainLIB extends CommandOpMode {
 
         );
 
+        /// EMERGENCY OUTTAKE SHOOTING
         driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(
 
                 new ParallelCommandGroup(
@@ -183,51 +166,38 @@ public class TeleOpMainLIB extends CommandOpMode {
 
         );
 
-//        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whileHeld(
-//                new ParallelCommandGroup(
-//                        new InstantCommand(() -> robot.leftShooter.set(1)),
-//                        new InstantCommand(() -> robot.rightShooter.set(1)))
+
+        /// AUTO PEDRO PATHS (not recommended)
+//        driver2.getGamepadButton(GamepadKeys.Button.TOUCHPAD).whenPressed(
+//                new ConditionalCommand(
+//                        new ConditionalCommand(
+//                                new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), redParkPose)), true),
+//                                new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), blueParkPose)), true),
+//                                () -> goalColor == GoalColor.RED_GOAL
+//                        )
+//                        , new InstantCommand(() -> {
+//                            gamepad2.rumble(200);
+//                }),
+//                        () -> goalColor != null
+//                )
 //
 //
-//                        );
 //
-//        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenReleased(
-//                new ParallelCommandGroup(
-//                        new InstantCommand(() -> robot.outtake.stop())
+//        );
+//
+//        new Trigger(() -> driver2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5).whenActive(
+//                new ConditionalCommand(
+//                        new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), blueShootClose.mirror())), true),
+//                        new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), blueShootClose)), true),
+//                        () -> goalColor == GoalColor.RED_GOAL
 //                )
 //
 //        );
-
-        driver2.getGamepadButton(GamepadKeys.Button.TOUCHPAD).whenPressed(
-                new ConditionalCommand(
-                        new ConditionalCommand(
-                                new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), redParkPose)), true),
-                                new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), blueParkPose)), true),
-                                () -> goalColor == GoalColor.RED_GOAL
-                        )
-                        , new InstantCommand(() -> {
-                            gamepad2.rumble(200);
-                }),
-                        () -> goalColor != null
-                )
-
-
-
-        );
-
-        new Trigger(() -> driver2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5).whenActive(
-                new ConditionalCommand(
-                        new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), blueShootClose.mirror())), true),
-                        new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), blueShootClose)), true),
-                        () -> goalColor == GoalColor.RED_GOAL
-                )
-
-        );
-
-        //position lock
-        new Trigger(() -> driver2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5).whenActive(
-                new InstantCommand(() -> robot.follower.holdPoint(robot.follower.getPose()))
-        );
+//
+//        //position lock
+//        new Trigger(() -> driver2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5).whenActive(
+//                new InstantCommand(() -> robot.follower.holdPoint(robot.follower.getPose()))
+//        );
 
 
 
@@ -284,7 +254,7 @@ public class TeleOpMainLIB extends CommandOpMode {
 
 
 
-        if(robot.leftShooter.getVelocity() > targetSpeed){
+        if(shooterReady){
 
             robot.lightLeft.setPosition(0.5);
             robot.lightRight.setPosition(0.5); //green

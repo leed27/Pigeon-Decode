@@ -7,16 +7,14 @@ import com.pedropathing.localization.PoseTracker;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
-import com.seattlesolvers.solverslib.hardware.SimpleServo;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 import com.seattlesolvers.solverslib.hardware.motors.MotorGroup;
 import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
 
-import org.firstinspires.ftc.teamcode.Intake;
-import org.firstinspires.ftc.teamcode.Outtake;
+import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import java.util.List;
@@ -119,8 +117,8 @@ public class Robot {
 
         }
 
-        intake = new org.firstinspires.ftc.teamcode.Intake();
-        outtake = new org.firstinspires.ftc.teamcode.Outtake();
+        intake = new Intake();
+        outtake = new Outtake();
 
         if(opModeType.equals(OpModeType.TELEOP)) {
             follower.setStartingPose(autoEndPose);
