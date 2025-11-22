@@ -23,6 +23,8 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShoot;
+import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAuto;
+import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
 @TeleOp(name = "Pigeon Teleop")
@@ -125,20 +127,76 @@ public class TeleOpMainLIB extends CommandOpMode {
 
         );
 
-        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whileHeld(
+        driver2.getGamepadButton(GamepadKeys.Button.CIRCLE).whileHeld(
+
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.leftShooter.set(1)),
-                        new InstantCommand(() -> robot.rightShooter.set(1)))
-
-
-                        );
-
-        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenReleased(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.outtake.stop())
+//                        new InstantCommand(() -> robot.leftShooter.set(1)),
+//                        new InstantCommand(() -> robot.rightShooter.set(1)),
+                        new AutoShootInAutoFAR()
                 )
 
         );
+
+        driver2.getGamepadButton(GamepadKeys.Button.CIRCLE).whenReleased(
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> robot.outtake.stop()),
+                        new InstantCommand(() -> robot.intake.stop())
+                )
+
+        );
+
+        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whileHeld(
+
+                new ParallelCommandGroup(
+                        new AutoShootInAuto()
+                        //new InstantCommand(() -> robot.outtake.reverseShoot())
+                )
+
+        );
+
+        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenReleased(
+
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> robot.outtake.stop()),
+                        new InstantCommand(() -> robot.intake.stop())
+                        //new InstantCommand(() -> robot.outtake.reverseShoot())
+                )
+
+        );
+
+        driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(
+
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> robot.leftShooter.set(-0.5)),
+                        new InstantCommand(() -> robot.rightShooter.set(-0.5))
+                        //new InstantCommand(() -> robot.outtake.reverseShoot())
+                )
+
+        );
+
+
+        driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> robot.outtake.stop())
+                        //new InstantCommand(() -> robot.intake.stop())
+                )
+
+        );
+
+//        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whileHeld(
+//                new ParallelCommandGroup(
+//                        new InstantCommand(() -> robot.leftShooter.set(1)),
+//                        new InstantCommand(() -> robot.rightShooter.set(1)))
+//
+//
+//                        );
+//
+//        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenReleased(
+//                new ParallelCommandGroup(
+//                        new InstantCommand(() -> robot.outtake.stop())
+//                )
+//
+//        );
 
         driver2.getGamepadButton(GamepadKeys.Button.TOUCHPAD).whenPressed(
                 new ConditionalCommand(
@@ -239,7 +297,9 @@ public class TeleOpMainLIB extends CommandOpMode {
 
         //joystick override
         if ((gamepad1.left_stick_y != 0 || gamepad1.left_stick_x != 0 || gamepad1.right_stick_x != 0 || gamepad1.right_stick_y != 0) && robot.follower.isBusy()) {
-            robot.follower.breakFollowing();
+            //if(robot.follower.isBusy()){
+                robot.follower.breakFollowing();
+            //}
             robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
             robot.follower.startTeleopDrive();
         }

@@ -37,7 +37,7 @@ public class Globals {
     public static Pose redParkPose = new Pose(38.5,33, Math.toRadians(90));
     public static Pose blueParkPose = redParkPose.mirror();
 
-    public static Pose blueShootClose = new Pose(51,96, Math.toRadians(144));
+    public static Pose blueShootClose = new Pose(51,96, Math.toRadians(135));
 
     public static PIDFCoefficients FLYWHEEL_PIDF_COEFFICIENTS = new PIDFCoefficients(0.01, 0, 0, 0.00052);
     public static double LAUNCHER_MAX_VELOCITY = 2500; // Ticks/second (NOT MEASURED YET)

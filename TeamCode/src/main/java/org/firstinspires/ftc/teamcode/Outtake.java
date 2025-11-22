@@ -62,6 +62,40 @@ public class Outtake extends SubsystemBase {
         }
     }
 
+    public void shootAutoFar(){
+        if(robot.leftShooter.getVelocity() > 1500 && robot.rightShooter.getVelocity() > 1500){
+            robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
+            robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
+            shooterReady = true;
+        }else{
+//            robot.leftShooter.setVelocity(1300);
+//            robot.rightShooter.setVelocity(1300);
+            robot.leftShooter.set(1);
+            robot.rightShooter.set(1);
+            shooterReady = false;
+        }
+    }
+
+    public void reverse(){
+        robot.leftShooter.set(-1);
+        robot.rightShooter.set(-1);
+    }
+
+
+//    public void reverseShoot(){
+//        if(robot.leftShooter.getVelocity() > -1100 && robot.rightShooter.getVelocity() > -1100){
+//            robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
+//            robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
+//            shooterReady = true;
+//        }else{
+////            robot.leftShooter.setVelocity(1300);
+////            robot.rightShooter.setVelocity(1300);
+//            robot.leftShooter.set(-1);
+//            robot.rightShooter.set(-1);
+//            shooterReady = false;
+//        }
+//    }
+
     public void stop(){
         robot.leftShooter.setVelocity(0);
         robot.rightShooter.setVelocity(0);
