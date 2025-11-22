@@ -9,17 +9,18 @@ import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
 
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-public class AutoShootInAutoFAR extends ParallelCommandGroup{
-    public AutoShootInAutoFAR() {
+public class AutoShootInAutoFar extends ParallelCommandGroup {
+    public AutoShootInAutoFar() {
         Robot robot = Robot.getInstance();
         addCommands(
-                new InstantCommand(() -> robot.outtake.shootAutoFar()),
+                new InstantCommand(() -> robot.outtake.shootAuto()),
                 new InstantCommand(() -> robot.hoodServo.set(0.7)),
+                new InstantCommand(() -> test++),
                 new ConditionalCommand(
                         new InstantCommand(() -> robot.intake.startNoHood()
                         ),
                         new InstantCommand(() -> robot.intake.stopExceptShooter()),
-                        () -> (robot.leftShooter.getVelocity() > 1350)
+                        () -> (robot.leftShooter.getVelocity() > 1550)
                 ).withTimeout(100)
 
         );
