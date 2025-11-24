@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.PoseTracker;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -20,7 +21,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import java.util.List;
 
 public class Robot {
-
     public MotorEx leftFront, leftRear, rightRear, rightFront; //drivetrain wheels
 
     public MotorEx leftShooter, rightShooter;
