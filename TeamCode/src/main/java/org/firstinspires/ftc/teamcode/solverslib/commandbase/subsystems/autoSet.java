@@ -9,8 +9,26 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
 public class autoSet extends SubsystemBase {
-    //twin ts is just for brainstorming.
-    //made by diddy XD
+    /*
+        Okay, using these, we should be able to find the angle we need to align to.
+        The auto align should be mapped to a face button.
+
+        Then, we can find the exact speed we need. Physics wise, there is a window for the
+        speed we can use. HOWEVER, I am aiming for the speed in the exact MIDDLE of the goal,
+        which is about 2.6ft above the robot (shooter is 15 inches high). I use messy algebra,
+        ew, to figure out the velocity in ft/s. (YES IK IM USING FT/S CUZ WE LUV FREEDOM UNITS)
+        Then we convert in the disgusting made up unit of ticks/s which is about .0353, which
+        is calculated with a variety of factors, which I didn't include in the code since it was
+        just a bunch of static numbers. Just know if the flywheel changes, this conversion number
+        NEEDS to be changed.
+
+        Now, the only unfinished part is that we need to figure out how to use limelight effectively.
+        That's what needs to be done IN ROBOTICS, and then we can test it.
+
+        Hopefully we can finish this part this week, and move everything into the Outtake subsys.
+        I'm doing it here since its purley experimental.
+        -Adhithya Yuvaraj (Nov 24th 2025)
+         */
 
     private final Robot robot = Robot.getInstance();
 
@@ -19,7 +37,7 @@ public class autoSet extends SubsystemBase {
     public void diddyExperiments() {
 
         Robot robot = Robot.getInstance();
-        boolean isBlue = true;
+        boolean isBlue = true; //determines the alliance color. This is kinda impt ngl.
 
         //get the pose of the robot
         Pose pose = follower.getPose();
