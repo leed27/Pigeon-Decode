@@ -13,7 +13,15 @@ public class Intake extends SubsystemBase {
     public void start(){
         robot.leftIntake.set(1);
         robot.rightIntake.set(1);
-        robot.hoodServo.set(0.7);
+        //robot.hoodServo.set(0.7);
+        robot.leftShooter.set(-0.5);
+        robot.rightShooter.set(-0.5);
+    }
+
+    public void startCustom(double speed){
+        robot.leftIntake.set(speed);
+        robot.rightIntake.set(speed);
+        //robot.hoodServo.set(0.7);
         robot.leftShooter.set(-0.5);
         robot.rightShooter.set(-0.5);
     }

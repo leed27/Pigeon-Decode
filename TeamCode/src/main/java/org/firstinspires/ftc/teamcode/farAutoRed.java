@@ -15,6 +15,7 @@ import com.seattlesolvers.solverslib.command.RepeatCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
+import com.seattlesolvers.solverslib.command.WaitUntilCommand;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAuto;
@@ -31,9 +32,9 @@ public class farAutoRed extends CommandOpMode{
     // ALL PATHS
     private final Pose startPose = new Pose(88, 9, Math.toRadians(90));
 
-    private final Pose shootPose = new Pose(88, 15, Math.toRadians(67));
+    private final Pose shootPose = new Pose(88, 15, Math.toRadians(70));
     /// blue paths
-    private final Pose parkPose = new Pose(100,11, Math.toRadians(66));
+    private final Pose parkPose = new Pose(108,14, Math.toRadians(70));
     private PathChain startToShoot, shootToPark;
 
     public void generatePath() {
@@ -58,11 +59,11 @@ public class farAutoRed extends CommandOpMode{
 
     public SequentialCommandGroup startToShoot() {
         return new SequentialCommandGroup(
-                new WaitCommand(6000),
+                //new WaitCommand(24000),
                 new FollowPathCommand(robot.follower, startToShoot, true),
                 new RepeatCommand(
                         new AutoShootInAutoFAR()
-                ).withTimeout(3000),
+                ).withTimeout(5000),
 
                 //new WaitCommand(3000),
                 new InstantCommand(() -> robot.outtake.stop()),
@@ -73,7 +74,7 @@ public class farAutoRed extends CommandOpMode{
 
     public SequentialCommandGroup shootToPark() {
         return new SequentialCommandGroup(
-                new FollowPathCommand(robot.follower, shootToPark, true)
+                new FollowPathCommand(robot.follower, shootToPark, true).withTimeout(3000)
         );
     }
 
@@ -132,8 +133,10 @@ public class farAutoRed extends CommandOpMode{
         schedule(
 //                    // DO NOT REMOVE: updates follower to follow path
                 new RunCommand(() -> robot.follower.update()),
+                new InstantCommand(() -> timer.reset()),
 
                 new SequentialCommandGroup(
+                        new WaitUntilCommand(() -> timer.seconds() > 27.5),
                         startToShoot(),
                         shootToPark()
                 )

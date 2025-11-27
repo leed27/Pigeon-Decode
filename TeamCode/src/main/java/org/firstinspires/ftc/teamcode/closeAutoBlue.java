@@ -46,16 +46,16 @@ public class closeAutoBlue extends CommandOpMode{
 
     private final Pose blueTopPileForwardPose = new Pose(17, 84, Math.toRadians(180)); //e
     private final Pose blueMiddlePilePose = new Pose(50, 60, Math.toRadians(180));
-    private final Pose blueMiddlePileForwardPose = new Pose(17, 60, Math.toRadians(180));
+    private final Pose blueMiddlePileForwardPose = new Pose(15, 60, Math.toRadians(180));
     private final Pose controlPose = new Pose(79, 37);
     private final Pose blueBottomPilePose = new Pose(50, 36, Math.toRadians(180));
-    private final Pose blueBottomPileForwardPose = new Pose(17, 36, Math.toRadians(180));
+    private final Pose blueBottomPileForwardPose = new Pose(15, 36, Math.toRadians(180));
     private final Pose blueTopShootPose = new Pose(51,96, Math.toRadians(150));
     private final Pose blueTopShootPose2 = new Pose(51,96, Math.toRadians(135));
 
     private final Pose blueBottomShootPose =  new Pose(55, 15, Math.toRadians(120));
 
-    private final Pose parkPose = new Pose(48, 80, Math.toRadians(135));
+    private final Pose parkPose = new Pose(34, 80, Math.toRadians(135));
     private Path grabTopBlue;
     private PathChain shootPreloads, collectTopBlue, shootTopBlue, grabMiddleBlue, goBackMiddleBlue, collectMiddleBlue, shootMiddleBlue, grabEndBlue, collectEndBlue, shootEndBlue, park;
 
@@ -144,7 +144,7 @@ public class closeAutoBlue extends CommandOpMode{
                 new InstantCommand(() -> robot.outtake.reverse()),
                 new InstantCommand(() -> robot.follower.setMaxPower(.4)),
                 //start intake
-                new InstantCommand(() -> robot.intake.start()),
+                new InstantCommand(() -> robot.intake.startCustom(0.8)),
                 new FollowPathCommand(robot.follower, collectTopBlue, false).withTimeout(3000),
                 new WaitCommand(500),
                 //stop intake
@@ -174,7 +174,7 @@ public class closeAutoBlue extends CommandOpMode{
                 new InstantCommand(() -> robot.outtake.reverse()),
                 new InstantCommand(() -> robot.follower.setMaxPower(.55)),
                 //start intake
-                new InstantCommand(() -> robot.intake.start()),
+                new InstantCommand(() -> robot.intake.startCustom(0.8)),
                 new FollowPathCommand(robot.follower, collectMiddleBlue, false).withTimeout(3000),
                 new WaitCommand(1000),
                 //stop intake
@@ -205,7 +205,7 @@ public class closeAutoBlue extends CommandOpMode{
                 new InstantCommand(() -> robot.outtake.reverse()),
                 new InstantCommand(() -> robot.follower.setMaxPower(.55)),
                 //start intake
-                new InstantCommand(() -> robot.intake.start()),
+                new InstantCommand(() -> robot.intake.startCustom(0.8)),
                 new FollowPathCommand(robot.follower, collectEndBlue, false).withTimeout(3000),
                 new WaitCommand(500),
                 //stop intake

@@ -3,9 +3,17 @@ package org.firstinspires.ftc.teamcode;
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
 import com.bylazar.gamepad.*;
+import com.pedropathing.ftc.InvertedFTCCoordinates;
+import com.pedropathing.ftc.PoseConverter;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
+import com.pedropathing.geometry.PedroCoordinates;
+import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
+import com.pedropathing.paths.PathConstraints;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -22,10 +30,17 @@ import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShoot;
+import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootCustom;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAuto;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
+
+import java.util.List;
 
 @TeleOp(name = "Pigeon Teleop")
 public class TeleOpMainLIB extends CommandOpMode {
@@ -33,7 +48,9 @@ public class TeleOpMainLIB extends CommandOpMode {
 
     public ElapsedTime gameTimer;
     private MecanumDrive drive;
-    double speed = 1;
+    public static int speed = 1000;
+    Limelight3A limelight;
+
 
     public ElapsedTime elapsedtime;
     private final Robot robot = Robot.getInstance();
@@ -42,6 +59,12 @@ public class TeleOpMainLIB extends CommandOpMode {
     @Override
     public void initialize(){
         opModeType = OpModeType.TELEOP;
+
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
+        //limelight.start(); // This tells Limelight to start looking!
+
+        limelight.pipelineSwitch(0);
 
 
         // DO NOT REMOVE! Resetting FTCLib Command Sechduler
@@ -84,6 +107,10 @@ public class TeleOpMainLIB extends CommandOpMode {
 
         driver2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
                 new InstantCommand(() -> robot.hoodServo.set(0.5))
+        );
+
+        driver2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(
+                new InstantCommand(() -> robot.hoodServo.set(0.7))
         );
 
 
@@ -146,22 +173,29 @@ public class TeleOpMainLIB extends CommandOpMode {
 
         );
 
-        /// EMERGENCY OUTTAKE SHOOTING
-        driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(
+        driver2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
 
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.leftShooter.set(-0.5)),
-                        new InstantCommand(() -> robot.rightShooter.set(-0.5))
-                        //new InstantCommand(() -> robot.outtake.reverseShoot())
-                )
+                new InstantCommand(() -> speed -= 10)
+
+        );
+
+        driver2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
+
+                new InstantCommand(() -> speed += 10)
 
         );
 
 
+//        driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(
+//
+//                new AutoShootCustom(speed)
+//
+//        );
+
         driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.outtake.stop())
-                        //new InstantCommand(() -> robot.intake.stop())
+                        new InstantCommand(() -> robot.outtake.stop()),
+                        new InstantCommand(() -> robot.intake.stop())
                 )
 
         );
@@ -202,30 +236,6 @@ public class TeleOpMainLIB extends CommandOpMode {
 
 
 
-
-
-        /// pedro heading lock
-//        if(headingLock) {
-//            double targetHeading = Math.toRadians(180);
-//
-//            double headingError = targetHeading - currentHeading;
-//            headingError = Math.IEEEremainder(headingError, 2 * Math.PI);
-//
-//            if (Math.abs(headingError) < Math.toRadians(2)) {
-//                headingCorrection = 0;
-//            } else {
-//                headingCorrection = headingPIDController.calculate(headingError);
-//            }
-//
-//            follower.setTeleOpMovementVectors(-gamepad1.getLeftY(), gamepad1.getLeftX(), headingCorrection);
-//
-//        } else {
-//            follower.setTeleOpMovementVectors(-gamepad1.getLeftY(), gamepad1.getLeftX(), gamepad1.getRightX());
-//        }
-
-
-
-
         super.run();
     }
 
@@ -238,6 +248,7 @@ public class TeleOpMainLIB extends CommandOpMode {
 
             gameTimer = new ElapsedTime();
         }
+        limelight.start();
 
 
 
@@ -252,19 +263,55 @@ public class TeleOpMainLIB extends CommandOpMode {
 //                driver.getRightX()
 //        );
 
-
-
-        if(shooterReady){
-
-            robot.lightLeft.setPosition(0.5);
-            robot.lightRight.setPosition(0.5); //green
-        }else{
+        speed = robot.outtake.shootAutoGenerator();
+        if(speed == -1){
             robot.lightLeft.setPosition(0.28);
             robot.lightRight.setPosition(0.28); //red
+        }else{
+            robot.lightLeft.setPosition(0.5);
+            robot.lightRight.setPosition(0.5); //green
+
+
+
+            if(gamepad2.left_bumper){
+                robot.outtake.shootCustom(speed);
+                //robot.hoodServo.set(0.5);
+                if(robot.leftShooter.getVelocity() > speed-50){
+                    robot.intake.startNoHood();
+                }else{
+                    robot.intake.stopExceptShooter();
+                }
+            }
         }
+
+
+
+//        if(shooterReady){
+//
+//            robot.lightLeft.setPosition(0.5);
+//            robot.lightRight.setPosition(0.5); //green
+//        }else{
+//            robot.lightLeft.setPosition(0.28);
+//            robot.lightRight.setPosition(0.28); //red
+//        }
 
         robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
 
+        if(gamepad2.left_trigger > 0.5){
+            if(goalColor == GoalColor.RED_GOAL){
+                double newHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
+                robot.follower.turnToDegrees(Math.toDegrees(newHeading));
+                robot.follower.setConstraints(new PathConstraints(
+                        0.995,
+                        200,
+                        1.5,
+                        1
+                ));
+            }else{
+                double newHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
+                robot.follower.turnToDegrees(Math.toDegrees(newHeading));
+            }
+        }
         //joystick override
         if ((gamepad1.left_stick_y != 0 || gamepad1.left_stick_x != 0 || gamepad1.right_stick_x != 0 || gamepad1.right_stick_y != 0) && robot.follower.isBusy()) {
             //if(robot.follower.isBusy()){
@@ -274,13 +321,84 @@ public class TeleOpMainLIB extends CommandOpMode {
             robot.follower.startTeleopDrive();
         }
 
+
+
+        LLResult result = limelight.getLatestResult();
+                if(result != null){
+                    if(result.isValid()){
+                        Pose3D botpose = result.getBotpose_MT2();
+                        double llX = botpose.getPosition().x;
+                        double llY = botpose.getPosition().y;
+                        double llHeading = Math.toRadians(botpose.getOrientation().getYaw());
+
+                        Pose2D llPose = new Pose2D(DistanceUnit.INCH,llX,llY, AngleUnit.RADIANS,llHeading);
+                        Pose pedroPose = PoseConverter.pose2DToPose(llPose, InvertedFTCCoordinates.INSTANCE).getAsCoordinateSystem(PedroCoordinates.INSTANCE);
+
+                        //robot.follower.setPose(pedroPose);
+                        telemetry.addData("horray", botpose);
+
+
+                    }
+
+
+                        List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults(); // fiducials are special markers (like AprilTags)
+                        for (LLResultTypes.FiducialResult fiducial : fiducials) {
+
+                            //int id = fiducial.getFiducialId();
+
+
+
+//                            if(lastGoodPose == null){
+//                                lastGoodPose = pedroPose;
+//                            }
+
+                            // The ID number of the fiducial
+//                                if(id==20) {
+//                                    goals = Globals.GoalColor.BLUE_GOAL;
+//                                    telemetry.addData("goal color", "blue!");
+//                                } else if (id == 21) {
+//                                    randomizationMotif = Globals.RandomizationMotif.GREEN_LEFT;
+//                                    telemetry.addData("randomization:", randomizationMotif.toString());
+//                                    telemetry.update();
+//                                } else if (id == 22) {
+//                                    randomizationMotif = Globals.RandomizationMotif.GREEN_MIDDLE;
+//                                    telemetry.addData("randomization:", randomizationMotif.toString());
+//                                    telemetry.update();
+//                                } else if (id == 23) {
+//                                    randomizationMotif = Globals.RandomizationMotif.GREEN_RIGHT;
+//                                    telemetry.addData("randomization :", randomizationMotif.toString());
+//                                    telemetry.update();
+//                                } else if (id == 24){
+//                                    goals = Globals.GoalColor.RED_GOAL;
+//                                    telemetry.addData("goal color", "red!");
+//                                }else {
+//                                    //failsafe
+//                                    randomizationMotif = Globals.RandomizationMotif.GREEN_LEFT;
+//                                    telemetry.addData("FAILSAFE! :", randomizationMotif.toString());
+//                                    telemetry.update();
+//                                }
+                            }
+
+                    }else{
+                    //telemetry.addData("none! :", randomizationMotif.toString());
+                }
+
+
+
+
+
+
+
         telemetry.addData("Status", "Running");
         //telemetry.addData("loop times", elapsedtime.milliseconds());
         telemetry.addData("servo", robot.hoodServo.get());
         telemetry.addData("follower busy", robot.follower.isBusy());
-        telemetry.addData("servo23", robot.lightLeft.getPosition());
+        telemetry.addData("x", robot.follower.getPose().getX());
+        telemetry.addData("y", robot.follower.getPose().getY());
+        telemetry.addData("angle", Math.toDegrees(robot.follower.getPose().getHeading()));
+        telemetry.addData("speed in feet", test);
         telemetry.addData("motor speed", robot.leftShooter.getVelocity());
-        telemetry.addData("motor speed right", robot.rightShooter.getVelocity());
+        telemetry.addData("degrees TARGET", Math.toDegrees(Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX())));
         telemetry.addData("digaierg right", shooterReady);
         elapsedtime.reset();
 

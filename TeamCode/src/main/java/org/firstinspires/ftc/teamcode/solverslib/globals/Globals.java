@@ -24,13 +24,14 @@ public class Globals {
 
     public static RandomizationMotif randomizationMotif;
     public static boolean shooterReady = false;
-    public static int test = 0;
-
+    public static double test = 0;
+    public static double xPos = 0;
+    public static double yPos = 0;
     public static GoalColor goalColor;
 
     public static OpModeType opModeType;
 
-    public static Pose autoEndPose = new Pose(8, 32, Math.toRadians(0)); //RIGHT ABOVE THE RED TAPE HP ZONE TAPE FACING BLUE
+    public static Pose autoEndPose = new Pose(15, 32, Math.toRadians(0)); //RIGHT ABOVE THE RED TAPE HP ZONE TAPE FACING BLUE
 
     public static Pose redParkPose = new Pose(38.5,33, Math.toRadians(90));
     public static Pose blueParkPose = redParkPose.mirror();
