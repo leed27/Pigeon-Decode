@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants()
             .mass(12.3)
+            .holdPointHeadingScaling(1) //apparently the fix to the weird turnto pid?
             .forwardZeroPowerAcceleration(-28.21169772728104)
             .lateralZeroPowerAcceleration(-66.36080174688745)
             .useSecondaryTranslationalPIDF(false)
