@@ -21,11 +21,17 @@ public class Outtake extends SubsystemBase {
 
     public void init(){
         launcherVelClose.add(0, 0);
-        launcherVelClose.add(20, 1050);
-        launcherVelClose.add(23, 1150);
-        launcherVelClose.add(27, 1250);
-        launcherVelClose.add(36.5, 1350);
-        launcherVelClose.add(50, 1450);
+        launcherVelClose.add(25.878, 1320);
+        launcherVelClose.add(26.13, 1290);
+        launcherVelClose.add(27.25, 1220);
+        launcherVelClose.add(29, 1200);
+        launcherVelClose.add(31.7, 1180);
+        launcherVelClose.add(41.2, 1155);
+        launcherVelClose.add(53.2, 1140);
+        launcherVelClose.add(71.5, 1170);
+        launcherVelClose.add(91.5, 1100);
+
+
         launcherVelClose.createLUT();
         launcherVelFar.add(0, 0);
         launcherVelFar.add(22.9, 1500);
@@ -50,7 +56,7 @@ public class Outtake extends SubsystemBase {
             return -1;
         }
 
-        if(howFar > 9){
+        if(howFar > 9.5){
             robot.hoodServo.set(.7);
             double hoodAngle = Math.toRadians(40);
             double newSpeedInFeet = (howFar*Math.sqrt(16.1))/(Math.cos(hoodAngle) * Math.sqrt(howFar*Math.tan(hoodAngle)-height));
@@ -125,6 +131,12 @@ public class Outtake extends SubsystemBase {
             robot.leftShooter.set(1);
             robot.rightShooter.set(1);
             shooterReady = false;
+        }
+
+        if(robot.leftShooter.getVelocity() > speed-60){
+            robot.stopperServo.set(0.56);
+        }else{
+            robot.stopperServo.set(0.7);
         }
     }
 

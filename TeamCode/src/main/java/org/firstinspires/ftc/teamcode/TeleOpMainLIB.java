@@ -49,6 +49,7 @@ public class TeleOpMainLIB extends CommandOpMode {
     public ElapsedTime gameTimer;
     private MecanumDrive drive;
     public static int speed = 1000;
+    public static int adjustSpeed = 0;
     Limelight3A limelight;
 
 
@@ -77,6 +78,8 @@ public class TeleOpMainLIB extends CommandOpMode {
         register(robot.intake, robot.outtake);
         driver = new GamepadEx(gamepad1);
         driver2 = new GamepadEx(gamepad2);
+
+        robot.stopperServo.set(0.65);
         //drive = new MecanumDrive(robot.leftFront, robot.rightFront, robot.leftRear, robot.rightRear);
 
 
@@ -103,15 +106,6 @@ public class TeleOpMainLIB extends CommandOpMode {
 
         );
 
-
-
-        driver2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
-                new InstantCommand(() -> robot.hoodServo.set(0.5))
-        );
-
-        driver2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(
-                new InstantCommand(() -> robot.hoodServo.set(0.7))
-        );
 
 
         /// REGULAR SHOOTING
@@ -173,65 +167,83 @@ public class TeleOpMainLIB extends CommandOpMode {
 
         );
 
+        driver.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
+
+                new InstantCommand(() -> robot.stopperServo.set(robot.stopperServo.get() - 0.05))
+
+        );
+
+        driver.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
+
+                new InstantCommand(() -> robot.stopperServo.set(robot.stopperServo.get() + 0.05))
+
+        );
+
         driver2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
 
-                new InstantCommand(() -> speed -= 10)
+                new InstantCommand(() -> adjustSpeed -= 10)
 
         );
 
         driver2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
 
-                new InstantCommand(() -> speed += 10)
+                new InstantCommand(() -> adjustSpeed += 10)
 
         );
 
+        driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenPressed(
 
-//        driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(
-//
-//                new AutoShootCustom(speed)
-//
-//        );
+                new InstantCommand(() -> {
+                    if(goalColor == GoalColor.RED_GOAL){
+                    double newHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
+                    robot.follower.turnToDegrees(Math.toDegrees(newHeading));
+                    robot.follower.setConstraints(new PathConstraints(
+                            0.995,
+                            200,
+                            1.5,
+                            1
+                    ));
+                }else{
+                    double newHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
+                    robot.follower.turnToDegrees(Math.toDegrees(newHeading));
+                }}
+                )
+        );
+
+
 
         driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
                 new ParallelCommandGroup(
                         new InstantCommand(() -> robot.outtake.stop()),
-                        new InstantCommand(() -> robot.intake.stop())
+                        new InstantCommand(() -> robot.intake.stop()),
+                        new InstantCommand(() -> robot.stopperServo.set(0.7)),
+                        new SequentialCommandGroup(
+                                new InstantCommand(() -> robot.follower.breakFollowing()),
+                                new InstantCommand(() -> robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true)),
+                                new InstantCommand(() -> robot.follower.startTeleopDrive())
+                        )
                 )
 
         );
 
 
-        /// AUTO PEDRO PATHS (not recommended)
-//        driver2.getGamepadButton(GamepadKeys.Button.TOUCHPAD).whenPressed(
-//                new ConditionalCommand(
-//                        new ConditionalCommand(
-//                                new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), redParkPose)), true),
-//                                new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), blueParkPose)), true),
-//                                () -> goalColor == GoalColor.RED_GOAL
-//                        )
-//                        , new InstantCommand(() -> {
-//                            gamepad2.rumble(200);
-//                }),
-//                        () -> goalColor != null
-//                )
-//
-//
-//
-//        );
-//
-//        new Trigger(() -> driver2.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5).whenActive(
-//                new ConditionalCommand(
-//                        new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), blueShootClose.mirror())), true),
-//                        new FollowPathCommand(robot.follower, new Path(new BezierLine(robot.follower.getPose(), blueShootClose)), true),
-//                        () -> goalColor == GoalColor.RED_GOAL
-//                )
-//
-//        );
-//
-//        //position lock
-//        new Trigger(() -> driver2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5).whenActive(
-//                new InstantCommand(() -> robot.follower.holdPoint(robot.follower.getPose()))
-//        );
+        driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> robot.outtake.stop()),
+                        new InstantCommand(() -> robot.intake.stop()),
+                        new InstantCommand(() -> robot.stopperServo.set(0.7)),
+                        new SequentialCommandGroup(
+                                new InstantCommand(() -> robot.follower.breakFollowing()),
+                                new InstantCommand(() -> robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true)),
+                                new InstantCommand(() -> robot.follower.startTeleopDrive())
+                        )
+                )
+
+        );
+
+
+
+
 
 
 
@@ -253,7 +265,6 @@ public class TeleOpMainLIB extends CommandOpMode {
 
 
 
-
         // DO NOT REMOVE! Runs FTCLib Command Scheudler
         super.run();
 
@@ -262,6 +273,7 @@ public class TeleOpMainLIB extends CommandOpMode {
 //                driver.getLeftY(),
 //                driver.getRightX()
 //        );
+
 
         speed = robot.outtake.shootAutoGenerator();
         if(speed == -1){
@@ -273,8 +285,16 @@ public class TeleOpMainLIB extends CommandOpMode {
 
 
 
+            if(gamepad2.touchpad){
+                robot.follower.breakFollowing();
+                //}
+                robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
+                robot.follower.startTeleopDrive();
+            }
             if(gamepad2.left_bumper){
-                robot.outtake.shootCustom(speed);
+
+
+                robot.outtake.shootCustom(speed+(adjustSpeed));
                 //robot.hoodServo.set(0.5);
                 if(robot.leftShooter.getVelocity() > speed-50){
                     robot.intake.startNoHood();
@@ -283,6 +303,8 @@ public class TeleOpMainLIB extends CommandOpMode {
                 }
             }
         }
+
+
 
 
 
@@ -297,23 +319,23 @@ public class TeleOpMainLIB extends CommandOpMode {
 
         robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
 
-        if(gamepad2.left_trigger > 0.5){
-            if(goalColor == GoalColor.RED_GOAL){
-                double newHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
-                robot.follower.turnToDegrees(Math.toDegrees(newHeading));
-                robot.follower.setConstraints(new PathConstraints(
-                        0.995,
-                        200,
-                        1.5,
-                        1
-                ));
-            }else{
-                double newHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
-                robot.follower.turnToDegrees(Math.toDegrees(newHeading));
-            }
-        }
+//        if(gamepad2.left_trigger > 0.5){
+//            if(goalColor == GoalColor.RED_GOAL){
+//                double newHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
+//                robot.follower.turnToDegrees(Math.toDegrees(newHeading));
+//                robot.follower.setConstraints(new PathConstraints(
+//                        0.995,
+//                        200,
+//                        1.5,
+//                        1
+//                ));
+//            }else{
+//                double newHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
+//                robot.follower.turnToDegrees(Math.toDegrees(newHeading));
+//            }
+//        }
         //joystick override
-        if ((gamepad1.left_stick_y != 0 || gamepad1.left_stick_x != 0 || gamepad1.right_stick_x != 0 || gamepad1.right_stick_y != 0) && robot.follower.isBusy()) {
+        if ((gamepad1.left_stick_y != 0 || gamepad1.left_stick_x != 0 || gamepad1.right_stick_x != 0 || gamepad1.right_stick_y != 0)&& robot.follower.isBusy()) {
             //if(robot.follower.isBusy()){
                 robot.follower.breakFollowing();
             //}
@@ -326,7 +348,7 @@ public class TeleOpMainLIB extends CommandOpMode {
         LLResult result = limelight.getLatestResult();
                 if(result != null){
                     if(result.isValid()){
-                        Pose3D botpose = result.getBotpose_MT2();
+                        Pose3D botpose = result.getBotpose();
                         double llX = botpose.getPosition().x;
                         double llY = botpose.getPosition().y;
                         double llHeading = Math.toRadians(botpose.getOrientation().getYaw());
@@ -335,7 +357,7 @@ public class TeleOpMainLIB extends CommandOpMode {
                         Pose pedroPose = PoseConverter.pose2DToPose(llPose, InvertedFTCCoordinates.INSTANCE).getAsCoordinateSystem(PedroCoordinates.INSTANCE);
 
                         //robot.follower.setPose(pedroPose);
-                        telemetry.addData("horray", botpose);
+                        telemetry.addData("horray", pedroPose);
 
 
                     }
@@ -391,15 +413,15 @@ public class TeleOpMainLIB extends CommandOpMode {
 
         telemetry.addData("Status", "Running");
         //telemetry.addData("loop times", elapsedtime.milliseconds());
-        telemetry.addData("servo", robot.hoodServo.get());
         telemetry.addData("follower busy", robot.follower.isBusy());
         telemetry.addData("x", robot.follower.getPose().getX());
         telemetry.addData("y", robot.follower.getPose().getY());
         telemetry.addData("angle", Math.toDegrees(robot.follower.getPose().getHeading()));
         telemetry.addData("speed in feet", test);
+        telemetry.addData("target speed", speed);
+        telemetry.addData("adjust speed", adjustSpeed);
         telemetry.addData("motor speed", robot.leftShooter.getVelocity());
         telemetry.addData("degrees TARGET", Math.toDegrees(Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX())));
-        telemetry.addData("digaierg right", shooterReady);
         elapsedtime.reset();
 
         telemetry.update();
