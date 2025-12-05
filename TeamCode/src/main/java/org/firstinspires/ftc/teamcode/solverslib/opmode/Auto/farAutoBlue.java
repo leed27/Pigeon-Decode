@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.solverslib.opmode.Auto;
 
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
@@ -14,15 +14,13 @@ import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RepeatCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
-import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.command.WaitUntilCommand;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
-import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAuto;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@Autonomous(name = "farAutoBlue", group = "auto")
+@Autonomous(name = "FAR \uD83D\uDD35", group = "auto")
 public class farAutoBlue extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
@@ -43,7 +41,6 @@ public class farAutoBlue extends CommandOpMode{
         // Starting Pose (update this as well):
         //robot.follower.setStartingPose(startPose);
 
-        //MADE BY DYLAN LEE AND ADHITHYA YUVARAJ :D
 
         startToShoot = robot.follower.pathBuilder()
                 .addPath(new BezierLine(startPose, shootPose))

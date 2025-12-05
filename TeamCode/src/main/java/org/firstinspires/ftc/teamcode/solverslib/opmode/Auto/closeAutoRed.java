@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.solverslib.opmode.Auto;
 
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
@@ -21,7 +21,7 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAuto;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@Autonomous(name = "closeAutoRed", group = "auto")
+@Autonomous(name = "CLOSE \uD83D\uDD34", group = "auto")
 public class closeAutoRed extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
@@ -53,8 +53,6 @@ public class closeAutoRed extends CommandOpMode{
 
         // Starting Pose (update this as well):
         //robot.follower.setStartingPose(startPose);
-
-        //MADE BY DYLAN LEE AND ADHITHYA YUVARAJ :D
 
         shootPreloads = robot.follower.pathBuilder()
                 .addPath(new BezierLine(startPose, blueTopShootPose))

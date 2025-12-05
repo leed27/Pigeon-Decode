@@ -7,6 +7,7 @@ import android.util.Log;
 import com.acmerobotics.dashboard.config.Config;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -21,6 +22,7 @@ import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Globals;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
+@Disabled
 @Config
 @TeleOp(name = "LaunchMotorTuner", group = "Motor")
 public class Tuning extends CommandOpMode {
