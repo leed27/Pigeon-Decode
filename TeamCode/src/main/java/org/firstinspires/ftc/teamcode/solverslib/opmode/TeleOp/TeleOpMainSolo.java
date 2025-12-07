@@ -283,8 +283,21 @@ public class TeleOpMainSolo extends CommandOpMode {
                     robot.intake.stopExceptShooter();
                 }
             }
+
+
         }
 
+        if(gamepad1.right_trigger > 0.5){
+            speed = robot.outtake.autoShoot2(adjustSpeed);
+
+            robot.outtake.shootCustom(speed);
+            //robot.hoodServo.set(0.5);
+            if(robot.leftShooter.getVelocity() > speed-50){
+                robot.intake.startNoHood();
+            }else{
+                robot.intake.stopExceptShooter();
+            }
+        }
 
 
 

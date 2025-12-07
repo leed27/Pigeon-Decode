@@ -19,6 +19,12 @@ public class Outtake extends SubsystemBase {
     private final InterpLUT launcherVelClose = new InterpLUT();
     private final InterpLUT launcherVelFar = new InterpLUT();//converts from m/s to ticks/s ?
 
+    private final InterpLUT lookUpClose = new InterpLUT();
+    private final InterpLUT lookUpFar = new InterpLUT();
+
+
+
+
     public void init(){
         launcherVelClose.add(0, 0);
         launcherVelClose.add(25.878, 1320);
@@ -30,17 +36,51 @@ public class Outtake extends SubsystemBase {
         launcherVelClose.add(53.2, 1140);
         launcherVelClose.add(71.5, 1170);
         launcherVelClose.add(91.5, 1100);
-
-
         launcherVelClose.createLUT();
+
         launcherVelFar.add(0, 0);
         launcherVelFar.add(22.9, 1500);
         launcherVelFar.add(24, 1570);
         launcherVelFar.add(25, 1640);
         launcherVelFar.add(26, 1720);
         launcherVelFar.createLUT();
+
+        lookUpClose.add(0, 0);
+        lookUpClose.add(4, 1100);
+        lookUpClose.add(4.25, 1140);
+        lookUpClose.add(4.5, 1170);
+        lookUpClose.add(5, 1200);
+        lookUpClose.add(8, 1300);
+        lookUpClose.add(10, 1350);
+        lookUpClose.add(13, 1400);
     }
 
+    public int autoShoot2(int correctionTicks){
+        double x = robot.follower.getPose().getX();
+        double y = robot.follower.getPose().getY();
+
+
+        double howFar = 0;
+
+        if(goalColor == GoalColor.RED_GOAL){
+            howFar = Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((144-x)/(12)),2));
+        }else{
+            howFar = Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((-x)/(12)),2));
+        }
+
+        if(howFar <= 4.5){
+            return -1;
+        }
+
+        if(y >= 63){
+            robot.hoodServo.set(.5);
+            return (int) (lookUpClose.get(howFar));
+        }else{
+            robot.hoodServo.set(.7);
+            return (int) (lookUpFar.get(howFar));
+        }
+
+    }
     public int shootAutoGenerator(){
         double x = robot.follower.getPose().getX();
         double y = robot.follower.getPose().getY();
@@ -133,11 +173,13 @@ public class Outtake extends SubsystemBase {
             shooterReady = false;
         }
 
-        if(robot.leftShooter.getVelocity() > speed-60){
-            robot.stopperServo.set(0.56);
-        }else{
-            robot.stopperServo.set(0.7);
-        }
+        robot.stopperServo.set(0.56);
+
+//        if(robot.leftShooter.getVelocity() > speed-60){
+//            robot.stopperServo.set(0.56);
+//        }else{
+//            robot.stopperServo.set(0.7);
+//        }
     }
 
     public void reverse(){
