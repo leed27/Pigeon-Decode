@@ -318,10 +318,12 @@ public class TeleOpMainSolo extends CommandOpMode {
         LLResult result = limelight.getLatestResult();
                 if(result != null){
                     if(result.isValid()){
-                        Pose3D botpose = result.getBotpose();
+                        Pose3D botpose = result.getBotpose_MT2();
                         double llX = botpose.getPosition().x;
                         double llY = botpose.getPosition().y;
-                        double llHeading = Math.toRadians(botpose.getOrientation().getYaw());
+                        double llHeading = Math.toRadians(botpose.getOrientation().getYaw(AngleUnit.RADIANS));
+
+                        limelight.updateRobotOrientation(llHeading);
 
                         Pose2D llPose = new Pose2D(DistanceUnit.INCH,llX,llY, AngleUnit.RADIANS,llHeading);
                         Pose pedroPose = PoseConverter.pose2DToPose(llPose, InvertedFTCCoordinates.INSTANCE).getAsCoordinateSystem(PedroCoordinates.INSTANCE);
