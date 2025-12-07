@@ -101,6 +101,15 @@ public class TeleOpMainSolo extends CommandOpMode {
 
         );
 
+        /// BACKUP ADJUSTMENT SPEED IF LOCALIZATION DRIFTS
+        driver.getGamepadButton(GamepadKeys.Button.CIRCLE).whenPressed(
+                new InstantCommand(() -> adjustSpeed+= 20 )
+
+        );
+        driver.getGamepadButton(GamepadKeys.Button.SQUARE).whenPressed(
+                new InstantCommand(() -> adjustSpeed-= 20 )
+
+        );
 
 
 
