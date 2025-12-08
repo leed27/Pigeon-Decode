@@ -102,34 +102,34 @@ public class BabyOp extends CommandOpMode {
 
 
         /// REGULAR SHOOTING
-        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(
+//        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(
+//
+//                new ParallelCommandGroup(
+////                        new InstantCommand(() -> robot.leftShooter.set(1)),
+////                        new InstantCommand(() -> robot.rightShooter.set(1)),
+//                        new AutoShoot()
+//                )
+//
+//        );
+//
+//        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
+//                new ParallelCommandGroup(
+//                        new InstantCommand(() -> robot.outtake.stop()),
+//                        new InstantCommand(() -> robot.intake.stop())
+//                )
+//
+//        );
+//
+//
+//        /// CLOSE SHOOTING
+//        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whileHeld(
+//
+//                new ParallelCommandGroup(
+//                        new AutoShootInAuto()
+//                        //new InstantCommand(() -> robot.outtake.reverseShoot())
+//                )
 
-                new ParallelCommandGroup(
-//                        new InstantCommand(() -> robot.leftShooter.set(1)),
-//                        new InstantCommand(() -> robot.rightShooter.set(1)),
-                        new AutoShoot()
-                )
-
-        );
-
-        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.outtake.stop()),
-                        new InstantCommand(() -> robot.intake.stop())
-                )
-
-        );
-
-
-        /// CLOSE SHOOTING
-        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whileHeld(
-
-                new ParallelCommandGroup(
-                        new AutoShootInAuto()
-                        //new InstantCommand(() -> robot.outtake.reverseShoot())
-                )
-
-        );
+//        );
 
         driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenReleased(
 

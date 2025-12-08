@@ -40,6 +40,8 @@ import java.util.List;
 
 @TeleOp(name = "Pigeon Teleop SOLO")
 public class TeleOpMainSolo extends CommandOpMode {
+
+    //we should OBVIOUSLY NEVER USE IT cuz Adhithya would be P2 ;) /j
     public GamepadEx driver;
 
     public ElapsedTime gameTimer;
@@ -288,7 +290,7 @@ public class TeleOpMainSolo extends CommandOpMode {
         }
 
         if(gamepad1.right_trigger > 0.5){
-            speed = robot.outtake.autoShoot2(adjustSpeed);
+            speed = robot.outtake.autoShoot2() + adjustSpeed;
 
             robot.outtake.shootCustom(speed);
             //robot.hoodServo.set(0.5);
