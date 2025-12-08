@@ -40,6 +40,7 @@ public class TeleOpMain extends CommandOpMode {
     private MecanumDrive drive;
     public static int speed = 1000;
     public static int adjustSpeed = 0;
+    public static int speed2 = 1200;
     Limelight3A limelight;
 
 
@@ -299,6 +300,8 @@ public class TeleOpMain extends CommandOpMode {
 
 
         speed = robot.outtake.shootAutoGenerator();
+        int speed2 = robot.outtake.autoShoot2();
+
         if(speed == -1){
             robot.lightLeft.setPosition(0.28);
             robot.lightRight.setPosition(0.28); //red
@@ -342,6 +345,18 @@ public class TeleOpMain extends CommandOpMode {
                     robot.intake.stopExceptShooter();
                 }
             }
+
+            //ADDED
+
+            if(gamepad2.right_bumper){
+                robot.outtake.shootCustom(speed2);
+                if(robot.leftShooter.getVelocity() > speed-50){
+                    robot.intake.startNoHood();
+                }else {
+                    robot.intake.stopExceptShooter();
+                }
+            }
+
         }
 
 

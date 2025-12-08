@@ -13,7 +13,6 @@ public class Outtake extends SubsystemBase {
     private final Robot robot = Robot.getInstance();
     //private final PIDFController flywheelController = new PIDFController(FLYWHEEL_PIDF_COEFFICIENTS);
 
-    private double targetHoodAngle = 90-15;//MIN_HOOD_ANGLE;
     private double targetFlywheelVelocity = 0.0;
 
     private final InterpLUT launcherVelClose = new InterpLUT();
@@ -46,19 +45,30 @@ public class Outtake extends SubsystemBase {
         launcherVelFar.createLUT();
 
         lookUpClose.add(0, 0);
-        lookUpClose.add(4, 1100);
-        lookUpClose.add(4.25, 1140);
-        lookUpClose.add(4.5, 1170);
+        lookUpClose.add(4.5, 1100);
+        lookUpClose.add(4.7, 1140);
         lookUpClose.add(5, 1200);
+        lookUpClose.add(6, 1270);
         lookUpClose.add(8, 1300);
         lookUpClose.add(10, 1350);
-        lookUpClose.add(13, 1400);
+        lookUpClose.add(11, 1400);
+        lookUpClose.add(12, 1450);
+        lookUpClose.add(13, 1550);
+        lookUpClose.createLUT();
+
+        lookUpFar.add(0, 0);
+        lookUpFar.add(11, 0);
+        lookUpFar.add(11.66, 1400);
+        lookUpFar.add(12, 1450);
+        lookUpFar.add(13, 1500);
+        lookUpFar.add(14, 1570);
+        lookUpFar.add(14.42, 1650);
+        lookUpClose.createLUT();
     }
 
-    public int autoShoot2(int correctionTicks){
+    public int autoShoot2(){
         double x = robot.follower.getPose().getX();
         double y = robot.follower.getPose().getY();
-
 
         double howFar = 0;
 
