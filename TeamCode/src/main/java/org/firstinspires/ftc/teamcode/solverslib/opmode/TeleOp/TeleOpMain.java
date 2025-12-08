@@ -364,7 +364,7 @@ public class TeleOpMain extends CommandOpMode {
         LLResult result = limelight.getLatestResult();
                 if(result != null){
                     if(result.isValid()){
-                        Pose3D botpose = result.getBotpose();
+                        Pose3D botpose = result.getBotpose_MT2();
                         double llX = botpose.getPosition().x;
                         double llY = botpose.getPosition().y;
                         double llHeading = Math.toRadians(botpose.getOrientation().getYaw());
