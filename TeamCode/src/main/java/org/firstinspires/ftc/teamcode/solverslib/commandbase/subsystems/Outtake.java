@@ -162,7 +162,7 @@ public class Outtake extends SubsystemBase {
             shooterReady = false;
         }
 
-        robot.stopperServo.set(0.56);
+        //robot.stopperServo.set(0.56);
     }
 
     public void shootAutoFar(){
@@ -194,7 +194,7 @@ public class Outtake extends SubsystemBase {
             shooterReady = false;
         }
 
-        robot.stopperServo.set(0.56);
+
 
 //        if(robot.leftShooter.getVelocity() > speed-60){
 //            robot.stopperServo.set(0.56);

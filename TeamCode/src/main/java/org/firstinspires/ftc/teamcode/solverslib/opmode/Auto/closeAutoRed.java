@@ -113,13 +113,13 @@ public class closeAutoRed extends CommandOpMode{
 
     public SequentialCommandGroup scorePreload() {
         return new SequentialCommandGroup(
+                new InstantCommand(() -> robot.outtake.shootAuto()),
                 new FollowPathCommand(robot.follower, shootPreloads, true),
                 new RepeatCommand(
                         new AutoShootInAuto()
-                ).withTimeout(2300),
+                ).withTimeout(1000),
 
                 //new WaitCommand(3000),
-                new InstantCommand(() -> robot.outtake.stop()),
                 new InstantCommand(() -> robot.intake.stop()),
                 new InstantCommand(() -> robot.stopperServo.set(0.7))
 
@@ -131,7 +131,7 @@ public class closeAutoRed extends CommandOpMode{
                 new FollowPathCommand(robot.follower, grabTopBlue, false),
                 new InstantCommand(() -> robot.follower.setMaxPower(.5)),
                 //start intake
-                new InstantCommand(() -> robot.intake.startCustom(0.8)),
+                new InstantCommand(() -> robot.intake.start()),
                 new FollowPathCommand(robot.follower, collectTopBlue, false).withTimeout(3000),
                 new WaitCommand(500),
                 //stop intake
@@ -145,9 +145,8 @@ public class closeAutoRed extends CommandOpMode{
                 new FollowPathCommand(robot.follower, shootTopBlue, false),
                 new RepeatCommand(
                         new AutoShootInAuto()
-                ).withTimeout(2300),
+                ).withTimeout(1000),
                 //new WaitCommand(3000),
-                new InstantCommand(() -> robot.outtake.stop()),
                 new InstantCommand(() -> robot.intake.stop()),
                 new InstantCommand(() -> robot.stopperServo.set(0.7))
 
@@ -175,8 +174,7 @@ public class closeAutoRed extends CommandOpMode{
                 new FollowPathCommand(robot.follower, shootMiddleBlue, false),
                 new RepeatCommand(
                         new AutoShootInAuto()
-                ).withTimeout(2300),
-                new InstantCommand(() -> robot.outtake.stop()),
+                ).withTimeout(1000),
                 new InstantCommand(() -> robot.intake.stop()),
                 new InstantCommand(() -> robot.stopperServo.set(0.7))
 
@@ -202,7 +200,7 @@ public class closeAutoRed extends CommandOpMode{
                 new FollowPathCommand(robot.follower, shootEndBlue, false),
                 new RepeatCommand(
                         new AutoShootInAuto()
-                ).withTimeout(2300),
+                ).withTimeout(1000),
                 new FollowPathCommand(robot.follower, park, false),
                 new InstantCommand(() -> robot.outtake.stop()),
                 new InstantCommand(() -> robot.intake.stop()),
