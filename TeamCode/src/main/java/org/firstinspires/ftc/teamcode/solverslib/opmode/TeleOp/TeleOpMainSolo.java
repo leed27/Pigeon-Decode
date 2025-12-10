@@ -51,6 +51,8 @@ public class TeleOpMainSolo extends CommandOpMode {
     public static int adjustSpeed = 0;
     Limelight3A limelight;
 
+    public static double targetHeading;
+
 
     public ElapsedTime elapsedtime;
     private final Robot robot = Robot.getInstance();
@@ -218,6 +220,27 @@ public class TeleOpMainSolo extends CommandOpMode {
 
         );
 
+        /// SWITCHING SIDES
+
+        driver.getGamepadButton(GamepadKeys.Button.SHARE).whenPressed(
+                //
+                new InstantCommand(() -> {
+                    if(goalColor == GoalColor.BLUE_GOAL){
+                        robot.lightLeft.setPosition(0.28);
+                        robot.lightRight.setPosition(0.28); //red
+                        gamepad1.rumble(100);
+                        goalColor = GoalColor.RED_GOAL;
+                    }else{
+                        robot.lightLeft.setPosition(0.6);
+                        robot.lightRight.setPosition(0.6); //blue
+                        gamepad1.rumble(100);
+                        goalColor = GoalColor.BLUE_GOAL;
+                    }
+
+                }
+                )
+
+        );
 
 
 
@@ -258,17 +281,6 @@ public class TeleOpMainSolo extends CommandOpMode {
 
             /// MANUALLY ADJUSTING SIDES
             if(gamepad1.share){
-                if(goalColor == GoalColor.BLUE_GOAL){
-                    robot.lightLeft.setPosition(0.28);
-                    robot.lightRight.setPosition(0.28); //red
-                    gamepad1.rumble(100);
-                    goalColor = GoalColor.RED_GOAL;
-                }else{
-                    robot.lightLeft.setPosition(0.6);
-                    robot.lightRight.setPosition(0.6); //blue
-                    gamepad1.rumble(100);
-                    goalColor = GoalColor.BLUE_GOAL;
-                }
 
 
             }
@@ -293,7 +305,7 @@ public class TeleOpMainSolo extends CommandOpMode {
 
                 robot.stopperServo.set(0.56);
                 /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE
-                if(robot.leftShooter.getVelocity() > speed-50 && Math.abs(robot.follower.getPose().getHeading() - Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX())) < Math.toRadians(5)){
+                if(robot.leftShooter.getVelocity() > speed-50 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
                     robot.intake.startNoHood();
                 }else{
                     robot.intake.stopExceptShooter();
@@ -327,6 +339,12 @@ public class TeleOpMainSolo extends CommandOpMode {
             //}
             robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
             robot.follower.startTeleopDrive();
+        }
+
+        if(goalColor == GoalColor.RED_GOAL){
+            targetHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
+        }else{
+            targetHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
         }
 
 

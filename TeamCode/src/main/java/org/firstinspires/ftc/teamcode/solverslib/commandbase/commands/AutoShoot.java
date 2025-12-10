@@ -17,7 +17,7 @@ public class AutoShoot extends ParallelCommandGroup {
                 new InstantCommand(() -> robot.outtake.shootClose()),
                 new InstantCommand(() -> robot.hoodServo.set(0.5)),
                 new ConditionalCommand(
-                        new InstantCommand(() -> robot.intake.startNoHood()
+                        new InstantCommand(() -> robot.intake.startCustom(0.8)
                         ),
                         new InstantCommand(() -> robot.intake.stopExceptShooter()),
                         () -> (robot.leftShooter.getVelocity() > 1200)

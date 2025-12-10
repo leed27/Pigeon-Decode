@@ -16,7 +16,7 @@ public class AutoShootInAuto extends ParallelCommandGroup {
                 new InstantCommand(() -> robot.hoodServo.set(0.5)),
                 new InstantCommand(() -> robot.stopperServo.set(0.56)),
                 new ConditionalCommand(
-                        new InstantCommand(() -> robot.intake.startNoHood()
+                        new InstantCommand(() -> robot.intake.startCustom(0.8)
                         ),
                         new InstantCommand(() -> robot.intake.stopExceptShooter()),
                         () -> (robot.leftShooter.getVelocity() > 1050)

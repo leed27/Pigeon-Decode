@@ -42,6 +42,9 @@ public class TeleOpMain extends CommandOpMode {
     public static int speed = 1000;
     public static int adjustSpeed = 0;
     public static int speed2 = 1200;
+
+    public static double targetHeading;
+
     Limelight3A limelight;
 
 
@@ -72,6 +75,7 @@ public class TeleOpMain extends CommandOpMode {
         driver2 = new GamepadEx(gamepad2);
 
         robot.stopperServo.set(0.65);
+
         //drive = new MecanumDrive(robot.leftFront, robot.rightFront, robot.leftRear, robot.rightRear);
 
 
@@ -189,19 +193,19 @@ public class TeleOpMain extends CommandOpMode {
 
         /// RELOCALIZATION
 
-        driver.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(
+        driver2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(
                 //in the corner of field
                 new InstantCommand(() -> {
                     if(goalColor == GoalColor.RED_GOAL){
                         robot.follower.setPose(new Pose(
                                 7.88, 8.759, Math.toRadians(90)
                         ));
-                        gamepad1.rumbleBlips(3);
+                        gamepad2.rumbleBlips(3);
                     }else{
                         robot.follower.setPose(new Pose(
                                 7.88, 8.759, Math.toRadians(90)
                         ).mirror());
-                        gamepad1.rumbleBlips(3);
+                        gamepad2.rumbleBlips(3);
                     }
 
                 }
@@ -209,19 +213,19 @@ public class TeleOpMain extends CommandOpMode {
 
         );
 
-        driver.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
+        driver2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
                 //
                 new InstantCommand(() -> {
                     if(goalColor == GoalColor.RED_GOAL){
                         robot.follower.setPose(new Pose(
                                 80, 136, Math.toRadians(90)
                         ));
-                        gamepad1.rumbleBlips(3);
+                        gamepad2.rumbleBlips(3);
                     }else{
                         robot.follower.setPose(new Pose(
                                 80, 136, Math.toRadians(90)
                         ).mirror());
-                        gamepad1.rumbleBlips(3);
+                        gamepad2.rumbleBlips(3);
                     }
 
                 }
@@ -295,12 +299,32 @@ public class TeleOpMain extends CommandOpMode {
                 new ParallelCommandGroup(
                         new InstantCommand(() -> robot.outtake.stop()),
                         new InstantCommand(() -> robot.intake.stop()),
-                        new InstantCommand(() -> robot.stopperServo.set(0.7)),
+                        new InstantCommand(() -> robot.stopperServo.set(0.65)),
                         new SequentialCommandGroup(
                                 new InstantCommand(() -> robot.follower.breakFollowing()),
                                 new InstantCommand(() -> robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true)),
                                 new InstantCommand(() -> robot.follower.startTeleopDrive())
                         )
+                )
+
+        );
+
+        driver2.getGamepadButton(GamepadKeys.Button.SHARE).whenPressed(
+                //
+                new InstantCommand(() -> {
+                    if(goalColor == GoalColor.BLUE_GOAL){
+                        robot.lightLeft.setPosition(0.28);
+                        robot.lightRight.setPosition(0.28); //red
+                        gamepad1.rumble(100);
+                        goalColor = GoalColor.RED_GOAL;
+                    }else{
+                        robot.lightLeft.setPosition(0.6);
+                        robot.lightRight.setPosition(0.6); //blue
+                        gamepad1.rumble(100);
+                        goalColor = GoalColor.BLUE_GOAL;
+                    }
+
+                }
                 )
 
         );
@@ -351,19 +375,25 @@ public class TeleOpMain extends CommandOpMode {
 
             /// MANUALLY ADJUSTING SIDES
             if(gamepad2.share){
-                if(goalColor == GoalColor.BLUE_GOAL){
-                    robot.lightLeft.setPosition(0.28);
-                    robot.lightRight.setPosition(0.28); //red
-                    gamepad2.rumble(100);
-                    goalColor = GoalColor.RED_GOAL;
-                }else{
-                    robot.lightLeft.setPosition(0.6);
-                    robot.lightRight.setPosition(0.6); //blue
-                    gamepad2.rumble(100);
-                    goalColor = GoalColor.BLUE_GOAL;
-                }
+//                if(goalColor == GoalColor.BLUE_GOAL){
+//                    robot.lightLeft.setPosition(0.28);
+//                    robot.lightRight.setPosition(0.28); //red
+//                    gamepad2.rumble(100);
+//                    goalColor = GoalColor.RED_GOAL;
+//                }else{
+//                    robot.lightLeft.setPosition(0.6);
+//                    robot.lightRight.setPosition(0.6); //blue
+//                    gamepad2.rumble(100);
+//                    goalColor = GoalColor.BLUE_GOAL;
+//                }
 
 
+            }
+
+            if(goalColor == GoalColor.RED_GOAL){
+                targetHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
+            }else{
+                targetHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
             }
 
 
@@ -385,7 +415,7 @@ public class TeleOpMain extends CommandOpMode {
 
                 robot.stopperServo.set(0.56);
                 /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE
-                if(robot.leftShooter.getVelocity() > speed-50 && Math.abs(robot.follower.getPose().getHeading() - Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX())) < Math.toRadians(5)){
+                if(robot.leftShooter.getVelocity() > speed-50 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
                     robot.intake.startNoHood();
                 }else{
                     robot.intake.stopExceptShooter();

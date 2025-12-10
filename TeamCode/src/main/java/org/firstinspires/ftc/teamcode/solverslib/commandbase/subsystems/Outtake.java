@@ -67,6 +67,7 @@ public class Outtake extends SubsystemBase {
         lookUpFar.add(13, 1500);
         lookUpFar.add(14, 1570);
         lookUpFar.add(14.42, 1650);
+        lookUpFar.add(17, 1800);
         lookUpFar.createLUT();
     }
 

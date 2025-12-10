@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
 import com.seattlesolvers.solverslib.command.RepeatCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
@@ -113,11 +114,15 @@ public class closeAutoBlue extends CommandOpMode{
 
     public SequentialCommandGroup scorePreload() {
         return new SequentialCommandGroup(
-                new InstantCommand(() -> robot.outtake.shootAuto()),
+                new WaitCommand(100),
+                new InstantCommand(() -> robot.stopperServo.set(0.56)),
+//                new InstantCommand(() -> robot.outtake.shootAuto()),
+//
                 new FollowPathCommand(robot.follower, shootPreloads, true),
+                new WaitCommand(500),
                 new RepeatCommand(
                         new AutoShootInAuto()
-                ).withTimeout(1000),
+                ).withTimeout(1500),
 
                 //new WaitCommand(3000),
                 new InstantCommand(() -> robot.intake.stop()),
@@ -143,9 +148,11 @@ public class closeAutoBlue extends CommandOpMode{
     public SequentialCommandGroup scoreTopBlue() {
         return new SequentialCommandGroup(
                 new FollowPathCommand(robot.follower, shootTopBlue, false),
+                new InstantCommand(() -> robot.stopperServo.set(0.56)),
+                new WaitCommand(500),
                 new RepeatCommand(
                         new AutoShootInAuto()
-                ).withTimeout(1000),
+                ).withTimeout(1500),
                 //new WaitCommand(3000),
                 new InstantCommand(() -> robot.intake.stop()),
                 new InstantCommand(() -> robot.stopperServo.set(0.7))
@@ -172,9 +179,11 @@ public class closeAutoBlue extends CommandOpMode{
         return new SequentialCommandGroup(
                 new FollowPathCommand(robot.follower, goBackMiddleBlue, true),
                 new FollowPathCommand(robot.follower, shootMiddleBlue, false),
+                new InstantCommand(() -> robot.stopperServo.set(0.56)),
+                new WaitCommand(500),
                 new RepeatCommand(
                         new AutoShootInAuto()
-                ).withTimeout(1000),
+                ).withTimeout(1500),
                 new InstantCommand(() -> robot.intake.stop()),
                 new InstantCommand(() -> robot.stopperServo.set(0.7))
 
@@ -191,16 +200,18 @@ public class closeAutoBlue extends CommandOpMode{
                 new WaitCommand(500),
                 //stop intake
                 new InstantCommand(() ->robot.intake.stop()),
-                new InstantCommand(() -> robot.follower.setMaxPower(1))
+                new InstantCommand(() -> robot.follower.setMaxPower(.8))
         );
     }
 
     public SequentialCommandGroup scoreBottomBlue() {
         return new SequentialCommandGroup(
                 new FollowPathCommand(robot.follower, shootEndBlue, false),
+                new InstantCommand(() -> robot.stopperServo.set(0.56)),
+                new WaitCommand(500),
                 new RepeatCommand(
                         new AutoShootInAuto()
-                ).withTimeout(1000),
+                ).withTimeout(1500),
                 new FollowPathCommand(robot.follower, park, false),
                 new InstantCommand(() -> robot.outtake.stop()),
                 new InstantCommand(() -> robot.intake.stop()),
@@ -307,6 +318,8 @@ public class closeAutoBlue extends CommandOpMode{
     @Override
     public void run() {
         super.run();
+
+        robot.outtake.shootAuto();
 
         telemetry.addData("timer", timer.milliseconds());
 
