@@ -265,6 +265,40 @@ public class TeleOpMain extends CommandOpMode {
 
         );
 
+        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(
+
+                new InstantCommand(() -> {
+                    if(goalColor == GoalColor.RED_GOAL){
+                        double newHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
+                        robot.follower.turnToDegrees(Math.toDegrees(newHeading));
+                        robot.follower.setConstraints(new PathConstraints(
+                                0.995,
+                                200,
+                                1.5,
+                                1
+                        ));
+                    }else{
+                        double newHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
+                        robot.follower.turnToDegrees(Math.toDegrees(newHeading));
+                    }}
+                )
+        );
+
+
+        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> robot.outtake.stop()),
+                        new InstantCommand(() -> robot.intake.stop()),
+                        new InstantCommand(() -> robot.stopperServo.set(0.7)),
+                        new SequentialCommandGroup(
+                                new InstantCommand(() -> robot.follower.breakFollowing()),
+                                new InstantCommand(() -> robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true)),
+                                new InstantCommand(() -> robot.follower.startTeleopDrive())
+                        )
+                )
+
+        );
+
 
 
 
@@ -300,7 +334,7 @@ public class TeleOpMain extends CommandOpMode {
 
 
         speed = robot.outtake.shootAutoGenerator();
-        int speed2 = robot.outtake.autoShoot2();
+        speed2 = robot.outtake.autoShoot2();
 
         if(speed == -1){
             robot.lightLeft.setPosition(0.28);
@@ -335,8 +369,6 @@ public class TeleOpMain extends CommandOpMode {
                 robot.follower.startTeleopDrive();
             }
             if(gamepad2.left_bumper){
-
-
                 robot.outtake.shootCustom(speed+(adjustSpeed));
                 //robot.hoodServo.set(0.5);
                 if(robot.leftShooter.getVelocity() > speed-50){
@@ -346,11 +378,11 @@ public class TeleOpMain extends CommandOpMode {
                 }
             }
 
-            //ADDED
+            //ADDED BY DIDDY
 
             if(gamepad2.right_bumper){
                 robot.outtake.shootCustom(speed2);
-                if(robot.leftShooter.getVelocity() > speed-50){
+                if(robot.leftShooter.getVelocity() > speed2-50){
                     robot.intake.startNoHood();
                 }else {
                     robot.intake.stopExceptShooter();
@@ -450,6 +482,7 @@ public class TeleOpMain extends CommandOpMode {
         telemetry.addData("angle", Math.toDegrees(robot.follower.getPose().getHeading()));
         telemetry.addData("speed in feet", test);
         telemetry.addData("target speed", speed);
+        telemetry.addData("target speed NEW", speed2);
         telemetry.addData("adjust speed", adjustSpeed);
         telemetry.addData("motor speed", robot.leftShooter.getVelocity());
         telemetry.addData("degrees TARGET", Math.toDegrees(Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX())));

@@ -25,6 +25,8 @@ public class Outtake extends SubsystemBase {
 
 
     public void init(){
+
+        //DEFYING PHYSICS TABLES :D
         launcherVelClose.add(0, 0);
         launcherVelClose.add(25.878, 1320);
         launcherVelClose.add(26.13, 1290);
@@ -44,6 +46,7 @@ public class Outtake extends SubsystemBase {
         launcherVelFar.add(26, 1720);
         launcherVelFar.createLUT();
 
+        //NORMAL TABLES THAT DIDDY APPROVES
         lookUpClose.add(0, 0);
         lookUpClose.add(4.5, 1100);
         lookUpClose.add(4.7, 1140);
@@ -53,7 +56,8 @@ public class Outtake extends SubsystemBase {
         lookUpClose.add(10, 1350);
         lookUpClose.add(11, 1400);
         lookUpClose.add(12, 1450);
-        lookUpClose.add(13, 1550);
+        lookUpClose.add(13.5, 1550);
+        lookUpClose.add(14, 1550);
         lookUpClose.createLUT();
 
         lookUpFar.add(0, 0);
@@ -63,7 +67,7 @@ public class Outtake extends SubsystemBase {
         lookUpFar.add(13, 1500);
         lookUpFar.add(14, 1570);
         lookUpFar.add(14.42, 1650);
-        lookUpClose.createLUT();
+        lookUpFar.createLUT();
     }
 
     public int autoShoot2(){
@@ -82,7 +86,7 @@ public class Outtake extends SubsystemBase {
             return -1;
         }
 
-        if(y >= 63){
+        if(y >= 55){
             robot.hoodServo.set(.5);
             return (int) (lookUpClose.get(howFar));
         }else{
@@ -92,6 +96,7 @@ public class Outtake extends SubsystemBase {
 
     }
     public int shootAutoGenerator(){
+
         double x = robot.follower.getPose().getX();
         double y = robot.follower.getPose().getY();
         final double height = 2.6;
@@ -106,7 +111,7 @@ public class Outtake extends SubsystemBase {
             return -1;
         }
 
-        if(howFar > 9.5){
+        if(y <= 55){
             robot.hoodServo.set(.7);
             double hoodAngle = Math.toRadians(40);
             double newSpeedInFeet = (howFar*Math.sqrt(16.1))/(Math.cos(hoodAngle) * Math.sqrt(howFar*Math.tan(hoodAngle)-height));
@@ -140,6 +145,8 @@ public class Outtake extends SubsystemBase {
             robot.rightShooter.set(1);
             shooterReady = false;
         }
+
+        robot.stopperServo.set(0.56);
     }
 
     public void shootAuto(){
@@ -154,10 +161,12 @@ public class Outtake extends SubsystemBase {
             robot.rightShooter.set(1);
             shooterReady = false;
         }
+
+        robot.stopperServo.set(0.56);
     }
 
     public void shootAutoFar(){
-        if(robot.leftShooter.getVelocity() > 1430 && robot.rightShooter.getVelocity() > 1430){
+        if(robot.leftShooter.getVelocity() > 1440 && robot.rightShooter.getVelocity() > 1440){
             robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
             robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
             shooterReady = true;
@@ -168,6 +177,8 @@ public class Outtake extends SubsystemBase {
             robot.rightShooter.set(1);
             shooterReady = false;
         }
+
+        robot.stopperServo.set(0.56);
     }
 
     public void shootCustom(int speed){

@@ -17,7 +17,7 @@ public class AutoShootInAutoFAR extends ParallelCommandGroup{
                         new InstantCommand(() -> robot.intake.startNoHood()
                         ),
                         new InstantCommand(() -> robot.intake.stopExceptShooter()),
-                        () -> (robot.leftShooter.getVelocity() > 1350)
+                        () -> (robot.leftShooter.getVelocity() > 1420)
                 ).withTimeout(100)
 
         );

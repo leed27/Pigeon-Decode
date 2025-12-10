@@ -120,7 +120,8 @@ public class closeAutoBlue extends CommandOpMode{
 
                 //new WaitCommand(3000),
                 new InstantCommand(() -> robot.outtake.stop()),
-                new InstantCommand(() -> robot.intake.stop())
+                new InstantCommand(() -> robot.intake.stop()),
+                new InstantCommand(() -> robot.stopperServo.set(0.7))
 
         );
     }
@@ -128,15 +129,12 @@ public class closeAutoBlue extends CommandOpMode{
     public SequentialCommandGroup grabTopBlue() {
         return new SequentialCommandGroup(
                 new FollowPathCommand(robot.follower, grabTopBlue, false),
-                new InstantCommand(() -> robot.outtake.reverse()),
-                new InstantCommand(() -> robot.follower.setMaxPower(.4)),
+                new InstantCommand(() -> robot.follower.setMaxPower(.5)),
                 //start intake
                 new InstantCommand(() -> robot.intake.startCustom(0.8)),
                 new FollowPathCommand(robot.follower, collectTopBlue, false).withTimeout(3000),
                 new WaitCommand(500),
                 //stop intake
-                new InstantCommand(() -> robot.intake.reverse()),
-                new WaitCommand(100),
                 new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1))
         );
@@ -150,7 +148,8 @@ public class closeAutoBlue extends CommandOpMode{
                 ).withTimeout(2000),
                 //new WaitCommand(3000),
                 new InstantCommand(() -> robot.outtake.stop()),
-                new InstantCommand(() -> robot.intake.stop())
+                new InstantCommand(() -> robot.intake.stop()),
+                new InstantCommand(() -> robot.stopperServo.set(0.7))
 
         );
     }
@@ -158,15 +157,12 @@ public class closeAutoBlue extends CommandOpMode{
     public SequentialCommandGroup grabMiddleBlue() {
         return new SequentialCommandGroup(
                 new FollowPathCommand(robot.follower, grabMiddleBlue, false),
-                new InstantCommand(() -> robot.outtake.reverse()),
-                new InstantCommand(() -> robot.follower.setMaxPower(.55)),
+                new InstantCommand(() -> robot.follower.setMaxPower(.5)),
                 //start intake
                 new InstantCommand(() -> robot.intake.startCustom(0.8)),
                 new FollowPathCommand(robot.follower, collectMiddleBlue, false).withTimeout(3000),
                 new WaitCommand(1000),
                 //stop intake
-                new InstantCommand(() -> robot.intake.reverse()),
-                new WaitCommand(100),
                 new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1))
         );
@@ -181,7 +177,8 @@ public class closeAutoBlue extends CommandOpMode{
                         new AutoShootInAuto()
                 ).withTimeout(2000),
                 new InstantCommand(() -> robot.outtake.stop()),
-                new InstantCommand(() -> robot.intake.stop())
+                new InstantCommand(() -> robot.intake.stop()),
+                new InstantCommand(() -> robot.stopperServo.set(0.7))
 
         );
     }
@@ -189,15 +186,12 @@ public class closeAutoBlue extends CommandOpMode{
     public SequentialCommandGroup grabBottomBlue() {
         return new SequentialCommandGroup(
                 new FollowPathCommand(robot.follower, grabEndBlue, false),
-                new InstantCommand(() -> robot.outtake.reverse()),
-                new InstantCommand(() -> robot.follower.setMaxPower(.55)),
+                new InstantCommand(() -> robot.follower.setMaxPower(.5)),
                 //start intake
                 new InstantCommand(() -> robot.intake.startCustom(0.8)),
                 new FollowPathCommand(robot.follower, collectEndBlue, false).withTimeout(3000),
                 new WaitCommand(500),
                 //stop intake
-                new InstantCommand(() -> robot.intake.reverse()),
-                new WaitCommand(100),
                 new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1))
         );
@@ -211,7 +205,8 @@ public class closeAutoBlue extends CommandOpMode{
                 ).withTimeout(3000),
                 new FollowPathCommand(robot.follower, park, false),
                 new InstantCommand(() -> robot.outtake.stop()),
-                new InstantCommand(() -> robot.intake.stop())
+                new InstantCommand(() -> robot.intake.stop()),
+                new InstantCommand(() -> robot.stopperServo.set(0.7))
 
         );
     }
@@ -237,6 +232,8 @@ public class closeAutoBlue extends CommandOpMode{
         super.reset();
 
         robot.init(hardwareMap);
+
+        robot.stopperServo.set(0.65);
 
 
 //        Limelight3A limelight;
