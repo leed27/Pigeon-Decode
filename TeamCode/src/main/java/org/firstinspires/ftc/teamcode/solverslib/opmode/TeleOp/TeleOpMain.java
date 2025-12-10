@@ -376,7 +376,11 @@ public class TeleOpMain extends CommandOpMode {
             }
 
             /// UPDATES SHOOTER THROUGHOUT, NOT ONLY WHEN BUTTON IS PRESSED
-            robot.outtake.shootCustom(speed+(adjustSpeed));
+            if(gamepad2.triangle){
+                robot.outtake.stop();
+            }else{
+                robot.outtake.shootCustom(speed+(adjustSpeed));
+            }
             if(gamepad2.left_bumper){
 
                 robot.stopperServo.set(0.56);
