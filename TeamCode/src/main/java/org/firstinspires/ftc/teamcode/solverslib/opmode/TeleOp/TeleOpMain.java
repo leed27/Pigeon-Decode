@@ -105,23 +105,23 @@ public class TeleOpMain extends CommandOpMode {
 
 
         /// REGULAR SHOOTING
-        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(
-
-                new ParallelCommandGroup(
-//                        new InstantCommand(() -> robot.leftShooter.set(1)),
-//                        new InstantCommand(() -> robot.rightShooter.set(1)),
-                        new AutoShoot()
-                )
-
-        );
-
-        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.outtake.stop()),
-                        new InstantCommand(() -> robot.intake.stop())
-                )
-
-        );
+//        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whileHeld(
+//
+//                new ParallelCommandGroup(
+////                        new InstantCommand(() -> robot.leftShooter.set(1)),
+////                        new InstantCommand(() -> robot.rightShooter.set(1)),
+//                        new AutoShoot()
+//                )
+//
+//        );
+//
+//        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
+//                new ParallelCommandGroup(
+//                        new InstantCommand(() -> robot.outtake.stop()),
+//                        new InstantCommand(() -> robot.intake.stop())
+//                )
+//
+//        );
 
         /// FAR SHOOTING
         driver2.getGamepadButton(GamepadKeys.Button.CIRCLE).whileHeld(
@@ -216,6 +216,7 @@ public class TeleOpMain extends CommandOpMode {
         driver2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
                 //
                 new InstantCommand(() -> {
+
                     if(goalColor == GoalColor.RED_GOAL){
                         robot.follower.setPose(new Pose(
                                 80, 136, Math.toRadians(90)
@@ -406,13 +407,13 @@ public class TeleOpMain extends CommandOpMode {
             }
 
             /// UPDATES SHOOTER THROUGHOUT, NOT ONLY WHEN BUTTON IS PRESSED
-            if(gamepad2.triangle){
-                robot.outtake.stop();
-            }else{
-                robot.outtake.shootCustom(speed+(adjustSpeed));
-            }
+//            if(gamepad2.triangle){
+//                robot.outtake.stop();
+//            }else{
+//                robot.outtake.shootCustom(speed+(adjustSpeed));
+//            }
             if(gamepad2.left_bumper){
-
+                robot.outtake.shootCustom(speed+(adjustSpeed));
                 robot.stopperServo.set(0.56);
                 /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE
                 if(robot.leftShooter.getVelocity() > speed-50 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
@@ -424,11 +425,15 @@ public class TeleOpMain extends CommandOpMode {
 
             //ADDED BY DIDDY
 
+            /// UPDATES SHOOTER THROUGHOUT, NOT ONLY WHEN BUTTON IS PRESSED
+
             if(gamepad2.right_bumper){
-                robot.outtake.shootCustom(speed2);
-                if(robot.leftShooter.getVelocity() > speed2-50){
+                robot.outtake.shootCustom(speed2+(adjustSpeed));
+                robot.stopperServo.set(0.56);
+                /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE
+                if(robot.leftShooter.getVelocity() > speed2-50 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
                     robot.intake.startNoHood();
-                }else {
+                }else{
                     robot.intake.stopExceptShooter();
                 }
             }
@@ -527,6 +532,7 @@ public class TeleOpMain extends CommandOpMode {
         telemetry.addData("speed in feet", test);
         telemetry.addData("target speed", speed);
         telemetry.addData("target speed NEW", speed2);
+        telemetry.addData("how Far", Math.pow(((144-robot.follower.getPose().getY())/(12)), 2) + Math.pow(((-robot.follower.getPose().getX())/(12)),2));
         telemetry.addData("adjust speed", adjustSpeed);
         telemetry.addData("motor speed", robot.leftShooter.getVelocity());
         telemetry.addData("degrees TARGET", Math.toDegrees(Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX())));

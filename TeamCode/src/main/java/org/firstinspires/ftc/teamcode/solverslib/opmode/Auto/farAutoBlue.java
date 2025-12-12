@@ -36,8 +36,8 @@ public class farAutoBlue extends CommandOpMode{
     private final Pose blueBottomPilePose = new Pose(50, 36, Math.toRadians(180));
     private final Pose blueBottomPileForwardPose = new Pose(13, 36, Math.toRadians(180));
 
-    private final Pose blueDepotPilePose = new Pose(8.5, 23, Math.toRadians(270));
-    private final Pose blueDepotPileForwardPose = new Pose(8.5, 9, Math.toRadians(270));
+    private final Pose blueDepotPilePose = new Pose(12, 23, Math.toRadians(270));
+    private final Pose blueDepotPileForwardPose = new Pose(12, 9, Math.toRadians(0));
     private PathChain startToShoot, grabEndBlue, collectEndBlue, shootEndBlue, grabDepotBlue, collectDepotBlue, shootDepotBlue, shootToPark;
 
     public void generatePath() {
@@ -112,11 +112,11 @@ public class farAutoBlue extends CommandOpMode{
         return new SequentialCommandGroup(
                 //new WaitCommand(6000),
                 new FollowPathCommand(robot.follower, grabEndBlue, false),
-                new InstantCommand(() -> robot.follower.setMaxPower(.5)),
+                new InstantCommand(() -> robot.follower.setMaxPower(.3)),
                 //start intake
                 new InstantCommand(() -> robot.intake.startCustom(0.8)),
                 new FollowPathCommand(robot.follower, collectEndBlue, false).withTimeout(3000),
-                new WaitCommand(1500),
+                new WaitCommand(1000),
                 //stop intake
                 new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1))
@@ -144,7 +144,7 @@ public class farAutoBlue extends CommandOpMode{
         return new SequentialCommandGroup(
                 //new WaitCommand(6000),
                 new FollowPathCommand(robot.follower, grabDepotBlue, false),
-                new InstantCommand(() -> robot.follower.setMaxPower(.5)),
+                new InstantCommand(() -> robot.follower.setMaxPower(.3)),
                 //start intake
                 new InstantCommand(() -> robot.intake.startCustom(0.8)),
                 new FollowPathCommand(robot.follower, collectDepotBlue, false).withTimeout(3000),
