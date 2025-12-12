@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.solverslib.opmode.TeleOp;
 
+import static org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Lights.lightsState;
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
 import com.pedropathing.ftc.InvertedFTCCoordinates;
@@ -29,6 +30,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShoot;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAuto;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
+import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Lights;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
 import java.util.List;
@@ -75,8 +77,6 @@ public class TeleOpMain extends CommandOpMode {
         driver2 = new GamepadEx(gamepad2);
 
         robot.stopperServo.set(0.65);
-
-        //drive = new MecanumDrive(robot.leftFront, robot.rightFront, robot.leftRear, robot.rightRear);
 
 
         /// IF THERE NEEDS TO BE MOVEMENT DURING INIT STAGE, UNCOMMENT
@@ -181,13 +181,13 @@ public class TeleOpMain extends CommandOpMode {
 
         driver2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
 
-                new InstantCommand(() -> adjustSpeed -= 10)
+                new InstantCommand(() -> adjustSpeed -= 20)
 
         );
 
         driver2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
 
-                new InstantCommand(() -> adjustSpeed += 10)
+                new InstantCommand(() -> adjustSpeed += 20)
 
         );
 
@@ -314,15 +314,13 @@ public class TeleOpMain extends CommandOpMode {
                 //
                 new InstantCommand(() -> {
                     if(goalColor == GoalColor.BLUE_GOAL){
-                        robot.lightLeft.setPosition(0.28);
-                        robot.lightRight.setPosition(0.28); //red
-                        gamepad1.rumble(100);
+                        gamepad1.rumble(1000);
                         goalColor = GoalColor.RED_GOAL;
+                        lightsState = Lights.LightsState.SWITCH_SIDE;
                     }else{
-                        robot.lightLeft.setPosition(0.6);
-                        robot.lightRight.setPosition(0.6); //blue
-                        gamepad1.rumble(100);
+                        gamepad1.rumble(1000);
                         goalColor = GoalColor.BLUE_GOAL;
+                        lightsState = Lights.LightsState.SWITCH_SIDE;
                     }
 
                 }
@@ -351,45 +349,15 @@ public class TeleOpMain extends CommandOpMode {
         }
         limelight.start();
 
-
-
-
         // DO NOT REMOVE! Runs FTCLib Command Scheudler
         super.run();
-
-//        drive.driveRobotCentric(
-//                driver.getLeftX(),
-//                driver.getLeftY(),
-//                driver.getRightX()
-//        );
 
 
         speed = robot.outtake.shootAutoGenerator();
         speed2 = robot.outtake.autoShoot2();
 
         if(speed == -1){
-            robot.lightLeft.setPosition(0.28);
-            robot.lightRight.setPosition(0.28); //red
         }else{
-            robot.lightLeft.setPosition(0.5);
-            robot.lightRight.setPosition(0.5); //green
-
-            /// MANUALLY ADJUSTING SIDES
-            if(gamepad2.share){
-//                if(goalColor == GoalColor.BLUE_GOAL){
-//                    robot.lightLeft.setPosition(0.28);
-//                    robot.lightRight.setPosition(0.28); //red
-//                    gamepad2.rumble(100);
-//                    goalColor = GoalColor.RED_GOAL;
-//                }else{
-//                    robot.lightLeft.setPosition(0.6);
-//                    robot.lightRight.setPosition(0.6); //blue
-//                    gamepad2.rumble(100);
-//                    goalColor = GoalColor.BLUE_GOAL;
-//                }
-
-
-            }
 
             if(goalColor == GoalColor.RED_GOAL){
                 targetHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
@@ -422,10 +390,6 @@ public class TeleOpMain extends CommandOpMode {
                     robot.intake.stopExceptShooter();
                 }
             }
-
-            //ADDED BY DIDDY
-
-            /// UPDATES SHOOTER THROUGHOUT, NOT ONLY WHEN BUTTON IS PRESSED
 
             if(gamepad2.right_bumper){
                 robot.outtake.shootCustom(speed2+(adjustSpeed));

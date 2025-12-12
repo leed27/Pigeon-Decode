@@ -15,6 +15,7 @@ import com.seattlesolvers.solverslib.hardware.motors.MotorGroup;
 import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
 
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Lights;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Outtake;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
@@ -40,6 +41,7 @@ public class Robot {
 
     public Intake intake;
     public Outtake outtake;
+    public Lights lights;
     private static Robot instance = new Robot();
     public boolean enabled;
 
@@ -119,6 +121,7 @@ public class Robot {
 
         intake = new Intake();
         outtake = new Outtake();
+        lights = new Lights();
 
         if(opModeType.equals(OpModeType.TELEOP)) {
             follower.setStartingPose(autoEndPose);

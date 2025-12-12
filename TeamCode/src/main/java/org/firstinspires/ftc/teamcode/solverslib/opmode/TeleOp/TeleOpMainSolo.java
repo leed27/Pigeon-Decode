@@ -80,8 +80,6 @@ public class TeleOpMainSolo extends CommandOpMode {
         driver = new GamepadEx(gamepad1);
 
         robot.stopperServo.set(0.65);
-        //drive = new MecanumDrive(robot.leftFront, robot.rightFront, robot.leftRear, robot.rightRear);
-
 
         /// IF THERE NEEDS TO BE MOVEMENT DURING INIT STAGE, UNCOMMENT
         //robot.initHasMovement();
@@ -226,14 +224,10 @@ public class TeleOpMainSolo extends CommandOpMode {
                 //
                 new InstantCommand(() -> {
                     if(goalColor == GoalColor.BLUE_GOAL){
-                        robot.lightLeft.setPosition(0.28);
-                        robot.lightRight.setPosition(0.28); //red
-                        gamepad1.rumble(100);
+                        gamepad1.rumble(1000);
                         goalColor = GoalColor.RED_GOAL;
                     }else{
-                        robot.lightLeft.setPosition(0.6);
-                        robot.lightRight.setPosition(0.6); //blue
-                        gamepad1.rumble(100);
+                        gamepad1.rumble(1000);
                         goalColor = GoalColor.BLUE_GOAL;
                     }
 
@@ -264,28 +258,9 @@ public class TeleOpMainSolo extends CommandOpMode {
         // DO NOT REMOVE! Runs FTCLib Command Scheudler
         super.run();
 
-//        drive.driveRobotCentric(
-//                driver.getLeftX(),
-//                driver.getLeftY(),
-//                driver.getRightX()
-//        );
-
-
         speed = robot.outtake.shootAutoGenerator();
         if(speed == -1){
-            robot.lightLeft.setPosition(0.28);
-            robot.lightRight.setPosition(0.28); //red
         }else{
-            robot.lightLeft.setPosition(0.5);
-            robot.lightRight.setPosition(0.5); //green
-
-            /// MANUALLY ADJUSTING SIDES
-            if(gamepad1.share){
-
-
-            }
-
-
 
             if(gamepad1.touchpad){
                 robot.follower.breakFollowing();
@@ -295,7 +270,7 @@ public class TeleOpMainSolo extends CommandOpMode {
             }
 
             /// UPDATES SHOOTER THROUGHOUT, NOT ONLY WHEN BUTTON IS PRESSED
-            if(gamepad2.triangle){
+            if(gamepad1.triangle){
                 robot.outtake.stop();
             }else{
                 robot.outtake.shootCustom(speed+(adjustSpeed));
