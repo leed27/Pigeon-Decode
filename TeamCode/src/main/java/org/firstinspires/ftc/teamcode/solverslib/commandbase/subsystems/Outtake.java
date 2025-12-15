@@ -85,7 +85,7 @@ public class Outtake extends SubsystemBase {
             howFar = Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((-x)/(12)),2));
         }
 
-        if(howFar <= 4.5 || howFar >= 18){
+        if(howFar <= 2 || howFar >= 18){
             return -1;
         }
 

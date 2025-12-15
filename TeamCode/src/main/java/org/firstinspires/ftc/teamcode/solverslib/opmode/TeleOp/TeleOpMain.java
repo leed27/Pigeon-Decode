@@ -183,13 +183,13 @@ public class TeleOpMain extends CommandOpMode {
 
         driver2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
 
-                new InstantCommand(() -> adjustSpeed -= 20)
+                new InstantCommand(() -> adjustSpeed -= 10)
 
         );
 
         driver2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
 
-                new InstantCommand(() -> adjustSpeed += 20)
+                new InstantCommand(() -> adjustSpeed += 10)
 
         );
 
@@ -403,7 +403,7 @@ public class TeleOpMain extends CommandOpMode {
                 robot.outtake.shootCustom(speed+(adjustSpeed));
                 robot.stopperServo.set(.47);
                 /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE
-                if(robot.leftShooter.getVelocity() > speed-50 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
+                if(robot.leftShooter.getVelocity() > speed+adjustSpeed-50 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
                     robot.intake.startNoHood();
                 }else{
                     robot.intake.stopExceptShooter();
@@ -414,7 +414,7 @@ public class TeleOpMain extends CommandOpMode {
                 robot.outtake.shootCustom(speed2+(adjustSpeed));
                 robot.stopperServo.set(.47);
                 /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE
-                if(robot.leftShooter.getVelocity() > speed2-50 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
+                if(robot.leftShooter.getVelocity() > speed2+adjustSpeed-50 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
                     robot.intake.startNoHood();
                 }else{
                     robot.intake.stopExceptShooter();
@@ -510,19 +510,20 @@ public class TeleOpMain extends CommandOpMode {
 
         telemetry.addData("Status", "Running");
         //telemetry.addData("loop times", elapsedtime.milliseconds());
-        telemetry.addData("follower busy", robot.follower.isBusy());
-        telemetry.addData("x", robot.follower.getPose().getX());
-        telemetry.addData("y", robot.follower.getPose().getY());
-        telemetry.addData("angle", Math.toDegrees(robot.follower.getPose().getHeading()));
-        telemetry.addData("speed in feet", test);
-        telemetry.addData("target speed", speed);
-        telemetry.addData("target speed NEW", speed2);
-        telemetry.addData("how Far", Math.pow(((144-robot.follower.getPose().getY())/(12)), 2) + Math.pow(((-robot.follower.getPose().getX())/(12)),2));
+        //telemetry.addData("follower busy", robot.follower.isBusy());
+        //telemetry.addData("x", robot.follower.getPose().getX());
+        //telemetry.addData("y", robot.follower.getPose().getY());
+        //telemetry.addData("angle", Math.toDegrees(robot.follower.getPose().getHeading()));
+        //telemetry.addData("speed in feet", test);
+        //telemetry.addData("target speed", speed);
+        telemetry.addData("target speed ORIGINAL", speed2);
         telemetry.addData("adjust speed", adjustSpeed);
+        telemetry.addData("FINAL SPEED", speed2+adjustSpeed);
+        telemetry.addData("how Far", (Math.pow(((144-robot.follower.getPose().getY())/(12)), 2) + Math.pow(((-robot.follower.getPose().getX())/(12)),2))/12);
         telemetry.addData("team", goalColor);
-        telemetry.addData("motor speed", robot.leftShooter.getVelocity());
-        telemetry.addData("degrees TARGET", Math.toDegrees(Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX())));
-        telemetry.addData("SERVO POSITIONNNNN", robot.stopperServo.get());
+        //telemetry.addData("motor speed", robot.leftShooter.getVelocity());
+        //telemetry.addData("degrees TARGET", Math.toDegrees(Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX())));
+        //telemetry.addData("SERVO POSITIONNNNN", robot.stopperServo.get());
         elapsedtime.reset();
 
         telemetry.update();
