@@ -50,14 +50,15 @@ public class Outtake extends SubsystemBase {
         lookUpClose.add(0, 0);
         lookUpClose.add(4.5, 1100);
         lookUpClose.add(4.7, 1140);
-        lookUpClose.add(5, 1200);
-        lookUpClose.add(6, 1220);
-        lookUpClose.add(8, 1250);
-        lookUpClose.add(10, 1300);
-        lookUpClose.add(11, 1400);
-        lookUpClose.add(12, 1450);
-        lookUpClose.add(13.5, 1550);
-        lookUpClose.add(14, 1600);
+        lookUpClose.add(5, 1170);
+        lookUpClose.add(6, 1190);
+        lookUpClose.add(7, 1250);
+        lookUpClose.add(8, 1300);
+        lookUpClose.add(10, 1400);
+        lookUpClose.add(11, 1450);
+        lookUpClose.add(12, 1550);
+        lookUpClose.add(13.5, 1600);
+        lookUpClose.add(14, 1650);
         lookUpClose.createLUT();
 
         lookUpFar.add(0, 0);
@@ -67,6 +68,7 @@ public class Outtake extends SubsystemBase {
         lookUpFar.add(13, 1650);
         lookUpFar.add(14, 1700);
         lookUpFar.add(17, 1800);
+        lookUpFar.add(30, 1801); //when our odom wheels are rly off
 
         lookUpFar.createLUT();
     }
@@ -148,7 +150,7 @@ public class Outtake extends SubsystemBase {
             shooterReady = false;
         }
 
-        robot.stopperServo.set(0.56);
+        //robot.stopperServo.set(0.56);
     }
 
     public void shootAuto(){
@@ -168,7 +170,7 @@ public class Outtake extends SubsystemBase {
     }
 
     public void shootAutoFar(){
-        if(robot.leftShooter.getVelocity() > 1470 && robot.rightShooter.getVelocity() > 1470){
+        if(robot.leftShooter.getVelocity() > 1530 && robot.rightShooter.getVelocity() > 1530){
             robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
             robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
             shooterReady = true;
@@ -180,7 +182,7 @@ public class Outtake extends SubsystemBase {
             shooterReady = false;
         }
 
-        robot.stopperServo.set(0.56);
+        //robot.stopperServo.set(0.56);
     }
 
     public void shootCustom(int speed){

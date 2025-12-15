@@ -47,7 +47,7 @@ public class closeAutoRed extends CommandOpMode{
 
     private final Pose parkPose = new Pose(34, 80, Math.toRadians(135)).mirror();
     private Path grabTopBlue;
-    private PathChain shootPreloads, collectTopBlue, shootTopBlue, grabMiddleBlue, goBackMiddleBlue, collectMiddleBlue, shootMiddleBlue, grabEndBlue, collectEndBlue, shootEndBlue, park;
+    private PathChain shootPreloads, collectTopBlue, shootTopBlue, grabMiddleBlue, goBackMiddleBlue, collectMiddleBlue, shootMiddleBlue, grabEndBlue, collectEndBlue, goBackEndBlue, shootEndBlue, park;
 
     public void generatePath() {
         // PEDRO VISUALIZER: https://visualizer.pedropathing.com
@@ -100,6 +100,11 @@ public class closeAutoRed extends CommandOpMode{
                 .setConstantHeadingInterpolation(blueBottomPileForwardPose.getHeading())
                 .build();
 
+        goBackEndBlue = robot.follower.pathBuilder()
+                .addPath(new BezierLine(blueBottomPileForwardPose, blueBottomPilePose))
+                .setConstantHeadingInterpolation(blueBottomPileForwardPose.getHeading())
+                .build();
+
         shootEndBlue = robot.follower.pathBuilder()
                 .addPath(new BezierLine( blueBottomPileForwardPose, blueTopShootPose))
                 .setConstantHeadingInterpolation(blueTopShootPose.getHeading())
@@ -115,7 +120,7 @@ public class closeAutoRed extends CommandOpMode{
     public SequentialCommandGroup scorePreload() {
         return new SequentialCommandGroup(
                 new WaitCommand(100),
-                new InstantCommand(() -> robot.stopperServo.set(0.56)),
+                new InstantCommand(() -> robot.stopperServo.set(0.47)),
 //                new InstantCommand(() -> robot.outtake.shootAuto()),
 //
                 new FollowPathCommand(robot.follower, shootPreloads, true),
@@ -126,7 +131,7 @@ public class closeAutoRed extends CommandOpMode{
 
                 //new WaitCommand(3000),
                 new InstantCommand(() -> robot.intake.stop()),
-                new InstantCommand(() -> robot.stopperServo.set(0.7))
+                new InstantCommand(() -> robot.stopperServo.set(.56))
 
         );
     }
@@ -148,14 +153,14 @@ public class closeAutoRed extends CommandOpMode{
     public SequentialCommandGroup scoreTopBlue() {
         return new SequentialCommandGroup(
                 new FollowPathCommand(robot.follower, shootTopBlue, false),
-                new InstantCommand(() -> robot.stopperServo.set(0.56)),
+                new InstantCommand(() -> robot.stopperServo.set(0.47)),
                 new WaitCommand(500),
                 new RepeatCommand(
                         new AutoShootInAuto()
                 ).withTimeout(1500),
                 //new WaitCommand(3000),
                 new InstantCommand(() -> robot.intake.stop()),
-                new InstantCommand(() -> robot.stopperServo.set(0.7))
+                new InstantCommand(() -> robot.stopperServo.set(.56))
 
         );
     }
@@ -179,13 +184,13 @@ public class closeAutoRed extends CommandOpMode{
         return new SequentialCommandGroup(
                 new FollowPathCommand(robot.follower, goBackMiddleBlue, true),
                 new FollowPathCommand(robot.follower, shootMiddleBlue, false),
-                new InstantCommand(() -> robot.stopperServo.set(0.56)),
+                new InstantCommand(() -> robot.stopperServo.set(0.47)),
                 new WaitCommand(500),
                 new RepeatCommand(
                         new AutoShootInAuto()
                 ).withTimeout(1500),
                 new InstantCommand(() -> robot.intake.stop()),
-                new InstantCommand(() -> robot.stopperServo.set(0.7))
+                new InstantCommand(() -> robot.stopperServo.set(.56))
 
         );
     }
@@ -198,16 +203,17 @@ public class closeAutoRed extends CommandOpMode{
                 new InstantCommand(() -> robot.intake.startCustom(0.8)),
                 new FollowPathCommand(robot.follower, collectEndBlue, false).withTimeout(3000),
                 new WaitCommand(500),
+                new FollowPathCommand(robot.follower, goBackEndBlue, false),
+                new InstantCommand(() -> robot.follower.setMaxPower(.8)),
                 //stop intake
-                new InstantCommand(() ->robot.intake.stop()),
-                new InstantCommand(() -> robot.follower.setMaxPower(.8))
+                new InstantCommand(() ->robot.intake.stop())
         );
     }
 
     public SequentialCommandGroup scoreBottomBlue() {
         return new SequentialCommandGroup(
                 new FollowPathCommand(robot.follower, shootEndBlue, false),
-                new InstantCommand(() -> robot.stopperServo.set(0.56)),
+                new InstantCommand(() -> robot.stopperServo.set(0.47)),
                 new WaitCommand(500),
                 new RepeatCommand(
                         new AutoShootInAuto()
@@ -215,7 +221,7 @@ public class closeAutoRed extends CommandOpMode{
                 new FollowPathCommand(robot.follower, park, false),
                 new InstantCommand(() -> robot.outtake.stop()),
                 new InstantCommand(() -> robot.intake.stop()),
-                new InstantCommand(() -> robot.stopperServo.set(0.7))
+                new InstantCommand(() -> robot.stopperServo.set(.56))
 
         );
     }
@@ -239,7 +245,7 @@ public class closeAutoRed extends CommandOpMode{
 
         robot.init(hardwareMap);
 
-        robot.stopperServo.set(0.65);
+        robot.stopperServo.set(0.56);
 
 
 
@@ -324,6 +330,7 @@ public class closeAutoRed extends CommandOpMode{
         telemetry.addData("followerIsBusy", robot.follower.isBusy());
         telemetry.addData("repeat", test);
         telemetry.addData("shooterReady", shooterReady);
+        telemetry.addData("servo pos", robot.stopperServo.get());
         telemetry.addData("velocity motor", robot.leftShooter.getVelocity());
         telemetry.addData("Heading", Math.toDegrees(robot.follower.getPose().getHeading()));
         telemetry.addData("Heading Error", Math.toDegrees(robot.follower.getHeadingError()));

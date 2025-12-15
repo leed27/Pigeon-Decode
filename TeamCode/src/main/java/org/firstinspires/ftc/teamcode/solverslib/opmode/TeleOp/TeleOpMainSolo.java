@@ -79,7 +79,7 @@ public class TeleOpMainSolo extends CommandOpMode {
         register(robot.intake, robot.outtake);
         driver = new GamepadEx(gamepad1);
 
-        robot.stopperServo.set(0.65);
+        robot.stopperServo.set(0.56);
 
         /// IF THERE NEEDS TO BE MOVEMENT DURING INIT STAGE, UNCOMMENT
         //robot.initHasMovement();
@@ -207,7 +207,7 @@ public class TeleOpMainSolo extends CommandOpMode {
                 new ParallelCommandGroup(
                         new InstantCommand(() -> robot.outtake.stop()),
                         new InstantCommand(() -> robot.intake.stop()),
-                        new InstantCommand(() -> robot.stopperServo.set(0.7)),
+                        new InstantCommand(() -> robot.stopperServo.set(0.56)),
                         new SequentialCommandGroup(
                                 new InstantCommand(() -> robot.follower.breakFollowing()),
                                 new InstantCommand(() -> robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true)),
@@ -258,7 +258,7 @@ public class TeleOpMainSolo extends CommandOpMode {
         // DO NOT REMOVE! Runs FTCLib Command Scheudler
         super.run();
 
-        speed = robot.outtake.shootAutoGenerator();
+        speed = robot.outtake.autoShoot2();
         if(speed == -1){
         }else{
 
@@ -278,7 +278,7 @@ public class TeleOpMainSolo extends CommandOpMode {
             if(gamepad1.left_trigger > 0.5){
 
 
-                robot.stopperServo.set(0.56);
+                robot.stopperServo.set(0.47);
                 /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE
                 if(robot.leftShooter.getVelocity() > speed-50 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
                     robot.intake.startNoHood();
@@ -402,6 +402,7 @@ public class TeleOpMainSolo extends CommandOpMode {
         telemetry.addData("target speed", speed);
         telemetry.addData("adjust speed", adjustSpeed);
         telemetry.addData("motor speed", robot.leftShooter.getVelocity());
+        telemetry.addData("team", goalColor);
         telemetry.addData("degrees TARGET", Math.toDegrees(Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX())));
         elapsedtime.reset();
 

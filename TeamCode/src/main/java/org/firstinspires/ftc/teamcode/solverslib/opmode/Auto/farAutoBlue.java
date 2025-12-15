@@ -30,21 +30,24 @@ public class farAutoBlue extends CommandOpMode{
 
     // ALL PATHS
     private final Pose startPose = new Pose(88, 9, Math.toRadians(90)).mirror();
-    private final Pose shootPose = new Pose(88, 15, Math.toRadians(70)).mirror();
+    private final Pose shootPose = new Pose(88, 15, Math.toRadians(63.5)).mirror();
     /// blue paths6
     private final Pose parkPose = new Pose(108,14, Math.toRadians(70)).mirror();
     private final Pose blueBottomPilePose = new Pose(50, 36, Math.toRadians(180));
     private final Pose blueBottomPileForwardPose = new Pose(13, 36, Math.toRadians(180));
 
-    private final Pose blueDepotPilePose = new Pose(12, 23, Math.toRadians(270));
-    private final Pose blueDepotPileForwardPose = new Pose(12, 9, Math.toRadians(0));
-    private PathChain startToShoot, grabEndBlue, collectEndBlue, shootEndBlue, grabDepotBlue, collectDepotBlue, shootDepotBlue, shootToPark;
+    private final Pose blueDepotPilePose = new Pose(9, 33, Math.toRadians(270));
+    private final Pose blueDepotPileForwardPose = new Pose(9, 9, Math.toRadians(270));
+    private PathChain startToShoot, grabEndBlue, collectEndBlue, uncollectDepotBlue, shootEndBlue, grabDepotBlue, collectDepotBlue, shootDepotBlue, shootToPark;
 
     public void generatePath() {
         // PEDRO VISUALIZER: https://visualizer.pedropathing.com
 
         // Starting Pose (update this as well):
         //robot.follower.setStartingPose(startPose);
+
+        //open .47
+        //close .56
 
 
         startToShoot = robot.follower.pathBuilder()
@@ -72,8 +75,14 @@ public class farAutoBlue extends CommandOpMode{
                 .setLinearHeadingInterpolation(shootPose.getHeading(), blueDepotPilePose.getHeading())
                 .build();
 
+
         collectDepotBlue = robot.follower.pathBuilder()
                 .addPath(new BezierLine(blueDepotPilePose, blueDepotPileForwardPose))
+                .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileForwardPose.getHeading())
+                .build();
+
+        uncollectDepotBlue = robot.follower.pathBuilder()
+                .addPath(new BezierLine(blueDepotPileForwardPose, blueDepotPilePose))
                 .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileForwardPose.getHeading())
                 .build();
 
@@ -96,14 +105,15 @@ public class farAutoBlue extends CommandOpMode{
         return new SequentialCommandGroup(
                 //new WaitCommand(6000),
                 new FollowPathCommand(robot.follower, startToShoot, true),
+                new InstantCommand(() -> robot.stopperServo.set(0.47)),
                 new RepeatCommand(
                         new AutoShootInAutoFAR()
-                ).withTimeout(3000),
+                ).withTimeout(4000),
 
                 //new WaitCommand(3000),
                 new InstantCommand(() -> robot.outtake.stop()),
                 new InstantCommand(() -> robot.intake.stop()),
-                new InstantCommand(() -> robot.stopperServo.set(0.7))
+                new InstantCommand(() -> robot.stopperServo.set(.56))
 
         );
     }
@@ -128,27 +138,31 @@ public class farAutoBlue extends CommandOpMode{
         return new SequentialCommandGroup(
                 //new WaitCommand(6000),
                 new FollowPathCommand(robot.follower, shootEndBlue, true),
+                new InstantCommand(() -> robot.stopperServo.set(0.47)),
                 new RepeatCommand(
                         new AutoShootInAutoFAR()
-                ).withTimeout(3000),
+                ).withTimeout(4000),
 
                 //new WaitCommand(3000),
                 new InstantCommand(() -> robot.outtake.stop()),
                 new InstantCommand(() -> robot.intake.stop()),
-                new InstantCommand(() -> robot.stopperServo.set(0.7))
+                new InstantCommand(() -> robot.stopperServo.set(0.56)),
+                new InstantCommand(() -> robot.follower.setMaxPower(.7))
 
-        );
+                );
     }
 
     public SequentialCommandGroup getDepotBlue() {
         return new SequentialCommandGroup(
                 //new WaitCommand(6000),
                 new FollowPathCommand(robot.follower, grabDepotBlue, false),
-                new InstantCommand(() -> robot.follower.setMaxPower(.3)),
                 //start intake
                 new InstantCommand(() -> robot.intake.startCustom(0.8)),
-                new FollowPathCommand(robot.follower, collectDepotBlue, false).withTimeout(3000),
-                new WaitCommand(1000),
+                new InstantCommand(() -> robot.follower.setMaxPower(.5)),
+                new FollowPathCommand(robot.follower, collectDepotBlue, false),
+                new FollowPathCommand(robot.follower, uncollectDepotBlue, false),
+                new FollowPathCommand(robot.follower, collectDepotBlue, false),
+                new FollowPathCommand(robot.follower, uncollectDepotBlue, false).withTimeout(1000),
                 //stop intake
                 new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1))
@@ -160,14 +174,15 @@ public class farAutoBlue extends CommandOpMode{
         return new SequentialCommandGroup(
                 //new WaitCommand(6000),
                 new FollowPathCommand(robot.follower, shootDepotBlue, true),
+                new InstantCommand(() -> robot.stopperServo.set(0.47)),
                 new RepeatCommand(
                         new AutoShootInAutoFAR()
-                ).withTimeout(3000),
+                ).withTimeout(4000),
 
                 //new WaitCommand(3000),
                 new InstantCommand(() -> robot.outtake.stop()),
                 new InstantCommand(() -> robot.intake.stop()),
-                new InstantCommand(() -> robot.stopperServo.set(0.7))
+                new InstantCommand(() -> robot.stopperServo.set(0.56))
 
         );
     }
@@ -195,7 +210,7 @@ public class farAutoBlue extends CommandOpMode{
 
         robot.init(hardwareMap);
 
-        robot.stopperServo.set(0.65);
+        robot.stopperServo.set(0.56);
 
 
 //        Limelight3A limelight;
@@ -270,6 +285,7 @@ public class farAutoBlue extends CommandOpMode{
         telemetry.addData("followerIsBusy", robot.follower.isBusy());
         telemetry.addData("repeat", test);
         telemetry.addData("shooterReady", shooterReady);
+        telemetry.addData("servo pos", robot.stopperServo.get());
         telemetry.addData("velocity motor", robot.leftShooter.getVelocity());
         telemetry.addData("Heading", Math.toDegrees(robot.follower.getPose().getHeading()));
         telemetry.addData("Heading Error", Math.toDegrees(robot.follower.getHeadingError()));

@@ -7,6 +7,8 @@ import com.pedropathing.ftc.InvertedFTCCoordinates;
 import com.pedropathing.ftc.PoseConverter;
 import com.pedropathing.geometry.PedroCoordinates;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.PathBuilder;
+import com.pedropathing.paths.PathChain;
 import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
@@ -76,7 +78,7 @@ public class TeleOpMain extends CommandOpMode {
         driver = new GamepadEx(gamepad1);
         driver2 = new GamepadEx(gamepad2);
 
-        robot.stopperServo.set(0.65);
+        robot.stopperServo.set(0.56);
 
 
         /// IF THERE NEEDS TO BE MOVEMENT DURING INIT STAGE, UNCOMMENT
@@ -235,6 +237,8 @@ public class TeleOpMain extends CommandOpMode {
         );
 
 
+
+
         /// AUTO SHOOTING
 
         /// maybe fix driver inconsistency w/ joystick, make it follow path every half a second
@@ -266,7 +270,7 @@ public class TeleOpMain extends CommandOpMode {
                 new ParallelCommandGroup(
                         new InstantCommand(() -> robot.outtake.stop()),
                         new InstantCommand(() -> robot.intake.stop()),
-                        new InstantCommand(() -> robot.stopperServo.set(0.7)),
+                        new InstantCommand(() -> robot.stopperServo.set(.56)),
                         new SequentialCommandGroup(
                                 new InstantCommand(() -> robot.follower.breakFollowing()),
                                 new InstantCommand(() -> robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true)),
@@ -300,7 +304,7 @@ public class TeleOpMain extends CommandOpMode {
                 new ParallelCommandGroup(
                         new InstantCommand(() -> robot.outtake.stop()),
                         new InstantCommand(() -> robot.intake.stop()),
-                        new InstantCommand(() -> robot.stopperServo.set(0.65)),
+                        new InstantCommand(() -> robot.stopperServo.set(.56)),
                         new SequentialCommandGroup(
                                 new InstantCommand(() -> robot.follower.breakFollowing()),
                                 new InstantCommand(() -> robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true)),
@@ -328,13 +332,6 @@ public class TeleOpMain extends CommandOpMode {
 
         );
 
-
-
-
-
-
-
-
         super.run();
     }
 
@@ -342,6 +339,21 @@ public class TeleOpMain extends CommandOpMode {
     public void run() {
         // Keep all the has movement init for until when TeleOp starts
         // This is like the init but when the program is actually started
+        Pose currentPose = robot.follower.getPose();
+        double howFar = Math.pow(((144-robot.follower.getPose().getY())/(12)), 2) + Math.pow(((-robot.follower.getPose().getX())/(12)),2);
+        howFar /= 12;
+        //easy FIX
+        if(howFar < 4.5 || howFar > 16.7) {
+            robot.lightLeft.setPosition(0.28);
+            robot.lightRight.setPosition(0.28);
+        }else{
+            robot.lightLeft.setPosition(0.5);
+            robot.lightRight.setPosition(0.5);
+        }
+
+
+
+
         if (gameTimer == null) {
             robot.initHasMovement();
 
@@ -351,6 +363,7 @@ public class TeleOpMain extends CommandOpMode {
 
         // DO NOT REMOVE! Runs FTCLib Command Scheudler
         super.run();
+        robot.lights.updateLights();
 
 
         speed = robot.outtake.shootAutoGenerator();
@@ -363,6 +376,12 @@ public class TeleOpMain extends CommandOpMode {
                 targetHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
             }else{
                 targetHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
+            }
+
+            if(gamepad2.triangle){
+                robot.outtake.stop();
+            }else{
+                robot.outtake.shootCustom(speed2+(adjustSpeed));
             }
 
 
@@ -382,7 +401,7 @@ public class TeleOpMain extends CommandOpMode {
 //            }
             if(gamepad2.left_bumper){
                 robot.outtake.shootCustom(speed+(adjustSpeed));
-                robot.stopperServo.set(0.56);
+                robot.stopperServo.set(.47);
                 /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE
                 if(robot.leftShooter.getVelocity() > speed-50 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
                     robot.intake.startNoHood();
@@ -393,7 +412,7 @@ public class TeleOpMain extends CommandOpMode {
 
             if(gamepad2.right_bumper){
                 robot.outtake.shootCustom(speed2+(adjustSpeed));
-                robot.stopperServo.set(0.56);
+                robot.stopperServo.set(.47);
                 /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE
                 if(robot.leftShooter.getVelocity() > speed2-50 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
                     robot.intake.startNoHood();
@@ -403,6 +422,8 @@ public class TeleOpMain extends CommandOpMode {
             }
 
         }
+
+
 
 
 
@@ -498,8 +519,10 @@ public class TeleOpMain extends CommandOpMode {
         telemetry.addData("target speed NEW", speed2);
         telemetry.addData("how Far", Math.pow(((144-robot.follower.getPose().getY())/(12)), 2) + Math.pow(((-robot.follower.getPose().getX())/(12)),2));
         telemetry.addData("adjust speed", adjustSpeed);
+        telemetry.addData("team", goalColor);
         telemetry.addData("motor speed", robot.leftShooter.getVelocity());
         telemetry.addData("degrees TARGET", Math.toDegrees(Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX())));
+        telemetry.addData("SERVO POSITIONNNNN", robot.stopperServo.get());
         elapsedtime.reset();
 
         telemetry.update();
