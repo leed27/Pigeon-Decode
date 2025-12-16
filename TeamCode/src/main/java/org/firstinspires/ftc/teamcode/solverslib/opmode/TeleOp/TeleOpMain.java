@@ -242,7 +242,7 @@ public class TeleOpMain extends CommandOpMode {
 
         /// AUTO SHOOTING
 
-        /// new hopefully fixable auto turning?
+        /// new hopefully fixable auto turning? post-note: doesn't work lol
         driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(
 
                 new SequentialCommandGroup(

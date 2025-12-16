@@ -45,16 +45,18 @@ public class closeAutoBlue2 extends CommandOpMode{
     private final Pose blueTopShootPose = new Pose(51,96, Math.toRadians(150));
     private final Pose blueTopShootPose2 = new Pose(51,96, Math.toRadians(135));
 
-    private final Pose blueBottomShootPose =  new Pose(55, 15, Math.toRadians(120));
+    private final Pose blueBottomShootPose =  new Pose(30, 15, Math.toRadians(120));
 
-    private final Pose getReadyPushPose = new Pose(60, 9, Math.toRadians(0));
+    private final Pose prepPushPose = new Pose(73, 50, Math.toRadians(0));
+
+    private final Pose getReadyPushPose = new Pose(73, 9, Math.toRadians(0));
     private final Pose pushPose = new Pose(54, 9, Math.toRadians(0));
 
     private final Pose parkPose = new Pose(34, 80, Math.toRadians(135));
 
     private final Pose parkPose2 = new Pose(60, 30, Math.toRadians(0));
     private Path grabTopBlue;
-    private PathChain shootPreloads, collectTopBlue, shootTopBlue, grabMiddleBlue, goBackMiddleBlue, goBackMiddleBlue2, collectMiddleBlue, readyGateBlue, openGateBlue, shootMiddleBlue, grabEndBlue, collectEndBlue, goBackEndBlue, shootEndBlue, park, getToPushing, pushTime, pushToPark;
+    private PathChain shootPreloads, collectTopBlue, shootTopBlue, grabMiddleBlue, goBackMiddleBlue, goBackMiddleBlue2, collectMiddleBlue, readyGateBlue, openGateBlue, shootMiddleBlue, grabEndBlue, collectEndBlue, goBackEndBlue, shootEndBlue, park, prepPushing, getToPushing, pushTime, pushToPark;
     public void generatePath() {
         // PEDRO VISUALIZER: https://visualizer.pedropathing.com
 
@@ -111,8 +113,14 @@ public class closeAutoBlue2 extends CommandOpMode{
                 .setLinearHeadingInterpolation(blueMiddlePileForwardPose.getHeading(), blueTopShootPose.getHeading())
                 .build();
 
+        prepPushing = robot.follower.pathBuilder()
+                .addPath(new BezierLine(blueTopShootPose, prepPushPose))
+                .setConstantHeadingInterpolation(prepPushPose.getHeading())
+                .build();
+
+
         getToPushing = robot.follower.pathBuilder()
-                .addPath(new BezierLine( blueTopShootPose, getReadyPushPose))
+                .addPath(new BezierLine(prepPushPose, getReadyPushPose))
                 .setConstantHeadingInterpolation(getReadyPushPose.getHeading())
                 .build();
 
@@ -171,6 +179,7 @@ public class closeAutoBlue2 extends CommandOpMode{
                 new InstantCommand(() -> robot.stopperServo.set(.56))
 
         );
+
     }
 
     public SequentialCommandGroup grabTopBlue() {
@@ -299,9 +308,12 @@ public class closeAutoBlue2 extends CommandOpMode{
     public SequentialCommandGroup pushAndPark(){
         return new SequentialCommandGroup(
                 new InstantCommand(()->robot.follower.setMaxPower(1)),
+                new FollowPathCommand(robot.follower, prepPushing, false),
+                new InstantCommand(()->robot.follower.setMaxPower(0.65)),
                 new FollowPathCommand(robot.follower, getToPushing, true),
                 new FollowPathCommand(robot.follower, pushTime, true),
                 new WaitCommand(500),
+                new InstantCommand(()->robot.follower.setMaxPower(0.8)),
                 new FollowPathCommand(robot.follower, pushToPark, true)
         );
     }
