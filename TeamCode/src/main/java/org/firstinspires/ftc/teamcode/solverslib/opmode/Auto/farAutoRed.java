@@ -21,7 +21,7 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@Autonomous(name = "FAR \uD83D\uDD34", group = "auto")
+@Autonomous(name = "FAR 9 BALL\uD83D\uDD34", group = "auto")
 public class farAutoRed extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
@@ -200,7 +200,7 @@ public class farAutoRed extends CommandOpMode{
     @Override
     public void initialize() {
         opModeType = OpModeType.AUTO;
-        goalColor = GoalColor.BLUE_GOAL;
+        goalColor = GoalColor.RED_GOAL;
         timer = new ElapsedTime();
         timer.reset();
 

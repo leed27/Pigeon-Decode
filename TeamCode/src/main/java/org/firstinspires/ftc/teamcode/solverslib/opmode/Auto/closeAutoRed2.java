@@ -22,8 +22,8 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAuto;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@Autonomous(name = "CLOSE 12 BALL \uD83D\uDD34", group = "auto")
-public class closeAutoRed extends CommandOpMode{
+@Autonomous(name = "CLOSE 9 BALL + PUSH \uD83D\uDD34", group = "auto")
+public class closeAutoRed2 extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
 
@@ -32,26 +32,29 @@ public class closeAutoRed extends CommandOpMode{
     // ALL PATHS
     private final Pose startPose = new Pose(24.6, 128.4, Math.toRadians(144)).mirror(); //e
     /// blue paths
-    private final Pose blueTopPilePose = new Pose(55,84, Math.toRadians(180)).mirror(); //e
-
+    private final Pose blueTopPilePose = new Pose(50,84, Math.toRadians(180)).mirror(); //e
     private final Pose blueTopPileForwardPose = new Pose(17, 84, Math.toRadians(180)).mirror(); //e
-    private final Pose blueMiddlePilePose = new Pose(55, 59, Math.toRadians(180)).mirror();
+    private final Pose blueMiddlePilePose = new Pose(50, 59, Math.toRadians(180)).mirror();
     private final Pose blueMiddlePileForwardPose = new Pose(15, 59, Math.toRadians(180)).mirror();
 
     private final Pose readyGatePose = new Pose(30, 59, Math.toRadians(180)).mirror();
-    private final Pose openGatePose = new Pose(18, 72, Math.toRadians(180)).mirror();
-    private final Pose controlPose = new Pose(79, 37).mirror();
-    private final Pose blueBottomPilePose = new Pose(55, 36, Math.toRadians(180)).mirror();
+    private final Pose openGatePose = new Pose(18, 69, Math.toRadians(180)).mirror();
+    private final Pose controlPose = new Pose(79, 37);
+    private final Pose blueBottomPilePose = new Pose(50, 36, Math.toRadians(180)).mirror();
     private final Pose blueBottomPileForwardPose = new Pose(15, 36, Math.toRadians(180)).mirror();
     private final Pose blueTopShootPose = new Pose(51,96, Math.toRadians(150)).mirror();
     private final Pose blueTopShootPose2 = new Pose(51,96, Math.toRadians(135)).mirror();
 
     private final Pose blueBottomShootPose =  new Pose(55, 15, Math.toRadians(120)).mirror();
 
-    private final Pose parkPose = new Pose(34, 80, Math.toRadians(135)).mirror();
-    private Path grabTopBlue;
-    private PathChain shootPreloads, collectTopBlue, shootTopBlue, grabMiddleBlue, goBackMiddleBlue, goBackMiddleBlue2, collectMiddleBlue, readyGateBlue, openGateBlue, shootMiddleBlue, grabEndBlue, collectEndBlue, goBackEndBlue, shootEndBlue, park;
+    private final Pose getReadyPushPose = new Pose(60, 9, Math.toRadians(0)).mirror();
+    private final Pose pushPose = new Pose(54, 9, Math.toRadians(0)).mirror();
 
+    private final Pose parkPose = new Pose(34, 80, Math.toRadians(135)).mirror();
+
+    private final Pose parkPose2 = new Pose(60, 30, Math.toRadians(0)).mirror();
+    private Path grabTopBlue;
+    private PathChain shootPreloads, collectTopBlue, shootTopBlue, grabMiddleBlue, goBackMiddleBlue, goBackMiddleBlue2, collectMiddleBlue, readyGateBlue, openGateBlue, shootMiddleBlue, grabEndBlue, collectEndBlue, goBackEndBlue, shootEndBlue, park, getToPushing, pushTime, pushToPark;
     public void generatePath() {
         // PEDRO VISUALIZER: https://visualizer.pedropathing.com
 
@@ -106,6 +109,21 @@ public class closeAutoRed extends CommandOpMode{
         shootMiddleBlue = robot.follower.pathBuilder()
                 .addPath(new BezierLine( blueMiddlePilePose, blueTopShootPose))
                 .setLinearHeadingInterpolation(blueMiddlePileForwardPose.getHeading(), blueTopShootPose.getHeading())
+                .build();
+
+        getToPushing = robot.follower.pathBuilder()
+                .addPath(new BezierLine( blueTopShootPose, getReadyPushPose))
+                .setConstantHeadingInterpolation(getReadyPushPose.getHeading())
+                .build();
+
+        pushTime = robot.follower.pathBuilder()
+                .addPath(new BezierLine( getReadyPushPose, pushPose))
+                .setConstantHeadingInterpolation(getReadyPushPose.getHeading())
+                .build();
+
+        pushToPark = robot.follower.pathBuilder()
+                .addPath(new BezierLine( pushPose, parkPose2))
+                .setConstantHeadingInterpolation(parkPose2.getHeading())
                 .build();
 
         grabEndBlue = robot.follower.pathBuilder()
@@ -278,6 +296,16 @@ public class closeAutoRed extends CommandOpMode{
         );
     }
 
+    public SequentialCommandGroup pushAndPark(){
+        return new SequentialCommandGroup(
+                new InstantCommand(()->robot.follower.setMaxPower(1)),
+                new FollowPathCommand(robot.follower, getToPushing, true),
+                new FollowPathCommand(robot.follower, pushTime, true),
+                new WaitCommand(500),
+                new FollowPathCommand(robot.follower, pushToPark, true)
+        );
+    }
+
 
 
 
@@ -336,7 +364,7 @@ public class closeAutoRed extends CommandOpMode{
 //                    // DO NOT REMOVE: updates follower to follow path
                 new RunCommand(() -> robot.follower.update()),
 
-                /*new SequentialCommandGroup(
+                new SequentialCommandGroup(
                         scorePreload(),
 
                         grabTopBlue(),
@@ -347,32 +375,7 @@ public class closeAutoRed extends CommandOpMode{
 
                         scoreMiddleBlue(),
 
-                        grabBottomBlue(),
-
-                        scoreBottomBlue(),
-
-                        parkAndStuff()
-                )*/
-
-                new SequentialCommandGroup(
-                        new InstantCommand(),
-                        scorePreload(),
-
-                        grabMiddleBlue(),
-
-                        openGate(),
-
-                        scoreMiddleBlue2(),
-
-                        grabTopBlue(),
-
-                        scoreTopBlue(),
-
-                        grabBottomBlue(),
-
-                        scoreBottomBlue(),
-
-                        parkAndStuff()
+                        pushAndPark()
                 )
         );
 

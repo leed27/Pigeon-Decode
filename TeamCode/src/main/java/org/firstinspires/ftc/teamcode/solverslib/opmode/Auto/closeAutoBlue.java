@@ -22,7 +22,7 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAuto;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@Autonomous(name = "CLOSE \uD83D\uDD35", group = "auto")
+@Autonomous(name = "CLOSE 12 BALL \uD83D\uDD35", group = "auto")
 public class closeAutoBlue extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
