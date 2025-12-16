@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.solverslib.globals;
 
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
+import com.pedropathing.control.PIDFController;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.PoseTracker;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -33,6 +34,7 @@ public class Robot {
     public ServoEx hoodServo, stopperServo;
     public Servo lightLeft, lightRight;
     public Follower follower;
+    public PIDFController controller;
     public PoseTracker poseUpdater;
 
     /// the next two are for optimizing loop times
@@ -102,6 +104,8 @@ public class Robot {
 //        slidesEncoder = new Motor(hardwareMap, "left_horizontal").encoder;
 //
         follower = Constants.createFollower(hardwareMap);
+        controller = new PIDFController(follower.constants.coefficientsHeadingPIDF);
+
 
         //poseUpdater = new PoseTracker(hardwareMap);
 

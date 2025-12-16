@@ -7,6 +7,7 @@ import com.pedropathing.ftc.InvertedFTCCoordinates;
 import com.pedropathing.ftc.PoseConverter;
 import com.pedropathing.geometry.PedroCoordinates;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.math.MathFunctions;
 import com.pedropathing.paths.PathBuilder;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.paths.PathConstraints;
@@ -241,26 +242,30 @@ public class TeleOpMain extends CommandOpMode {
 
         /// AUTO SHOOTING
 
-        /// maybe fix driver inconsistency w/ joystick, make it follow path every half a second
+        /// new hopefully fixable auto turning?
         driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(
 
                 new SequentialCommandGroup(
                         new InstantCommand(() -> {
-                            if(goalColor == GoalColor.RED_GOAL){
-                                double newHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
-                                robot.follower.turnToDegrees(Math.toDegrees(newHeading));
-                                robot.follower.setConstraints(new PathConstraints(
-                                        0.995,
-                                        200,
-                                        1.5,
-                                        1
-                                ));
+                            double headingError;
+                            if (robot.follower.getCurrentPath() == null) {
+                                headingError = 0;
                             }else{
-                                double newHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
-                                robot.follower.turnToDegrees(Math.toDegrees(newHeading));
-                            }}
-                        ),
-                        new WaitCommand(500)
+                                headingError = MathFunctions.getTurnDirection(robot.follower.getPose().getHeading(), targetHeading) * MathFunctions.getSmallestAngleDifference(robot.follower.getPose().getHeading(), targetHeading);
+                            }
+
+
+                            robot.controller.setCoefficients(robot.follower.constants.coefficientsHeadingPIDF);
+                            robot.controller.updateError(headingError);
+
+
+
+                            robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, robot.controller.run());
+
+
+                        }
+
+                        )
 
                 )
         );
