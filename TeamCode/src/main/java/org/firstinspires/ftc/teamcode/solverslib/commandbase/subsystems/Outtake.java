@@ -48,27 +48,28 @@ public class Outtake extends SubsystemBase {
 
         //NORMAL TABLES THAT DIDDY APPROVES
         lookUpClose.add(0, 0);
-        lookUpClose.add(4.5, 1100);
-        lookUpClose.add(4.7, 1140);
-        lookUpClose.add(5, 1170);
-        lookUpClose.add(6, 1190);
-        lookUpClose.add(7, 1250);
-        lookUpClose.add(8, 1300);
-        lookUpClose.add(10, 1400);
-        lookUpClose.add(11, 1450);
-        lookUpClose.add(12, 1550);
-        lookUpClose.add(13.5, 1600);
-        lookUpClose.add(14, 1650);
+        lookUpClose.add(2.138, 1020);
+        lookUpClose.add(2.953, 1120);
+        lookUpClose.add(3.301, 1135);
+        lookUpClose.add(3.900, 1160);
+        lookUpClose.add(4.670, 1210);
+        lookUpClose.add(5.15, 1250);
+        lookUpClose.add(5.85, 1270);
+        lookUpClose.add(6.38, 1280);
+        lookUpClose.add(6.7, 1300);
+        lookUpClose.add(7.3, 1350);
+        lookUpClose.add(8, 1370);
+        lookUpClose.add(8.7, 1390);
+        lookUpClose.add(9.15, 1420);
         lookUpClose.createLUT();
 
         lookUpFar.add(0, 0);
-        lookUpFar.add(11, 1500);
-        lookUpFar.add(11.66, 1550);
-        lookUpFar.add(12, 1600);
-        lookUpFar.add(13, 1650);
-        lookUpFar.add(14, 1700);
-        lookUpFar.add(17, 1800);
-        lookUpFar.add(30, 1801); //when our odom wheels are rly off
+        lookUpFar.add(10.5, 1470);
+        lookUpFar.add(11.436, 1490);
+        lookUpFar.add(12, 1510);
+        lookUpFar.add(13, 1540);
+        lookUpFar.add(14.06, 1570);
+        lookUpFar.add(30, 1800); //when our odom wheels are rly off
 
         lookUpFar.createLUT();
     }
@@ -94,10 +95,29 @@ public class Outtake extends SubsystemBase {
             return (int) (lookUpFar.get(howFar));
         }else{
             robot.hoodServo.set(.5);
+            if(howFar >= 9.14){
+                return -1;
+            }
             return (int) (lookUpClose.get(howFar));
         }
 
     }
+
+//    public double autoAlign(){
+//        double x = robot.follower.getPose().getX();
+//        double y = robot.follower.getPose().getY();
+//        double aimPosX = 0;
+//        double aimPosY = 0;
+//
+//        double angleNeeded = 0;
+//
+//        if(goalColor == GoalColor.RED_GOAL){
+//            if(x>)
+//            howFar = Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((144-x)/(12)),2));
+//        }else{
+//            howFar = Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((-x)/(12)),2));
+//        }
+//    }
     public int shootAutoGenerator(){
 
         double x = robot.follower.getPose().getX();
