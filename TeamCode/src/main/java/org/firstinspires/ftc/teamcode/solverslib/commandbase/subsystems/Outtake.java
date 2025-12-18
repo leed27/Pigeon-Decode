@@ -61,6 +61,7 @@ public class Outtake extends SubsystemBase {
         lookUpClose.add(8, 1370);
         lookUpClose.add(8.7, 1390);
         lookUpClose.add(9.15, 1420);
+        lookUpClose.add(10, 1450);
         lookUpClose.createLUT();
 
         lookUpFar.add(0, 0);
@@ -95,7 +96,7 @@ public class Outtake extends SubsystemBase {
             return (int) (lookUpFar.get(howFar));
         }else{
             robot.hoodServo.set(.5);
-            if(howFar >= 9.14){
+            if(howFar > 10){
                 return -1;
             }
             return (int) (lookUpClose.get(howFar));
