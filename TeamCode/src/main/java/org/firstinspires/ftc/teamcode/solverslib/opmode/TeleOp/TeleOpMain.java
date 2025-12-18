@@ -76,7 +76,6 @@ public class TeleOpMain extends CommandOpMode {
         elapsedtime.reset();
 
         register(robot.intake, robot.outtake, robot.lights);
-        lightsState = Lights.LightsState.SHOOTER_VALID;
         driver = new GamepadEx(gamepad1);
         driver2 = new GamepadEx(gamepad2);
 
@@ -343,6 +342,7 @@ public class TeleOpMain extends CommandOpMode {
 
     @Override
     public void run() {
+        lightsState = Lights.LightsState.SHOOTER_VALID;
         // Keep all the has movement init for until when TeleOp starts
         // This is like the init but when the program is actually started
         Pose currentPose = robot.follower.getPose();

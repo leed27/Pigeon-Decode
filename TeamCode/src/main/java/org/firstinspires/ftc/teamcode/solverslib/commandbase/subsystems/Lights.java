@@ -54,7 +54,7 @@ public class Lights extends SubsystemBase {
     }
 
     public void shooterValid(){
-        if(robot.outtake.shootAutoGenerator() == -1 || robot.leftShooter.getVelocity() < robot.outtake.autoShoot2()-50){
+        if(!shooterReady){
             robot.lightLeft.setPosition(RED);
             robot.lightRight.setPosition(RED);
         }else{
