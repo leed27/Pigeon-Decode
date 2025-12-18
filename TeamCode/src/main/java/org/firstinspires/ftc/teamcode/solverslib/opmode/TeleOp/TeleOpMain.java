@@ -75,7 +75,8 @@ public class TeleOpMain extends CommandOpMode {
         elapsedtime = new ElapsedTime();
         elapsedtime.reset();
 
-        register(robot.intake, robot.outtake);
+        register(robot.intake, robot.outtake, robot.lights);
+        lightsState = Lights.LightsState.SHOOTER_VALID;
         driver = new GamepadEx(gamepad1);
         driver2 = new GamepadEx(gamepad2);
 
@@ -348,13 +349,13 @@ public class TeleOpMain extends CommandOpMode {
         double howFar = Math.pow(((144-robot.follower.getPose().getY())/(12)), 2) + Math.pow(((-robot.follower.getPose().getX())/(12)),2);
         howFar /= 12;
         //easy FIX
-        if(howFar < 4.5 || howFar > 16.7) {
-            robot.lightLeft.setPosition(0.28);
-            robot.lightRight.setPosition(0.28);
-        }else{
-            robot.lightLeft.setPosition(0.5);
-            robot.lightRight.setPosition(0.5);
-        }
+//        if(howFar < 4.5 || howFar > 16.7) {
+//            robot.lightLeft.setPosition(0.28);
+//            robot.lightRight.setPosition(0.28);
+//        }else{
+//            robot.lightLeft.setPosition(0.5);
+//            robot.lightRight.setPosition(0.5);
+//        }
 
 
 
@@ -371,10 +372,10 @@ public class TeleOpMain extends CommandOpMode {
         robot.lights.updateLights();
 
 
-        speed = robot.outtake.shootAutoGenerator();
+        //speed = robot.outtake.shootAutoGenerator();
         speed2 = robot.outtake.autoShoot2();
 
-        if(speed == -1){
+        if(speed2 == -1){
         }else{
 
             if(goalColor == GoalColor.RED_GOAL){
@@ -404,16 +405,16 @@ public class TeleOpMain extends CommandOpMode {
 //            }else{
 //                robot.outtake.shootCustom(speed+(adjustSpeed));
 //            }
-            if(gamepad2.left_bumper){
-                robot.outtake.shootCustom(speed+(adjustSpeed));
-                robot.stopperServo.set(.47);
-                /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE
-                if(robot.leftShooter.getVelocity() > speed+adjustSpeed-50 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
-                    robot.intake.startNoHood();
-                }else{
-                    robot.intake.stopExceptShooter();
-                }
-            }
+//            if(gamepad2.left_bumper){
+//                robot.outtake.shootCustom(speed+(adjustSpeed));
+//                robot.stopperServo.set(.47);
+//                /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE
+//                if(robot.leftShooter.getVelocity() > speed+adjustSpeed-50 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
+//                    robot.intake.startNoHood();
+//                }else{
+//                    robot.intake.stopExceptShooter();
+//                }
+//            }
 
             if(gamepad2.right_bumper){
                 robot.outtake.shootCustom(speed2+(adjustSpeed));
@@ -524,7 +525,7 @@ public class TeleOpMain extends CommandOpMode {
         telemetry.addData("target speed ORIGINAL", speed2);
         telemetry.addData("adjust speed", adjustSpeed);
         telemetry.addData("FINAL SPEED", speed2+adjustSpeed);
-        telemetry.addData("how Far", (Math.pow(((144-robot.follower.getPose().getY())/(12)), 2) + Math.pow(((-robot.follower.getPose().getX())/(12)),2))/12);
+        telemetry.addData("how Far", Math.sqrt(Math.pow(((144-robot.follower.getPose().getY())/(12)), 2) + Math.pow(((-robot.follower.getPose().getX())/(12)),2)));
         telemetry.addData("team", goalColor);
         //telemetry.addData("motor speed", robot.leftShooter.getVelocity());
         //telemetry.addData("degrees TARGET", Math.toDegrees(Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX())));
