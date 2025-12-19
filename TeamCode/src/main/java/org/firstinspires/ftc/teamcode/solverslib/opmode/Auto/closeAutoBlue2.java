@@ -310,8 +310,8 @@ public class closeAutoBlue2 extends CommandOpMode{
                 new InstantCommand(()->robot.follower.setMaxPower(1)),
                 new FollowPathCommand(robot.follower, prepPushing, false),
                 new InstantCommand(()->robot.follower.setMaxPower(0.65)),
-                new FollowPathCommand(robot.follower, getToPushing, true),
-                new FollowPathCommand(robot.follower, pushTime, true),
+                new FollowPathCommand(robot.follower, getToPushing, true).withTimeout(2000),
+                new FollowPathCommand(robot.follower, pushTime, true).withTimeout(2000),
                 new WaitCommand(500),
                 new InstantCommand(()->robot.follower.setMaxPower(0.8)),
                 new FollowPathCommand(robot.follower, pushToPark, true)

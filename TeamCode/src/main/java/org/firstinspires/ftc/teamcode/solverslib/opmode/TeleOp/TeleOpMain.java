@@ -283,7 +283,7 @@ public class TeleOpMain extends CommandOpMode {
                 new InstantCommand(() -> {
                     if(goalColor == GoalColor.RED_GOAL){
                         double newHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
-                        robot.follower.turnToDegrees(Math.toDegrees(newHeading));
+                        robot.follower.turnToDegrees(Math.toDegrees(targetHeading));
                         robot.follower.setConstraints(new PathConstraints(
                                 0.995,
                                 200,
@@ -292,7 +292,7 @@ public class TeleOpMain extends CommandOpMode {
                         ));
                     }else{
                         double newHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
-                        robot.follower.turnToDegrees(Math.toDegrees(newHeading));
+                        robot.follower.turnToDegrees(Math.toDegrees(targetHeading));
                     }}
                 )
         );
@@ -367,6 +367,7 @@ public class TeleOpMain extends CommandOpMode {
 
 
         //speed = robot.outtake.shootAutoGenerator();
+        targetHeading = robot.outtake.autoAlign();
         speed2 = robot.outtake.autoShoot2();
 
         if(speed2 == -1){

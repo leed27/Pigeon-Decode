@@ -35,8 +35,8 @@ public class closeAutoRed extends CommandOpMode{
     private final Pose blueTopPilePose = new Pose(55,84, Math.toRadians(180)).mirror(); //e
 
     private final Pose blueTopPileForwardPose = new Pose(17, 84, Math.toRadians(180)).mirror(); //e
-    private final Pose blueMiddlePilePose = new Pose(55, 59, Math.toRadians(180)).mirror();
-    private final Pose blueMiddlePileForwardPose = new Pose(15, 59, Math.toRadians(180)).mirror();
+    private final Pose blueMiddlePilePose = new Pose(55, 57, Math.toRadians(180)).mirror();
+    private final Pose blueMiddlePileForwardPose = new Pose(15, 57, Math.toRadians(180)).mirror();
 
     private final Pose readyGatePose = new Pose(30, 59, Math.toRadians(180)).mirror();
     private final Pose openGatePose = new Pose(18, 72, Math.toRadians(180)).mirror();
@@ -89,7 +89,7 @@ public class closeAutoRed extends CommandOpMode{
                 .build();
 
         openGateBlue = robot.follower.pathBuilder()
-                .addPath(new BezierLine(blueMiddlePileForwardPose, openGatePose))
+                .addPath(new BezierLine(readyGatePose, openGatePose))
                 .setConstantHeadingInterpolation(openGatePose.getHeading())
                 .build();
 
@@ -125,7 +125,7 @@ public class closeAutoRed extends CommandOpMode{
 
         shootEndBlue = robot.follower.pathBuilder()
                 .addPath(new BezierLine( blueBottomPileForwardPose, blueTopShootPose))
-                .setConstantHeadingInterpolation(blueTopShootPose.getHeading())
+                .setLinearHeadingInterpolation(blueBottomPileForwardPose.getHeading(), blueTopShootPose.getHeading())
                 .build();
 
         park = robot.follower.pathBuilder()
@@ -202,7 +202,7 @@ public class closeAutoRed extends CommandOpMode{
         return new SequentialCommandGroup(
                 //
                 new FollowPathCommand(robot.follower, readyGateBlue, false),
-                new FollowPathCommand(robot.follower, openGateBlue, false),
+                new FollowPathCommand(robot.follower, openGateBlue, false).withTimeout(1000),
                 new WaitCommand(250),
                 new InstantCommand(() -> robot.follower.setMaxPower(1))
         );

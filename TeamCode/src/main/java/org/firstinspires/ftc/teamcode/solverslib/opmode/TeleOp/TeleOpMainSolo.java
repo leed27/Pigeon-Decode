@@ -178,7 +178,7 @@ public class TeleOpMainSolo extends CommandOpMode {
                         new InstantCommand(() -> {
                             if(goalColor == GoalColor.RED_GOAL){
                                 double newHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
-                                robot.follower.turnToDegrees(Math.toDegrees(newHeading));
+                                robot.follower.turnToDegrees(Math.toDegrees(targetHeading));
                                 robot.follower.setConstraints(new PathConstraints(
                                         0.995,
                                         200,
@@ -187,7 +187,7 @@ public class TeleOpMainSolo extends CommandOpMode {
                                 ));
                             }else{
                                 double newHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
-                                robot.follower.turnToDegrees(Math.toDegrees(newHeading));
+                                robot.follower.turnToDegrees(Math.toDegrees(targetHeading));
                             }
 
 
@@ -269,6 +269,8 @@ public class TeleOpMainSolo extends CommandOpMode {
 
         // DO NOT REMOVE! Runs FTCLib Command Scheudler
         super.run();
+
+        targetHeading = robot.outtake.autoAlign();
 
         speed = robot.outtake.autoShoot2();
         if(speed == -1){

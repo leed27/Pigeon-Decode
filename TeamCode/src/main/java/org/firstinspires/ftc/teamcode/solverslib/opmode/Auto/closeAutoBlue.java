@@ -125,7 +125,7 @@ public class closeAutoBlue extends CommandOpMode{
 
         shootEndBlue = robot.follower.pathBuilder()
                 .addPath(new BezierLine( blueBottomPileForwardPose, blueTopShootPose))
-                .setConstantHeadingInterpolation(blueTopShootPose.getHeading())
+                .setLinearHeadingInterpolation(blueBottomPileForwardPose.getHeading(), blueTopShootPose.getHeading())
                 .build();
 
         park = robot.follower.pathBuilder()
@@ -202,7 +202,7 @@ public class closeAutoBlue extends CommandOpMode{
         return new SequentialCommandGroup(
                 //
                 new FollowPathCommand(robot.follower, readyGateBlue, false),
-                new FollowPathCommand(robot.follower, openGateBlue, false),
+                new FollowPathCommand(robot.follower, openGateBlue, false).withTimeout(1000),
                 new WaitCommand(250),
                 new InstantCommand(() -> robot.follower.setMaxPower(1))
         );

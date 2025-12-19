@@ -34,8 +34,8 @@ public class closeAutoRed2 extends CommandOpMode{
     /// blue paths
     private final Pose blueTopPilePose = new Pose(50,84, Math.toRadians(180)).mirror(); //e
     private final Pose blueTopPileForwardPose = new Pose(17, 84, Math.toRadians(180)).mirror(); //e
-    private final Pose blueMiddlePilePose = new Pose(50, 59, Math.toRadians(180)).mirror();
-    private final Pose blueMiddlePileForwardPose = new Pose(15, 59, Math.toRadians(180)).mirror();
+    private final Pose blueMiddlePilePose = new Pose(50, 57, Math.toRadians(180)).mirror();
+    private final Pose blueMiddlePileForwardPose = new Pose(15, 57, Math.toRadians(180)).mirror();
 
     private final Pose readyGatePose = new Pose(30, 59, Math.toRadians(180)).mirror();
     private final Pose openGatePose = new Pose(18, 69, Math.toRadians(180)).mirror();
@@ -94,7 +94,7 @@ public class closeAutoRed2 extends CommandOpMode{
                 .build();
 
         openGateBlue = robot.follower.pathBuilder()
-                .addPath(new BezierLine(blueMiddlePileForwardPose, openGatePose))
+                .addPath(new BezierLine(readyGatePose, openGatePose))
                 .setConstantHeadingInterpolation(openGatePose.getHeading())
                 .build();
 
@@ -310,8 +310,8 @@ public class closeAutoRed2 extends CommandOpMode{
                 new InstantCommand(()->robot.follower.setMaxPower(1)),
                 new FollowPathCommand(robot.follower, prepPushing, false),
                 new InstantCommand(()->robot.follower.setMaxPower(0.65)),
-                new FollowPathCommand(robot.follower, getToPushing, true),
-                new FollowPathCommand(robot.follower, pushTime, true),
+                new FollowPathCommand(robot.follower, getToPushing, true).withTimeout(2000),
+                new FollowPathCommand(robot.follower, pushTime, true).withTimeout(2000),
                 new WaitCommand(500),
                 new InstantCommand(()->robot.follower.setMaxPower(0.8)),
                 new FollowPathCommand(robot.follower, pushToPark, true)

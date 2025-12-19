@@ -48,20 +48,21 @@ public class Outtake extends SubsystemBase {
 
         //NORMAL TABLES THAT DIDDY APPROVES
         lookUpClose.add(0, 0);
-        lookUpClose.add(2.138, 1020);
-        lookUpClose.add(2.953, 1120);
-        lookUpClose.add(3.301, 1135);
-        lookUpClose.add(3.900, 1160);
-        lookUpClose.add(4.670, 1210);
-        lookUpClose.add(5.15, 1250);
-        lookUpClose.add(5.85, 1270);
-        lookUpClose.add(6.38, 1280);
-        lookUpClose.add(6.7, 1300);
-        lookUpClose.add(7.3, 1350);
-        lookUpClose.add(8, 1370);
-        lookUpClose.add(8.7, 1390);
-        lookUpClose.add(9.15, 1420);
-        lookUpClose.add(10, 1450);
+        lookUpClose.add(4.804, 1050);
+        lookUpClose.add(5.138, 1070);
+        lookUpClose.add(5.953, 1120);
+        lookUpClose.add(6.301, 1135);
+        lookUpClose.add(6.900, 1160);
+        lookUpClose.add(7.670, 1210);
+        lookUpClose.add(8.15, 1250);
+        lookUpClose.add(8.85, 1270);
+        lookUpClose.add(9.38, 1280);
+        lookUpClose.add(9.7, 1300);
+        lookUpClose.add(10.3, 1350);
+        lookUpClose.add(11, 1370);
+        lookUpClose.add(11.7, 1390);
+        lookUpClose.add(12.15, 1420);
+        lookUpClose.add(13, 1450);
         lookUpClose.createLUT();
 
         lookUpFar.add(0, 0);
@@ -104,21 +105,40 @@ public class Outtake extends SubsystemBase {
 
     }
 
-//    public double autoAlign(){
-//        double x = robot.follower.getPose().getX();
-//        double y = robot.follower.getPose().getY();
-//        double aimPosX = 0;
-//        double aimPosY = 0;
-//
-//        double angleNeeded = 0;
-//
-//        if(goalColor == GoalColor.RED_GOAL){
-//            if(x>)
-//            howFar = Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((144-x)/(12)),2));
-//        }else{
-//            howFar = Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((-x)/(12)),2));
-//        }
-//    }
+    public double autoAlign(){
+        double x = robot.follower.getPose().getX();
+        double y = robot.follower.getPose().getY();
+        double aimPosX = 0;
+        double aimPosY = 0;
+
+        double angleNeeded = 0;
+
+        if(goalColor == GoalColor.BLUE_GOAL){
+            if((x+y)>= 135 && (x+y) <= 150){
+                aimPosX = 0;
+                aimPosY = 144;
+            }else if((x+y) > 150){
+                aimPosX = 0;
+                aimPosY = 135;
+            }else{
+                aimPosX = 6;
+                aimPosY = 144;
+            }
+        }else{
+            if((x-y)>= -9 && (x-y) <= 9){
+                aimPosX = 144;
+                aimPosY = 144;
+            }else if((x-y) > 9){
+                aimPosX = 135;
+                aimPosY = 144;
+            }else{
+                aimPosX = 144;
+                aimPosY = 135;
+            }
+        }
+
+        return Math.atan2((aimPosY-robot.follower.getPose().getY()), aimPosX-robot.follower.getPose().getX());
+    }
     public int shootAutoGenerator(){
 
         double x = robot.follower.getPose().getX();
