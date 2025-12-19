@@ -45,7 +45,6 @@ public class BabyOp extends CommandOpMode {
     private MecanumDrive drive;
     public static int speed = 1000;
     public static int adjustSpeed = 0;
-    Limelight3A limelight;
 
 
     public ElapsedTime elapsedtime;
@@ -67,7 +66,7 @@ public class BabyOp extends CommandOpMode {
         driver = new GamepadEx(gamepad1);
         driver2 = new GamepadEx(gamepad2);
 
-        robot.stopperServo.set(0.65);
+        robot.stopperServo.set(0.56);
 
         /// this is what slows it down i think probably
         robot.follower.setMaxPower(0.5);
@@ -196,7 +195,6 @@ public class BabyOp extends CommandOpMode {
 
 
         telemetry.addData("Status", "Running");
-        telemetry.addData("motor speed", robot.leftShooter.getVelocity());
         elapsedtime.reset();
 
         telemetry.update();

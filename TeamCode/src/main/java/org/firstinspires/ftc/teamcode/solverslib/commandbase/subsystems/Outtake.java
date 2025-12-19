@@ -210,12 +210,18 @@ public class Outtake extends SubsystemBase {
         if(robot.leftShooter.getVelocity() > speed && robot.rightShooter.getVelocity() > speed){
             robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
             robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
-            shooterReady = true;
+            //shooterReady = true;
         }else{
 //            robot.leftShooter.setVelocity(1300);
 //            robot.rightShooter.setVelocity(1300);
             robot.leftShooter.set(1);
             robot.rightShooter.set(1);
+            //shooterReady = false;
+        }
+
+        if(robot.leftShooter.getVelocity() > speed-20 && robot.rightShooter.getVelocity() > speed-20){
+            shooterReady = true;
+        }else{
             shooterReady = false;
         }
 

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.solverslib.opmode.TeleOp;
 
+import static org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Lights.lightsState;
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.GoalColor;
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.OpModeType;
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.autoEndPose;
@@ -36,6 +37,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShoot;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAuto;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
+import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Lights;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
 import java.util.List;
@@ -50,8 +52,6 @@ public class TeleOpMainSolo extends CommandOpMode {
     private MecanumDrive drive;
     public static int speed = 1000;
     public static int adjustSpeed = 0;
-    Limelight3A limelight;
-
     public static double targetHeading;
 
 
@@ -63,12 +63,6 @@ public class TeleOpMainSolo extends CommandOpMode {
     public void initialize(){
         opModeType = OpModeType.TELEOP;
 
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
-        //limelight.start(); // This tells Limelight to start looking!
-
-        limelight.pipelineSwitch(0);
-
 
         // DO NOT REMOVE! Resetting FTCLib Command Sechduler
         super.reset();
@@ -77,7 +71,7 @@ public class TeleOpMainSolo extends CommandOpMode {
         elapsedtime = new ElapsedTime();
         elapsedtime.reset();
 
-        register(robot.intake, robot.outtake);
+        register(robot.intake, robot.outtake, robot.lights);
         driver = new GamepadEx(gamepad1);
 
         robot.stopperServo.set(0.56);
@@ -182,21 +176,19 @@ public class TeleOpMainSolo extends CommandOpMode {
         new Trigger(() -> driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5).whileActiveContinuous(
                 new SequentialCommandGroup(
                         new InstantCommand(() -> {
-                            double headingError;
-                            if (robot.follower.getCurrentPath() == null) {
-                                headingError = 0;
+                            if(goalColor == GoalColor.RED_GOAL){
+                                double newHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
+                                robot.follower.turnToDegrees(Math.toDegrees(newHeading));
+                                robot.follower.setConstraints(new PathConstraints(
+                                        0.995,
+                                        200,
+                                        1.5,
+                                        1
+                                ));
                             }else{
-                                headingError = MathFunctions.getTurnDirection(robot.follower.getPose().getHeading(), targetHeading) * MathFunctions.getSmallestAngleDifference(robot.follower.getPose().getHeading(), targetHeading);
+                                double newHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
+                                robot.follower.turnToDegrees(Math.toDegrees(newHeading));
                             }
-
-
-                            robot.controller.setCoefficients(robot.follower.constants.coefficientsHeadingPIDF);
-                            robot.controller.updateError(headingError);
-
-
-
-                            robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, robot.controller.run());
-
 
 
                         }
@@ -269,10 +261,11 @@ public class TeleOpMainSolo extends CommandOpMode {
 
             gameTimer = new ElapsedTime();
         }
-        limelight.start();
 
 
 
+        /// LIGHTS
+        lightsState = Lights.LightsState.SHOOTER_VALID;
 
         // DO NOT REMOVE! Runs FTCLib Command Scheudler
         super.run();
@@ -309,17 +302,17 @@ public class TeleOpMainSolo extends CommandOpMode {
 
         }
 
-        if(gamepad1.right_trigger > 0.5){
-            speed = robot.outtake.autoShoot2() + adjustSpeed;
-
-            robot.outtake.shootCustom(speed);
-            //robot.hoodServo.set(0.5);
-            if(robot.leftShooter.getVelocity() > speed-50){
-                robot.intake.startNoHood();
-            }else{
-                robot.intake.stopExceptShooter();
-            }
-        }
+//        if(gamepad1.right_trigger > 0.5){
+//            speed = robot.outtake.autoShoot2() + adjustSpeed;
+//
+//            robot.outtake.shootCustom(speed);
+//            //robot.hoodServo.set(0.5);
+//            if(robot.leftShooter.getVelocity() > speed-50){
+//                robot.intake.startNoHood();
+//            }else{
+//                robot.intake.stopExceptShooter();
+//            }
+//        }
 
 
 
@@ -340,74 +333,6 @@ public class TeleOpMainSolo extends CommandOpMode {
         }else{
             targetHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
         }
-
-
-
-        LLResult result = limelight.getLatestResult();
-                if(result != null){
-                    if(result.isValid()){
-                        Pose3D botpose = result.getBotpose_MT2();
-                        double llX = botpose.getPosition().x;
-                        double llY = botpose.getPosition().y;
-                        double llHeading = Math.toRadians(botpose.getOrientation().getYaw(AngleUnit.RADIANS));
-
-                        limelight.updateRobotOrientation(llHeading);
-
-                        Pose2D llPose = new Pose2D(DistanceUnit.INCH,llX,llY, AngleUnit.RADIANS,llHeading);
-                        Pose pedroPose = PoseConverter.pose2DToPose(llPose, InvertedFTCCoordinates.INSTANCE).getAsCoordinateSystem(PedroCoordinates.INSTANCE);
-
-                        //robot.follower.setPose(pedroPose);
-                        telemetry.addData("horray", pedroPose);
-
-
-                    }
-
-
-                        List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults(); // fiducials are special markers (like AprilTags)
-                        for (LLResultTypes.FiducialResult fiducial : fiducials) {
-
-                            //int id = fiducial.getFiducialId();
-
-
-
-//                            if(lastGoodPose == null){
-//                                lastGoodPose = pedroPose;
-//                            }
-
-                            // The ID number of the fiducial
-//                                if(id==20) {
-//                                    goals = Globals.GoalColor.BLUE_GOAL;
-//                                    telemetry.addData("goal color", "blue!");
-//                                } else if (id == 21) {
-//                                    randomizationMotif = Globals.RandomizationMotif.GREEN_LEFT;
-//                                    telemetry.addData("randomization:", randomizationMotif.toString());
-//                                    telemetry.update();
-//                                } else if (id == 22) {
-//                                    randomizationMotif = Globals.RandomizationMotif.GREEN_MIDDLE;
-//                                    telemetry.addData("randomization:", randomizationMotif.toString());
-//                                    telemetry.update();
-//                                } else if (id == 23) {
-//                                    randomizationMotif = Globals.RandomizationMotif.GREEN_RIGHT;
-//                                    telemetry.addData("randomization :", randomizationMotif.toString());
-//                                    telemetry.update();
-//                                } else if (id == 24){
-//                                    goals = Globals.GoalColor.RED_GOAL;
-//                                    telemetry.addData("goal color", "red!");
-//                                }else {
-//                                    //failsafe
-//                                    randomizationMotif = Globals.RandomizationMotif.GREEN_LEFT;
-//                                    telemetry.addData("FAILSAFE! :", randomizationMotif.toString());
-//                                    telemetry.update();
-//                                }
-                            }
-
-                    }else{
-                    //telemetry.addData("none! :", randomizationMotif.toString());
-                }
-
-
-
-
 
 
 

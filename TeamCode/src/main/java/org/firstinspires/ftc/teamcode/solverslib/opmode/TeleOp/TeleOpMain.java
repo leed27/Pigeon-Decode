@@ -50,7 +50,6 @@ public class TeleOpMain extends CommandOpMode {
 
     public static double targetHeading;
 
-    Limelight3A limelight;
 
 
     public ElapsedTime elapsedtime;
@@ -60,12 +59,6 @@ public class TeleOpMain extends CommandOpMode {
     @Override
     public void initialize(){
         opModeType = OpModeType.TELEOP;
-
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
-        limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
-        //limelight.start(); // This tells Limelight to start looking!
-
-        limelight.pipelineSwitch(0);
 
 
         // DO NOT REMOVE! Resetting FTCLib Command Sechduler
@@ -342,7 +335,6 @@ public class TeleOpMain extends CommandOpMode {
 
     @Override
     public void run() {
-        lightsState = Lights.LightsState.SHOOTER_VALID;
         // Keep all the has movement init for until when TeleOp starts
         // This is like the init but when the program is actually started
         Pose currentPose = robot.follower.getPose();
@@ -365,11 +357,13 @@ public class TeleOpMain extends CommandOpMode {
 
             gameTimer = new ElapsedTime();
         }
-        limelight.start();
+
+
+        /// LIGHTS
+        lightsState = Lights.LightsState.SHOOTER_VALID;
 
         // DO NOT REMOVE! Runs FTCLib Command Scheudler
         super.run();
-        robot.lights.updateLights();
 
 
         //speed = robot.outtake.shootAutoGenerator();
@@ -420,7 +414,7 @@ public class TeleOpMain extends CommandOpMode {
                 robot.outtake.shootCustom(speed2+(adjustSpeed));
                 robot.stopperServo.set(.47);
                 /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE
-                if(robot.leftShooter.getVelocity() > speed2+adjustSpeed-50 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
+                if(robot.leftShooter.getVelocity() > speed2+adjustSpeed-20 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
                     robot.intake.startNoHood();
                 }else{
                     robot.intake.stopExceptShooter();
@@ -445,72 +439,6 @@ public class TeleOpMain extends CommandOpMode {
             robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
             robot.follower.startTeleopDrive();
         }
-
-
-
-        LLResult result = limelight.getLatestResult();
-                if(result != null){
-                    if(result.isValid()){
-                        Pose3D botpose = result.getBotpose_MT2();
-                        double llX = botpose.getPosition().x;
-                        double llY = botpose.getPosition().y;
-                        double llHeading = Math.toRadians(botpose.getOrientation().getYaw());
-
-                        Pose2D llPose = new Pose2D(DistanceUnit.INCH,llX,llY, AngleUnit.RADIANS,llHeading);
-                        Pose pedroPose = PoseConverter.pose2DToPose(llPose, InvertedFTCCoordinates.INSTANCE).getAsCoordinateSystem(PedroCoordinates.INSTANCE);
-
-                        //robot.follower.setPose(pedroPose);
-                        telemetry.addData("horray", pedroPose);
-
-
-                    }
-
-
-                        List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults(); // fiducials are special markers (like AprilTags)
-                        for (LLResultTypes.FiducialResult fiducial : fiducials) {
-
-                            //int id = fiducial.getFiducialId();
-
-
-
-//                            if(lastGoodPose == null){
-//                                lastGoodPose = pedroPose;
-//                            }
-
-                            // The ID number of the fiducial
-//                                if(id==20) {
-//                                    goals = Globals.GoalColor.BLUE_GOAL;
-//                                    telemetry.addData("goal color", "blue!");
-//                                } else if (id == 21) {
-//                                    randomizationMotif = Globals.RandomizationMotif.GREEN_LEFT;
-//                                    telemetry.addData("randomization:", randomizationMotif.toString());
-//                                    telemetry.update();
-//                                } else if (id == 22) {
-//                                    randomizationMotif = Globals.RandomizationMotif.GREEN_MIDDLE;
-//                                    telemetry.addData("randomization:", randomizationMotif.toString());
-//                                    telemetry.update();
-//                                } else if (id == 23) {
-//                                    randomizationMotif = Globals.RandomizationMotif.GREEN_RIGHT;
-//                                    telemetry.addData("randomization :", randomizationMotif.toString());
-//                                    telemetry.update();
-//                                } else if (id == 24){
-//                                    goals = Globals.GoalColor.RED_GOAL;
-//                                    telemetry.addData("goal color", "red!");
-//                                }else {
-//                                    //failsafe
-//                                    randomizationMotif = Globals.RandomizationMotif.GREEN_LEFT;
-//                                    telemetry.addData("FAILSAFE! :", randomizationMotif.toString());
-//                                    telemetry.update();
-//                                }
-                            }
-
-                    }else{
-                    //telemetry.addData("none! :", randomizationMotif.toString());
-                }
-
-
-
-
 
 
 

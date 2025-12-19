@@ -35,6 +35,7 @@ public class Lights extends SubsystemBase {
         SHOOTER_VALID,
         SWITCH_SIDE,
         VELOCITY_MET,
+        CONSTANT_COLOR
 
 
     }
@@ -50,6 +51,10 @@ public class Lights extends SubsystemBase {
 
         if(lightsState == LightsState.VELOCITY_MET){
             velocityMet();
+        }
+
+        if(lightsState == LightsState.CONSTANT_COLOR){
+            constantColor();
         }
     }
 
@@ -118,6 +123,11 @@ public class Lights extends SubsystemBase {
             robot.lightLeft.setPosition(RED);
             robot.lightRight.setPosition(RED);
         }
+    }
+
+    public void constantColor(){
+        robot.lightLeft.setPosition(ORANGE);
+        robot.lightRight.setPosition(ORANGE);
     }
 
 
