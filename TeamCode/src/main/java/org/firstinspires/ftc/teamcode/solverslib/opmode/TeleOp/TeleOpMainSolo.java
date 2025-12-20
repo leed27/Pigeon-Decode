@@ -173,7 +173,7 @@ public class TeleOpMainSolo extends CommandOpMode {
 
 
         /// maybe fix driver inconsistency w/ joystick, make it follow path every half a second
-        new Trigger(() -> driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5).whileActiveContinuous(
+        new Trigger(() -> driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5).whenActive(
                 new SequentialCommandGroup(
                         new InstantCommand(() -> {
                             if(goalColor == GoalColor.RED_GOAL){
@@ -294,7 +294,7 @@ public class TeleOpMainSolo extends CommandOpMode {
 
                 robot.stopperServo.set(0.47);
                 /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE
-                if(robot.leftShooter.getVelocity() > speed-50 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
+                if(robot.leftShooter.getVelocity() > speed-20 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
                     robot.intake.startNoHood();
                 }else{
                     robot.intake.stopExceptShooter();
@@ -330,11 +330,11 @@ public class TeleOpMainSolo extends CommandOpMode {
             robot.follower.startTeleopDrive();
         }
 
-        if(goalColor == GoalColor.RED_GOAL){
-            targetHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
-        }else{
-            targetHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
-        }
+//        if(goalColor == GoalColor.RED_GOAL){
+//            targetHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
+//        }else{
+//            targetHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
+//        }
 
 
 

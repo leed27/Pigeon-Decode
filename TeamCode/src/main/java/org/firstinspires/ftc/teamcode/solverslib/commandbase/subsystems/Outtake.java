@@ -195,7 +195,7 @@ public class Outtake extends SubsystemBase {
     }
 
     public void shootAuto(){
-        if(robot.leftShooter.getVelocity() > 1100 && robot.rightShooter.getVelocity() > 1100){
+        if(robot.leftShooter.getVelocity() > 1070 && robot.rightShooter.getVelocity() > 1070){
             robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
             robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
             shooterReady = true;

@@ -394,23 +394,6 @@ public class TeleOpMain extends CommandOpMode {
                 robot.follower.startTeleopDrive();
             }
 
-            /// UPDATES SHOOTER THROUGHOUT, NOT ONLY WHEN BUTTON IS PRESSED
-//            if(gamepad2.triangle){
-//                robot.outtake.stop();
-//            }else{
-//                robot.outtake.shootCustom(speed+(adjustSpeed));
-//            }
-//            if(gamepad2.left_bumper){
-//                robot.outtake.shootCustom(speed+(adjustSpeed));
-//                robot.stopperServo.set(.47);
-//                /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE
-//                if(robot.leftShooter.getVelocity() > speed+adjustSpeed-50 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
-//                    robot.intake.startNoHood();
-//                }else{
-//                    robot.intake.stopExceptShooter();
-//                }
-//            }
-
             if(gamepad2.right_bumper){
                 robot.outtake.shootCustom(speed2+(adjustSpeed));
                 robot.stopperServo.set(.47);
@@ -446,9 +429,9 @@ public class TeleOpMain extends CommandOpMode {
         telemetry.addData("Status", "Running");
         //telemetry.addData("loop times", elapsedtime.milliseconds());
         //telemetry.addData("follower busy", robot.follower.isBusy());
-        //telemetry.addData("x", robot.follower.getPose().getX());
-        //telemetry.addData("y", robot.follower.getPose().getY());
-        //telemetry.addData("angle", Math.toDegrees(robot.follower.getPose().getHeading()));
+        telemetry.addData("x", robot.follower.getPose().getX());
+        telemetry.addData("y", robot.follower.getPose().getY());
+        telemetry.addData("angle", Math.toDegrees(robot.follower.getPose().getHeading()));
         //telemetry.addData("speed in feet", test);
         //telemetry.addData("target speed", speed);
         telemetry.addData("target speed ORIGINAL", speed2);
