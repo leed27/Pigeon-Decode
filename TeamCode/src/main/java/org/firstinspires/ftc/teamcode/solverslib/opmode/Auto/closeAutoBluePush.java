@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.InstantCommand;
-import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
 import com.seattlesolvers.solverslib.command.RepeatCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
@@ -22,39 +21,39 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAuto;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@Autonomous(name = "CLOSE 9 BALL + PUSH \uD83D\uDD34", group = "auto")
-public class closeAutoRed2 extends CommandOpMode{
+@Autonomous(name = "CLOSE 9 BALL + PUSH \uD83D\uDD35", group = "auto")
+public class closeAutoBluePush extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
 
     //private final ArrayList<PathChain> paths = new ArrayList<>();
 
     // ALL PATHS
-    private final Pose startPose = new Pose(24.6, 128.4, Math.toRadians(144)).mirror(); //e
+    private final Pose startPose = new Pose(24.6, 128.4, Math.toRadians(144)); //e
     /// blue paths
-    private final Pose blueTopPilePose = new Pose(50,84, Math.toRadians(180)).mirror(); //e
-    private final Pose blueTopPileForwardPose = new Pose(17, 84, Math.toRadians(180)).mirror(); //e
-    private final Pose blueMiddlePilePose = new Pose(50, 57, Math.toRadians(180)).mirror();
-    private final Pose blueMiddlePileForwardPose = new Pose(15, 57, Math.toRadians(180)).mirror();
+    private final Pose blueTopPilePose = new Pose(50,84, Math.toRadians(180)); //e
+    private final Pose blueTopPileForwardPose = new Pose(17, 84, Math.toRadians(180)); //e
+    private final Pose blueMiddlePilePose = new Pose(50, 59, Math.toRadians(180));
+    private final Pose blueMiddlePileForwardPose = new Pose(15, 59, Math.toRadians(180));
 
-    private final Pose readyGatePose = new Pose(30, 59, Math.toRadians(180)).mirror();
-    private final Pose openGatePose = new Pose(18, 69, Math.toRadians(180)).mirror();
-    private final Pose controlPose = new Pose(79, 37).mirror();
-    private final Pose blueBottomPilePose = new Pose(50, 36, Math.toRadians(180)).mirror();
-    private final Pose blueBottomPileForwardPose = new Pose(15, 36, Math.toRadians(180)).mirror();
-    private final Pose blueTopShootPose = new Pose(51,96, Math.toRadians(150)).mirror();
-    private final Pose blueTopShootPose2 = new Pose(51,96, Math.toRadians(135)).mirror();
+    private final Pose readyGatePose = new Pose(30, 59, Math.toRadians(180));
+    private final Pose openGatePose = new Pose(18, 69, Math.toRadians(180));
+    private final Pose controlPose = new Pose(79, 37);
+    private final Pose blueBottomPilePose = new Pose(50, 36, Math.toRadians(180));
+    private final Pose blueBottomPileForwardPose = new Pose(15, 36, Math.toRadians(180));
+    private final Pose blueTopShootPose = new Pose(51,96, Math.toRadians(150));
+    private final Pose blueTopShootPose2 = new Pose(51,96, Math.toRadians(135));
 
-    private final Pose blueBottomShootPose =  new Pose(30, 15, Math.toRadians(120)).mirror();
+    private final Pose blueBottomShootPose =  new Pose(30, 15, Math.toRadians(120));
 
-    private final Pose prepPushPose = new Pose(73, 50, Math.toRadians(0)).mirror();
+    private final Pose prepPushPose = new Pose(73, 50, Math.toRadians(0));
 
-    private final Pose getReadyPushPose = new Pose(73, 9, Math.toRadians(0)).mirror();
-    private final Pose pushPose = new Pose(54, 9, Math.toRadians(0)).mirror();
+    private final Pose getReadyPushPose = new Pose(73, 9, Math.toRadians(0));
+    private final Pose pushPose = new Pose(54, 9, Math.toRadians(0));
 
-    private final Pose parkPose = new Pose(34, 80, Math.toRadians(135)).mirror();
+    private final Pose parkPose = new Pose(34, 80, Math.toRadians(135));
 
-    private final Pose parkPose2 = new Pose(60, 30, Math.toRadians(0)).mirror();
+    private final Pose parkPose2 = new Pose(60, 30, Math.toRadians(0));
     private Path grabTopBlue;
     private PathChain shootPreloads, collectTopBlue, shootTopBlue, grabMiddleBlue, goBackMiddleBlue, goBackMiddleBlue2, collectMiddleBlue, readyGateBlue, openGateBlue, shootMiddleBlue, grabEndBlue, collectEndBlue, goBackEndBlue, shootEndBlue, park, prepPushing, getToPushing, pushTime, pushToPark;
     public void generatePath() {
@@ -94,7 +93,7 @@ public class closeAutoRed2 extends CommandOpMode{
                 .build();
 
         openGateBlue = robot.follower.pathBuilder()
-                .addPath(new BezierLine(readyGatePose, openGatePose))
+                .addPath(new BezierLine(blueMiddlePileForwardPose, openGatePose))
                 .setConstantHeadingInterpolation(openGatePose.getHeading())
                 .build();
 
@@ -377,6 +376,7 @@ public class closeAutoRed2 extends CommandOpMode{
                 new RunCommand(() -> robot.follower.update()),
 
                 new SequentialCommandGroup(
+                        new InstantCommand(),
                         scorePreload(),
 
                         grabTopBlue(),
