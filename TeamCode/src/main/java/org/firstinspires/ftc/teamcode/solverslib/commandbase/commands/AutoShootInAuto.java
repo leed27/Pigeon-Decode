@@ -19,7 +19,7 @@ public class AutoShootInAuto extends ParallelCommandGroup {
                         new InstantCommand(() -> robot.intake.startCustom(0.8)
                         ),
                         new InstantCommand(() -> robot.intake.stopExceptShooter()),
-                        () -> (robot.leftShooter.getVelocity() > 1050)
+                        () -> (robot.leftShooter.getVelocity() > 1090)
                 ).withTimeout(100)
 
         );

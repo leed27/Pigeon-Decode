@@ -35,8 +35,8 @@ public class Intake extends SubsystemBase {
     public void stop(){
         robot.leftIntake.set(0);
         robot.rightIntake.set(0);
-        robot.leftShooter.set(0);
-        robot.rightShooter.set(0);
+        //robot.leftShooter.set(0);
+        //robot.rightShooter.set(0);
     }
 
     public void stopExceptShooter(){

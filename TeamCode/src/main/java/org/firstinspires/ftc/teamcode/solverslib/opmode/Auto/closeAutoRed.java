@@ -249,7 +249,7 @@ public class closeAutoRed extends CommandOpMode{
                 new FollowPathCommand(robot.follower, collectEndBlue, false).withTimeout(3000),
                 new WaitCommand(500),
                 //new FollowPathCommand(robot.follower, goBackEndBlue, false),
-                //new InstantCommand(() -> robot.follower.setMaxPower(.8)),
+                new InstantCommand(() -> robot.follower.setMaxPower(.8)),
                 //stop intake
 
                 new InstantCommand(() ->robot.intake.stop())

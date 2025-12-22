@@ -26,7 +26,7 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@Autonomous(name = "FAR 9 HP \uD83D\uDD34", group = "auto")
+@Autonomous(name = "FAR HP \uD83D\uDD34", group = "auto")
 public class farAutoRedHP extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
