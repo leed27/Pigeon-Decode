@@ -59,10 +59,10 @@ public class Outtake extends SubsystemBase {
         lookUpClose.add(9.38, 1280);
         lookUpClose.add(9.7, 1300);
         lookUpClose.add(10.3, 1350);
-        lookUpClose.add(11, 1370);
-        lookUpClose.add(11.7, 1390);
-        lookUpClose.add(12.15, 1420);
-        lookUpClose.add(13, 1450);
+        lookUpClose.add(11, 1400);
+        lookUpClose.add(11.7, 1420);
+        lookUpClose.add(12.15, 1450);
+        lookUpClose.add(13, 1480);
         lookUpClose.createLUT();
 
         lookUpFar.add(0, 0);

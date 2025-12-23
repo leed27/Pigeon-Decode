@@ -43,7 +43,7 @@ public class closeAutoBlue extends CommandOpMode{
     private final Pose controlPose = new Pose(79, 37);
     private final Pose blueBottomPilePose = new Pose(50, 36, Math.toRadians(180));
     private final Pose blueBottomPileForwardPose = new Pose(15, 36, Math.toRadians(180));
-    private final Pose blueTopShootPose = new Pose(51,96, Math.toRadians(150));
+    private final Pose blueTopShootPose = new Pose(51,96, Math.toRadians(144));
     private final Pose blueTopShootPose2 = new Pose(51,96, Math.toRadians(135));
 
     private final Pose blueBottomShootPose =  new Pose(55, 15, Math.toRadians(120));

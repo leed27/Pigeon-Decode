@@ -315,6 +315,8 @@ public class farAutoRedHP extends CommandOpMode{
     public void run() {
         super.run();
 
+        robot.outtake.shootAutoFar();
+
         telemetry.addData("timer", timer.milliseconds());
 
         telemetry.addData("followerIsBusy", robot.follower.isBusy());

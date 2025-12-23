@@ -77,6 +77,10 @@ public class farAutoBlueHP extends CommandOpMode{
                 .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileForwardPose.getHeading())
                 .addPath(new BezierLine(blueDepotPileBackPose, blueDepotPilePose))
                 .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileForwardPose.getHeading())
+                .addPath(new BezierLine(blueDepotPilePose, blueDepotPileBackPose))
+                .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileForwardPose.getHeading())
+                .addPath(new BezierLine(blueDepotPileBackPose, blueDepotPilePose))
+                .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileForwardPose.getHeading())
                 .build();
 
         uncollectDepotBlue = robot.follower.pathBuilder()
@@ -310,6 +314,9 @@ public class farAutoBlueHP extends CommandOpMode{
     @Override
     public void run() {
         super.run();
+
+        robot.outtake.shootAutoFar();
+
 
         telemetry.addData("timer", timer.milliseconds());
 

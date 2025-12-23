@@ -162,9 +162,11 @@ public class farAutoBlue extends CommandOpMode{
                 new InstantCommand(() -> robot.intake.startCustom(0.8)),
                 new InstantCommand(() -> robot.follower.setMaxPower(.5)),
                 new FollowPathCommand(robot.follower, collectDepotBlue, false).withTimeout(1000),
-                new FollowPathCommand(robot.follower, uncollectDepotBlue, false).withTimeout(1000),
-                new FollowPathCommand(robot.follower, collectDepotBlue, false).withTimeout(1000),
-                new FollowPathCommand(robot.follower, uncollectDepotBlue, false).withTimeout(1000),
+                new FollowPathCommand(robot.follower, uncollectDepotBlue, false).withTimeout(750),
+                new FollowPathCommand(robot.follower, collectDepotBlue, false).withTimeout(750),
+                new FollowPathCommand(robot.follower, uncollectDepotBlue, false).withTimeout(750),
+                new FollowPathCommand(robot.follower, collectDepotBlue, false).withTimeout(750),
+                new FollowPathCommand(robot.follower, uncollectDepotBlue, false).withTimeout(750),
                 //stop intake
                 new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1))
