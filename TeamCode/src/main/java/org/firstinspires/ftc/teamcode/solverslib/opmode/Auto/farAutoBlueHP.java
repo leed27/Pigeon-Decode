@@ -41,6 +41,7 @@ public class farAutoBlueHP extends CommandOpMode{
     private final Pose parkPose = new Pose(108,14, Math.toRadians(70)).mirror();
 
     private final Pose blueDepotPilePose = new Pose(10, 10, Math.toRadians(180));
+    private final Pose blueDepotPileAnglePose = new Pose(10.5, 10, Math.toRadians(200));
     private final Pose blueDepotPileBackPose = new Pose(20, 9, Math.toRadians(180));
     private final Pose blueDepotPileForwardPose = new Pose(10, 9, Math.toRadians(180));
     private final Pose blueDepotControlPose = new Pose(37,10);
@@ -74,23 +75,23 @@ public class farAutoBlueHP extends CommandOpMode{
 
         collectDepotBlue = robot.follower.pathBuilder()
                 .addPath(new BezierLine(blueDepotPilePose, blueDepotPileBackPose))
-                .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileForwardPose.getHeading())
+                .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileBackPose.getHeading())
                 .addPath(new BezierLine(blueDepotPileBackPose, blueDepotPilePose))
-                .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileForwardPose.getHeading())
+                .setLinearHeadingInterpolation(blueDepotPileBackPose.getHeading(), blueDepotPilePose.getHeading())
                 .addPath(new BezierLine(blueDepotPilePose, blueDepotPileBackPose))
-                .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileForwardPose.getHeading())
-                .addPath(new BezierLine(blueDepotPileBackPose, blueDepotPilePose))
-                .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileForwardPose.getHeading())
+                .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileBackPose.getHeading())
+                .addPath(new BezierLine(blueDepotPileBackPose, blueDepotPileAnglePose))
+                .setLinearHeadingInterpolation(blueDepotPileBackPose.getHeading(), blueDepotPileAnglePose.getHeading())
                 .build();
 
         uncollectDepotBlue = robot.follower.pathBuilder()
-                .addPath(new BezierLine(blueDepotPileForwardPose, blueDepotPilePose))
-                .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileForwardPose.getHeading())
+                .addPath(new BezierLine(blueDepotPileAnglePose, blueDepotPileBackPose))
+                .setLinearHeadingInterpolation(blueDepotPileAnglePose.getHeading(), blueDepotPileBackPose.getHeading())
                 .build();
 
         shootDepotBlue = robot.follower.pathBuilder()
-                .addPath(new BezierLine(blueDepotPilePose, shootPose))
-                .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), shootPose.getHeading(), .8)
+                .addPath(new BezierLine(blueDepotPileBackPose, shootPose))
+                .setLinearHeadingInterpolation(blueDepotPileBackPose.getHeading(), shootPose.getHeading(), .8)
                 .build();
 
         grabHumanPlayer = robot.follower.pathBuilder()
@@ -297,12 +298,12 @@ public class farAutoBlueHP extends CommandOpMode{
     @Override
     public void initialize_loop(){
 
-        if(gamepad1.square){
-            delayEnabled = true;
-        }
-        if(gamepad1.circle){
-            delayEnabled = false;
-        }
+//        if(gamepad1.square){
+//            delayEnabled = true;
+//        }
+//        if(gamepad1.circle){
+//            delayEnabled = false;
+//        }
 
         //telemetry.addData("randomization:", randomizationMotif.toString());
         telemetry.addData("Square to ADD delay", "Circle to REMOVE delay");

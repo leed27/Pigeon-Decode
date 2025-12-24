@@ -109,7 +109,7 @@ public class farAutoBlue extends CommandOpMode{
                 new InstantCommand(() -> robot.stopperServo.set(0.47)),
                 new RepeatCommand(
                         new AutoShootInAutoFAR()
-                ).withTimeout(4000),
+                ).withTimeout(3200),
 
                 //new WaitCommand(3000),
                 //new InstantCommand(() -> robot.outtake.stop()),
@@ -126,9 +126,8 @@ public class farAutoBlue extends CommandOpMode{
                 new FollowPathCommand(robot.follower, grabEndBlue, false),
                 new InstantCommand(() -> robot.follower.setMaxPower(.3)),
                 //start intake
-                new InstantCommand(() -> robot.intake.startCustom(0.8)),
+                new InstantCommand(() -> robot.intake.startCustom(1)),
                 new FollowPathCommand(robot.follower, collectEndBlue, false).withTimeout(3000),
-                new WaitCommand(1000),
                 //stop intake
                 new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1))
@@ -143,7 +142,7 @@ public class farAutoBlue extends CommandOpMode{
                 new InstantCommand(() -> robot.stopperServo.set(0.47)),
                 new RepeatCommand(
                         new AutoShootInAutoFAR()
-                ).withTimeout(4000),
+                ).withTimeout(2500),
 
                 //new WaitCommand(3000),
                 //new InstantCommand(() -> robot.outtake.stop()),
@@ -159,7 +158,7 @@ public class farAutoBlue extends CommandOpMode{
                 //new WaitCommand(6000),
                 new FollowPathCommand(robot.follower, grabDepotBlue, false),
                 //start intake
-                new InstantCommand(() -> robot.intake.startCustom(0.8)),
+                new InstantCommand(() -> robot.intake.startCustom(1)),
                 new InstantCommand(() -> robot.follower.setMaxPower(.5)),
                 new FollowPathCommand(robot.follower, collectDepotBlue, false).withTimeout(1000),
                 new FollowPathCommand(robot.follower, uncollectDepotBlue, false).withTimeout(750),
@@ -181,7 +180,7 @@ public class farAutoBlue extends CommandOpMode{
                 new InstantCommand(() -> robot.stopperServo.set(0.47)),
                 new RepeatCommand(
                         new AutoShootInAutoFAR()
-                ).withTimeout(4000),
+                ).withTimeout(2500),
 
                 //new WaitCommand(3000),
                 new InstantCommand(() -> robot.outtake.stop()),
@@ -284,6 +283,8 @@ public class farAutoBlue extends CommandOpMode{
     @Override
     public void run() {
         super.run();
+
+        robot.outtake.shootAutoFar();
 
         telemetry.addData("timer", timer.milliseconds());
 

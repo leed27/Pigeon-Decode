@@ -2,7 +2,10 @@ package org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems;
 
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
+import com.seattlesolvers.solverslib.command.ConditionalCommand;
 import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.command.ParallelCommandGroup;
+import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.command.UninterruptibleCommand;
 import com.seattlesolvers.solverslib.command.WaitCommand;
@@ -24,6 +27,8 @@ public class Lights extends SubsystemBase {
     public double VIOLET = 0.72;
     public double WHITE = 1;
     public double OFF = 0;
+
+    public double constantColor = ORANGE;
 
 
     public void init(){
@@ -54,7 +59,8 @@ public class Lights extends SubsystemBase {
         }
 
         if(lightsState == LightsState.CONSTANT_COLOR){
-            constantColor();
+            /// WHEN USING CONSTANT COLOR MAKE SURE TO CHANGE CONSTANT COLOR VARIABLE
+            constantColor(constantColor);
         }
     }
 
@@ -71,46 +77,74 @@ public class Lights extends SubsystemBase {
     //no idea if this works
     public void switchSide(){
         new UninterruptibleCommand(
-                new InstantCommand(
-                        () -> {
-                            if(goalColor == Globals.GoalColor.RED_GOAL){
-                                robot.lightLeft.setPosition(RED);
-                                robot.lightRight.setPosition(RED);
-                                new WaitCommand(200);
-                                robot.lightLeft.setPosition(OFF);
-                                robot.lightRight.setPosition(OFF);
-                                new WaitCommand(200);
-                                robot.lightLeft.setPosition(RED);
-                                robot.lightRight.setPosition(RED);
-                                new WaitCommand(200);
-                                robot.lightLeft.setPosition(OFF);
-                                robot.lightRight.setPosition(OFF);
-                                new WaitCommand(200);
-                                robot.lightLeft.setPosition(RED);
-                                robot.lightRight.setPosition(RED);
-
-                            }else{
-                                robot.lightLeft.setPosition(BLUE);
-                                robot.lightRight.setPosition(BLUE);
-                                new WaitCommand(200);
-                                robot.lightLeft.setPosition(OFF);
-                                robot.lightRight.setPosition(OFF);
-                                new WaitCommand(200);
-                                robot.lightLeft.setPosition(BLUE);
-                                robot.lightRight.setPosition(BLUE);
-                                new WaitCommand(200);
-                                robot.lightLeft.setPosition(OFF);
-                                robot.lightRight.setPosition(OFF);
-                                new WaitCommand(200);
-                                robot.lightLeft.setPosition(BLUE);
-                                robot.lightRight.setPosition(BLUE);
-
-                            }
-
-                            new WaitCommand(1000);
-                            lightsState = LightsState.SHOOTER_VALID;
-                        }
+                new ConditionalCommand(
+                        new SequentialCommandGroup(
+                                new ParallelCommandGroup(
+                                        new InstantCommand(() -> robot.lightLeft.setPosition(RED)),
+                                        new InstantCommand(() -> robot.lightRight.setPosition(RED))
+                                ),
+                                new WaitCommand(500),
+                                new ParallelCommandGroup(
+                                        new InstantCommand(() -> robot.lightLeft.setPosition(OFF)),
+                                        new InstantCommand(() -> robot.lightRight.setPosition(OFF))
+                                ),
+                                new WaitCommand(500),
+                                new ParallelCommandGroup(
+                                        new InstantCommand(() -> robot.lightLeft.setPosition(RED)),
+                                        new InstantCommand(() -> robot.lightRight.setPosition(RED))
+                                ),
+                                new WaitCommand(500),
+                                new ParallelCommandGroup(
+                                        new InstantCommand(() -> robot.lightLeft.setPosition(OFF)),
+                                        new InstantCommand(() -> robot.lightRight.setPosition(OFF))
+                                ),
+                                new WaitCommand(500),
+                                new ParallelCommandGroup(
+                                        new InstantCommand(() -> robot.lightLeft.setPosition(RED)),
+                                        new InstantCommand(() -> robot.lightRight.setPosition(RED))
+                                ),
+                                new WaitCommand(500),
+                                new ParallelCommandGroup(
+                                        new InstantCommand(() -> robot.lightLeft.setPosition(OFF)),
+                                        new InstantCommand(() -> robot.lightRight.setPosition(OFF))
+                                ),
+                                new WaitCommand(1000)
+                        ),
+                        new SequentialCommandGroup(
+                                new ParallelCommandGroup(
+                                        new InstantCommand(() -> robot.lightLeft.setPosition(BLUE)),
+                                        new InstantCommand(() -> robot.lightRight.setPosition(BLUE))
+                                ),
+                                new WaitCommand(500),
+                                new ParallelCommandGroup(
+                                        new InstantCommand(() -> robot.lightLeft.setPosition(OFF)),
+                                        new InstantCommand(() -> robot.lightRight.setPosition(OFF))
+                                ),
+                                new WaitCommand(500),
+                                new ParallelCommandGroup(
+                                        new InstantCommand(() -> robot.lightLeft.setPosition(BLUE)),
+                                        new InstantCommand(() -> robot.lightRight.setPosition(BLUE))
+                                ),
+                                new WaitCommand(500),
+                                new ParallelCommandGroup(
+                                        new InstantCommand(() -> robot.lightLeft.setPosition(OFF)),
+                                        new InstantCommand(() -> robot.lightRight.setPosition(OFF))
+                                ),
+                                new WaitCommand(500),
+                                new ParallelCommandGroup(
+                                        new InstantCommand(() -> robot.lightLeft.setPosition(BLUE)),
+                                        new InstantCommand(() -> robot.lightRight.setPosition(BLUE))
+                                ),
+                                new WaitCommand(500),
+                                new ParallelCommandGroup(
+                                        new InstantCommand(() -> robot.lightLeft.setPosition(OFF)),
+                                        new InstantCommand(() -> robot.lightRight.setPosition(OFF))
+                                ),
+                                new WaitCommand(1000)
+                        ),
+                        () -> (goalColor == Globals.GoalColor.RED_GOAL)
                 )
+
         );
 
     }
@@ -123,11 +157,12 @@ public class Lights extends SubsystemBase {
             robot.lightLeft.setPosition(RED);
             robot.lightRight.setPosition(RED);
         }
+
     }
 
-    public void constantColor(){
-        robot.lightLeft.setPosition(ORANGE);
-        robot.lightRight.setPosition(ORANGE);
+    public void constantColor(double color){
+        robot.lightLeft.setPosition(color);
+        robot.lightRight.setPosition(color);
     }
 
 

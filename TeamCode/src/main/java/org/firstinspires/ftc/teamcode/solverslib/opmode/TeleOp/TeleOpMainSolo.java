@@ -53,6 +53,8 @@ public class TeleOpMainSolo extends CommandOpMode {
     public static int speed = 1000;
     public static int adjustSpeed = 0;
     public static double targetHeading;
+    boolean autoShootDisabled = false;
+
 
 
     public ElapsedTime elapsedtime;
@@ -72,6 +74,8 @@ public class TeleOpMainSolo extends CommandOpMode {
         elapsedtime.reset();
 
         register(robot.intake, robot.outtake, robot.lights);
+        /// LIGHTS
+        lightsState = Lights.LightsState.SHOOTER_VALID;
         driver = new GamepadEx(gamepad1);
 
         robot.stopperServo.set(0.56);
@@ -98,6 +102,18 @@ public class TeleOpMainSolo extends CommandOpMode {
                 new InstantCommand(() -> robot.intake.stop())
 
         );
+
+
+        /// OVERRIDE AUTO SHOOT
+        driver.getGamepadButton(GamepadKeys.Button.TOUCHPAD).whenPressed(
+                new SequentialCommandGroup(
+                        new InstantCommand(() -> robot.follower.breakFollowing()),
+                        new InstantCommand(() -> robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true)),
+                        new InstantCommand(() -> robot.follower.startTeleopDrive()),
+                        new InstantCommand(() -> autoShootDisabled = !autoShootDisabled)
+                )
+        );
+
 
         /// BACKUP ADJUSTMENT SPEED IF LOCALIZATION DRIFTS
         driver.getGamepadButton(GamepadKeys.Button.CIRCLE).whenPressed(
@@ -264,8 +280,7 @@ public class TeleOpMainSolo extends CommandOpMode {
 
 
 
-        /// LIGHTS
-        lightsState = Lights.LightsState.SHOOTER_VALID;
+
 
         // DO NOT REMOVE! Runs FTCLib Command Scheudler
         super.run();
@@ -276,12 +291,6 @@ public class TeleOpMainSolo extends CommandOpMode {
         if(speed == -1){
         }else{
 
-            if(gamepad1.touchpad){
-                robot.follower.breakFollowing();
-                //}
-                robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
-                robot.follower.startTeleopDrive();
-            }
 
             /// UPDATES SHOOTER THROUGHOUT, NOT ONLY WHEN BUTTON IS PRESSED
             if(gamepad1.triangle){
@@ -340,16 +349,20 @@ public class TeleOpMainSolo extends CommandOpMode {
 
         telemetry.addData("Status", "Running");
         //telemetry.addData("loop times", elapsedtime.milliseconds());
-        telemetry.addData("follower busy", robot.follower.isBusy());
+        //telemetry.addData("follower busy", robot.follower.isBusy());
         telemetry.addData("x", robot.follower.getPose().getX());
         telemetry.addData("y", robot.follower.getPose().getY());
         telemetry.addData("angle", Math.toDegrees(robot.follower.getPose().getHeading()));
-        telemetry.addData("speed in feet", test);
-        telemetry.addData("target speed", speed);
+        //telemetry.addData("speed in feet", test);
+        //telemetry.addData("target speed", speed);
+        telemetry.addData("target speed ORIGINAL", speed);
         telemetry.addData("adjust speed", adjustSpeed);
-        telemetry.addData("motor speed", robot.leftShooter.getVelocity());
+        telemetry.addData("FINAL SPEED", speed+adjustSpeed);
+        telemetry.addData("how Far", Math.sqrt(Math.pow(((144-robot.follower.getPose().getY())/(12)), 2) + Math.pow(((-robot.follower.getPose().getX())/(12)),2)));
         telemetry.addData("team", goalColor);
-        telemetry.addData("degrees TARGET", Math.toDegrees(Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX())));
+        telemetry.addData("motor speed", robot.leftShooter.getVelocity());
+        telemetry.addData("auto shoot disabled", autoShootDisabled);
+        //telemetry.addData("SERVO POSITIONNNNN", robot.stopperServo.get());
         elapsedtime.reset();
 
         telemetry.update();
