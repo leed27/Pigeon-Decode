@@ -46,9 +46,9 @@ public class closeAutoRedPush extends CommandOpMode{
 
     private final Pose blueBottomShootPose =  new Pose(30, 15, Math.toRadians(120)).mirror();
 
-    private final Pose prepPushPose = new Pose(73, 50, Math.toRadians(0)).mirror();
+    private final Pose prepPushPose = new Pose(63, 50, Math.toRadians(0)).mirror();
 
-    private final Pose getReadyPushPose = new Pose(73, 9, Math.toRadians(0)).mirror();
+    private final Pose getReadyPushPose = new Pose(63, 9, Math.toRadians(0)).mirror();
     private final Pose pushPose = new Pose(54, 9, Math.toRadians(0)).mirror();
 
     private final Pose parkPose = new Pose(34, 80, Math.toRadians(135)).mirror();

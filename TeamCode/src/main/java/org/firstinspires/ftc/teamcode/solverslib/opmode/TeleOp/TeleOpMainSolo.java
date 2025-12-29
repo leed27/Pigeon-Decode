@@ -115,15 +115,15 @@ public class TeleOpMainSolo extends CommandOpMode {
         );
 
 
-        /// BACKUP ADJUSTMENT SPEED IF LOCALIZATION DRIFTS
-        driver.getGamepadButton(GamepadKeys.Button.CIRCLE).whenPressed(
-                new InstantCommand(() -> adjustSpeed+= 20 )
+//        /// BACKUP ADJUSTMENT SPEED IF LOCALIZATION DRIFTS
+//        driver.getGamepadButton(GamepadKeys.Button.CIRCLE).whenPressed(
+//                new InstantCommand(() -> adjustSpeed+= 20 )
+//
+//        );
+//        driver.getGamepadButton(GamepadKeys.Button.SQUARE).whenPressed(
+//                new InstantCommand(() -> adjustSpeed-= 20 )
 
-        );
-        driver.getGamepadButton(GamepadKeys.Button.SQUARE).whenPressed(
-                new InstantCommand(() -> adjustSpeed-= 20 )
-
-        );
+        //);
 
 
 
@@ -132,13 +132,13 @@ public class TeleOpMainSolo extends CommandOpMode {
 
         driver.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
 
-                new InstantCommand(() -> robot.stopperServo.set(robot.stopperServo.get() - 0.05))
+                new InstantCommand(() -> adjustSpeed -= 20)
 
         );
 
         driver.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
 
-                new InstantCommand(() -> robot.stopperServo.set(robot.stopperServo.get() + 0.05))
+                new InstantCommand(() -> adjustSpeed += 20)
 
         );
 

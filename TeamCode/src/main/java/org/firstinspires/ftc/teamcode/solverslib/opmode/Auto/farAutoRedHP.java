@@ -36,7 +36,10 @@ public class farAutoRedHP extends CommandOpMode{
     //private final ArrayList<PathChain> paths = new ArrayList<>();
 
     private final Pose startPose = new Pose(88, 9, Math.toRadians(90));
-    private final Pose shootPose = new Pose(88, 15, Math.toRadians(67));
+//    private final Pose shootPose = new Pose(88, 15, Math.toRadians(67));
+
+    private final Pose shootPose = new Pose(88, 15, Math.toRadians(70));
+
     /// blue paths6
     private final Pose parkPose = new Pose(108,14, Math.toRadians(70));
 
@@ -142,6 +145,7 @@ public class farAutoRedHP extends CommandOpMode{
                 new FollowPathCommand(robot.follower, grabDepotBlue, false).withTimeout(2500),
                 //start intake
                 new FollowPathCommand(robot.follower, collectDepotBlue, false).withTimeout(1500),
+                new WaitCommand(500),
                 //stop intake
                 new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1))
