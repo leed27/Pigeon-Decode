@@ -297,7 +297,7 @@ public class TeleOpMain extends CommandOpMode {
 
         driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.outtake.stop()),
+                        //new InstantCommand(() -> robot.outtake.stop()),
                         new InstantCommand(() -> robot.intake.stop()),
                         new InstantCommand(() -> robot.stopperServo.set(.56)),
                         new SequentialCommandGroup(

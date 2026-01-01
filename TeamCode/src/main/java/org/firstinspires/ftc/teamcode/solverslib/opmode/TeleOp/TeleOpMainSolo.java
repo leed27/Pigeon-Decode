@@ -232,7 +232,7 @@ public class TeleOpMainSolo extends CommandOpMode {
 
         new Trigger(() -> driver.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0.5).whenInactive(
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.outtake.stop()),
+                        //new InstantCommand(() -> robot.outtake.stop()),
                         new InstantCommand(() -> robot.intake.stop()),
                         new InstantCommand(() -> robot.stopperServo.set(0.56)),
                         new SequentialCommandGroup(
