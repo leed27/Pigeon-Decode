@@ -15,6 +15,10 @@ import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 import com.seattlesolvers.solverslib.hardware.motors.MotorGroup;
 import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
 
+import org.firstinspires.ftc.teamcode.Prism.Color;
+import org.firstinspires.ftc.teamcode.Prism.Direction;
+import org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver;
+import org.firstinspires.ftc.teamcode.Prism.PrismAnimations;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Lights;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Outtake;
@@ -28,6 +32,8 @@ public class Robot {
     public MotorEx leftShooter, rightShooter;
     public MotorEx leftIntake, rightIntake;
 
+    //lights go OOOOOO
+    public GoBildaPrismDriver prism;
     public MotorGroup launchMotors;
     public Motor.Encoder launchEncoder;
 
@@ -44,6 +50,9 @@ public class Robot {
     public Intake intake;
     public Outtake outtake;
     public Lights lights;
+    public PrismAnimations.Solid solid;
+
+    public PrismAnimations.Snakes snake1, snake2;
     private static Robot instance = new Robot();
     public boolean enabled;
 
@@ -76,6 +85,27 @@ public class Robot {
 
         lightLeft = hardwareMap.get(Servo.class, "lightLeft");
         lightRight = hardwareMap.get(Servo.class, "lightRight");
+
+        prism = hardwareMap.get(GoBildaPrismDriver.class, "prism");
+
+        solid = new PrismAnimations.Solid(new Color (225, 30, 0));
+        snake1 = new PrismAnimations.Snakes(3, 3, 5, Color.TRANSPARENT, 0.2F, Direction.Forward, new Color (225, 30, 0));
+        snake2 = new PrismAnimations.Snakes(3, 3, 5, Color.TRANSPARENT, 0.2F, Direction.Forward, new Color (225, 30, 0));
+
+        solid.setBrightness(100);
+        solid.setStartIndex(0);
+        solid.setStopIndex(12);
+
+        snake1.setBrightness(100);
+        snake1.setStartIndex(0);
+        snake1.setStopIndex(5);
+
+        snake2.setBrightness(100);
+        snake2.setStartIndex(6);
+        snake2.setStopIndex(11);
+
+
+
 
 //
         rightFront.setInverted(true);

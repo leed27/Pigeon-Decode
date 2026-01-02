@@ -16,6 +16,10 @@ import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
+import org.firstinspires.ftc.teamcode.Prism.Color;
+import org.firstinspires.ftc.teamcode.Prism.Direction;
+import org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver;
+import org.firstinspires.ftc.teamcode.Prism.PrismAnimations;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShoot;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAuto;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
@@ -27,6 +31,8 @@ public class TeleOpMain extends CommandOpMode {
     public GamepadEx driver, driver2;
 
     public ElapsedTime gameTimer;
+
+    public GoBildaPrismDriver prism;
     private MecanumDrive drive;
     public static int adjustSpeed = 0;
     public static int speed = 1200;
@@ -38,6 +44,7 @@ public class TeleOpMain extends CommandOpMode {
 
     public ElapsedTime elapsedtime;
     private final Robot robot = Robot.getInstance();
+
 
 
     @Override
@@ -60,6 +67,11 @@ public class TeleOpMain extends CommandOpMode {
 
         robot.stopperServo.set(0.56);
 
+        robot.prism.clearAllAnimations();
+
+        robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid);
+        //robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.solid);
+
 
         /// IF THERE NEEDS TO BE MOVEMENT DURING INIT STAGE, UNCOMMENT
         //robot.initHasMovement();
@@ -67,20 +79,37 @@ public class TeleOpMain extends CommandOpMode {
         /// ALL CONTROLS
 
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenHeld(
-                new InstantCommand(() -> robot.intake.start())
+                        new InstantCommand(() -> robot.intake.start())
+        );
 
+        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenHeld(
+                new ParallelCommandGroup(
+                        //new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.snake1))
+                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.snake2))
+                )
         );
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
-                new InstantCommand(() -> robot.intake.stop())
-
-                );
-
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> robot.intake.stop()),
+                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid))
+                        //new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.solid))
+                )
+        );
         driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(
-                new InstantCommand(() -> robot.intake.reverse())
-
+                        new InstantCommand(() -> robot.intake.reverse())
+        );
+        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.snake2))
+                        //new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.snake2))
+                )
         );
         driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
-                new InstantCommand(() -> robot.intake.stop())
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> robot.intake.stop()),
+                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid))
+                        //new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid))
+                )
 
         );
 
@@ -445,6 +474,8 @@ public class TeleOpMain extends CommandOpMode {
 
     @Override
     public void end() {
+
         autoEndPose = robot.follower.getPose();
+        robot.prism.clearAllAnimations();
     }
 }
