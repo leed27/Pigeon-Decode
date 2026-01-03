@@ -39,6 +39,7 @@ public class Robot {
 
     public ServoEx hoodServo, stopperServo;
     public Servo lightLeft, lightRight;
+    public ServoEx kickerServo;
     public Follower follower;
     public PIDFController controller;
     public PoseTracker poseUpdater;
@@ -50,9 +51,11 @@ public class Robot {
     public Intake intake;
     public Outtake outtake;
     public Lights lights;
-    public PrismAnimations.Solid solid;
+    public PrismAnimations.Solid solid, transpo;
 
     public PrismAnimations.Snakes snake1, snake2;
+
+    public PrismAnimations.SineWave fading, fading2;
     private static Robot instance = new Robot();
     public boolean enabled;
 
@@ -82,6 +85,8 @@ public class Robot {
         hoodServo = new ServoEx(hardwareMap, "hoodServo");
         stopperServo = new ServoEx(hardwareMap, "stopperServo");
 
+        kickerServo = new ServoEx(hardwareMap, "kicker");
+
 
         lightLeft = hardwareMap.get(Servo.class, "lightLeft");
         lightRight = hardwareMap.get(Servo.class, "lightRight");
@@ -89,8 +94,11 @@ public class Robot {
         prism = hardwareMap.get(GoBildaPrismDriver.class, "prism");
 
         solid = new PrismAnimations.Solid(new Color (225, 30, 0));
-        snake1 = new PrismAnimations.Snakes(3, 3, 5, Color.TRANSPARENT, 0.2F, Direction.Forward, new Color (225, 30, 0));
-        snake2 = new PrismAnimations.Snakes(3, 3, 5, Color.TRANSPARENT, 0.2F, Direction.Forward, new Color (225, 30, 0));
+        transpo = new PrismAnimations.Solid(Color.TRANSPARENT);
+        snake1 = new PrismAnimations.Snakes(3, 3, 5, Color.TRANSPARENT, (float) (Math.PI/120.0F), Direction.Forward, new Color (225, 30, 0));
+        snake2 = new PrismAnimations.Snakes(3, 3, 5, Color.TRANSPARENT, (float) (Math.PI/120.0F), Direction.Forward, new Color (225, 30, 0));
+        fading = new PrismAnimations.SineWave(new Color (225, 30, 0),  Color.TRANSPARENT, 6, (float) (Math.PI/36.0F), 0.3F, Direction.Forward);
+        fading2 = new PrismAnimations.SineWave(new Color (225, 30, 0),  Color.TRANSPARENT, 6, (float) (Math.PI/36.0F), 0.3F, Direction.Forward);
 
         solid.setBrightness(100);
         solid.setStartIndex(0);
@@ -103,6 +111,9 @@ public class Robot {
         snake2.setBrightness(100);
         snake2.setStartIndex(6);
         snake2.setStopIndex(11);
+
+        fading.setBrightness(100);
+        fading2.setBrightness(100);
 
 
 

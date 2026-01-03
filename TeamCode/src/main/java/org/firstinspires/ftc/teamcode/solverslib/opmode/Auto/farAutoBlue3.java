@@ -21,8 +21,8 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@Autonomous(name = "FAR 9 BALL \uD83D\uDD35", group = "auto")
-public class farAutoBlue extends CommandOpMode{
+@Autonomous(name = "WAIT + 3 BALL \uD83D\uDD35", group = "auto")
+public class farAutoBlue3 extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
 
@@ -33,15 +33,13 @@ public class farAutoBlue extends CommandOpMode{
     private final Pose shootPose = new Pose(88, 15, Math.toRadians(63.5)).mirror();
     /// blue paths6
     ///
+    private final Pose blueDepotPilePose = new Pose(10, 10, Math.toRadians(180));
+    private final Pose blueDepotPileAnglePose = new Pose(10.5, 10, Math.toRadians(200));
+    private final Pose blueDepotPileBackPose = new Pose(20, 9, Math.toRadians(180));
 
     private final Pose parkPose = new Pose(108,14, Math.toRadians(70)).mirror();
     private final Pose blueBottomPilePose = new Pose(50, 36, Math.toRadians(180));
     private final Pose blueBottomPileForwardPose = new Pose(13, 36, Math.toRadians(180));
-
-    private final Pose blueDepotPilePose = new Pose(10, 10, Math.toRadians(180));
-    private final Pose blueDepotPileAnglePose = new Pose(10.5, 10, Math.toRadians(200));
-    private final Pose blueDepotPileAnglePose2 = new Pose(12.5, 10, Math.toRadians(200));
-    private final Pose blueDepotPileBackPose = new Pose(20, 9, Math.toRadians(180));
 
     //private final Pose blueDepotPilePose = new Pose(9, 33, Math.toRadians(250));
     private final Pose blueDepotPileForwardPose = new Pose(9, 9, Math.toRadians(250));
@@ -84,18 +82,8 @@ public class farAutoBlue extends CommandOpMode{
 
 
         collectDepotBlue = robot.follower.pathBuilder()
-                .addPath(new BezierLine(blueDepotPilePose, blueDepotPileBackPose))
-                .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileBackPose.getHeading())
-                //.addPath(new BezierLine(blueDepotPileBackPose, blueDepotPilePose))
-                //.setLinearHeadingInterpolation(blueDepotPileBackPose.getHeading(), blueDepotPilePose.getHeading())
-                //.addPath(new BezierLine(blueDepotPilePose, blueDepotPileBackPose))
-                //.setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileBackPose.getHeading())
-                .addPath(new BezierLine(blueDepotPileBackPose, blueDepotPileAnglePose))
-                .setLinearHeadingInterpolation(blueDepotPileBackPose.getHeading(), blueDepotPileAnglePose.getHeading())
-                .addPath(new BezierLine(blueDepotPileAnglePose, blueDepotPileAnglePose2))
-                .setLinearHeadingInterpolation(blueDepotPileBackPose.getHeading(), blueDepotPileAnglePose.getHeading())
-                .addPath(new BezierLine(blueDepotPileAnglePose2, blueDepotPileAnglePose))
-                .setLinearHeadingInterpolation(blueDepotPileAnglePose2.getHeading(), blueDepotPileAnglePose.getHeading())
+                .addPath(new BezierLine(blueDepotPilePose, blueDepotPileForwardPose))
+                .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileForwardPose.getHeading())
                 .build();
 
         uncollectDepotBlue = robot.follower.pathBuilder()
@@ -120,7 +108,7 @@ public class farAutoBlue extends CommandOpMode{
 
     public SequentialCommandGroup startToShoot() {
         return new SequentialCommandGroup(
-                //new WaitCommand(6000),
+                new WaitCommand(26000),
                 new InstantCommand(() -> robot.outtake.shootAutoFar()),
                 new FollowPathCommand(robot.follower, startToShoot, true),
                 new InstantCommand(() -> robot.stopperServo.set(0.47)),
@@ -173,12 +161,16 @@ public class farAutoBlue extends CommandOpMode{
     public SequentialCommandGroup getDepotBlue() {
         return new SequentialCommandGroup(
                 //new WaitCommand(6000),
-                new InstantCommand(() -> robot.intake.start()),
-                new InstantCommand(() -> robot.follower.setMaxPower(1)),
-                new FollowPathCommand(robot.follower, grabDepotBlue, false).withTimeout(3000),
+                new FollowPathCommand(robot.follower, grabDepotBlue, false),
                 //start intake
-                new FollowPathCommand(robot.follower, collectDepotBlue, false).withTimeout(2000),
-                new WaitCommand(500),
+                new InstantCommand(() -> robot.intake.startCustom(1)),
+                new InstantCommand(() -> robot.follower.setMaxPower(.5)),
+                new FollowPathCommand(robot.follower, collectDepotBlue, false).withTimeout(1000),
+                new FollowPathCommand(robot.follower, uncollectDepotBlue, false).withTimeout(750),
+                new FollowPathCommand(robot.follower, collectDepotBlue, false).withTimeout(750),
+                new FollowPathCommand(robot.follower, uncollectDepotBlue, false).withTimeout(750),
+                new FollowPathCommand(robot.follower, collectDepotBlue, false).withTimeout(750),
+                new FollowPathCommand(robot.follower, uncollectDepotBlue, false).withTimeout(750),
                 //stop intake
                 new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1))
@@ -188,15 +180,15 @@ public class farAutoBlue extends CommandOpMode{
 
     public SequentialCommandGroup shootDepotBlue() {
         return new SequentialCommandGroup(
+                //new WaitCommand(6000),
                 new FollowPathCommand(robot.follower, shootDepotBlue, true),
                 new InstantCommand(() -> robot.stopperServo.set(0.47)),
-                new WaitCommand(500),
                 new RepeatCommand(
                         new AutoShootInAutoFAR()
-                ).withTimeout(4000),
+                ).withTimeout(2500),
 
                 //new WaitCommand(3000),
-                //new InstantCommand(() -> robot.outtake.stop()),
+                new InstantCommand(() -> robot.outtake.stop()),
                 new InstantCommand(() -> robot.intake.stop()),
                 new InstantCommand(() -> robot.stopperServo.set(0.56))
 
@@ -271,12 +263,7 @@ public class farAutoBlue extends CommandOpMode{
 
                 new SequentialCommandGroup(
                         //new WaitCommand(27500),
-                        new InstantCommand(),
                         startToShoot(),
-                        getEndBlue(),
-                        shootEndBlue(),
-                        getDepotBlue(),
-                        shootDepotBlue(),
                         shootToPark()
                 )
         );

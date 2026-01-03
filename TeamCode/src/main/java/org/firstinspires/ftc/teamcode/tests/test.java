@@ -7,17 +7,17 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Disabled
+//@Disabled
 @TeleOp(name= "test", group="Linear Opmode")
 
 public class test extends LinearOpMode {
-    private DcMotor motor, motor2;
-    private Servo lightLeft, lightRight;
+    //private DcMotor motor, motor2;
+    private Servo kicker;
 
 
     @Override
     public void runOpMode() {
-        motor = hardwareMap.get(DcMotor.class, "shooter");
+        kicker = hardwareMap.get(Servo.class, "kicker");
 //        motor2 = hardwareMap.get(DcMotor.class, "shooter2");
 
 //        lightLeft = hardwareMap.get(Servo.class, "lightLeft");
@@ -31,13 +31,20 @@ public class test extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+        kicker.setPosition(0.5);
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
 
-                if(gamepad1.square){
-                    motor.setPower(1);
+                if(gamepad1.left_bumper){
+                    kicker.setPosition(kicker.getPosition()- 0.01);
                 }
+                if(gamepad1.right_bumper){
+                    kicker.setPosition(kicker.getPosition()+ 0.01);
+                }
+
+                telemetry.addData("eriog", kicker.getPosition());
+                telemetry.update();
 
 //                lightLeft.setPosition(0.3);
 //                lightRight.setPosition(0.3);

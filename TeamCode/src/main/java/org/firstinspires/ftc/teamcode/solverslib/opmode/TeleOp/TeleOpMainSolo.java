@@ -90,33 +90,33 @@ public class TeleOpMainSolo extends CommandOpMode {
                 new InstantCommand(() -> robot.intake.start())
         );
 
-        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenHeld(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.snake1)),
-                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.snake2))
-                )
-        );
+//        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenHeld(
+//                new ParallelCommandGroup(
+//                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.snake1)),
+//                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.snake2))
+//                )
+//        );
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.intake.stop()),
-                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid)),
-                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.solid))
+                        new InstantCommand(() -> robot.intake.stop())
+//                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid)),
+//                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.solid))
                 )
         );
         driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(
                 new InstantCommand(() -> robot.intake.reverse())
         );
-        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.snake1)),
-                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.snake2))
-                )
-        );
+//        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(
+//                new ParallelCommandGroup(
+//                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.snake1)),
+//                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.snake2))
+//                )
+//        );
         driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.intake.stop()),
-                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid)),
-                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.solid))
+                        new InstantCommand(() -> robot.intake.stop())
+//                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid)),
+//                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.solid))
                 )
 
         );
@@ -298,6 +298,7 @@ public class TeleOpMainSolo extends CommandOpMode {
 
 
 
+        robot.prism.loadAnimationsFromArtboard(GoBildaPrismDriver.Artboard.ARTBOARD_0);
 
 
         // DO NOT REMOVE! Runs FTCLib Command Scheudler

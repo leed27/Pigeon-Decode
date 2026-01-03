@@ -36,21 +36,18 @@ public class farAutoRedHP extends CommandOpMode{
     //private final ArrayList<PathChain> paths = new ArrayList<>();
 
     private final Pose startPose = new Pose(88, 9, Math.toRadians(90));
-//    private final Pose shootPose = new Pose(88, 15, Math.toRadians(67));
-
-    private final Pose shootPose = new Pose(88, 15, Math.toRadians(70));
-
+    private final Pose shootPose = new Pose(88, 15, Math.toRadians(67));
     /// blue paths6
     private final Pose parkPose = new Pose(108,14, Math.toRadians(70));
 
     private final Pose blueDepotPilePose = new Pose(10, 10, Math.toRadians(180)).mirror();
     private final Pose blueDepotPileAnglePose = new Pose(10.5, 10, Math.toRadians(200)).mirror();
+    private final Pose blueDepotPileAnglePose2 = new Pose(12.5, 10, Math.toRadians(200)).mirror();
     private final Pose blueDepotPileBackPose = new Pose(20, 9, Math.toRadians(180)).mirror();
     private final Pose blueDepotPileForwardPose = new Pose(10, 9, Math.toRadians(180)).mirror();
     private final Pose blueDepotControlPose = new Pose(37,10).mirror();
-    private final Pose humanPlayerForwardPose = new Pose(10.5, 13.664, Math.toRadians(180)).mirror();
+    private final Pose humanPlayerForwardPose = new Pose(12.5, 13.664, Math.toRadians(180)).mirror();
     private final Pose humanPlayerBackPose = new Pose(24, 13.664, Math.toRadians(180)).mirror();
-
     private PathChain startToShoot, grabEndBlue, collectEndBlue, uncollectDepotBlue, shootEndBlue, grabDepotBlue, collectDepotBlue, shootDepotBlue, grabHumanPlayer, shootHumanPlayer, shootToPark;
 
     public void generatePath() {
@@ -78,12 +75,16 @@ public class farAutoRedHP extends CommandOpMode{
         collectDepotBlue = robot.follower.pathBuilder()
                 .addPath(new BezierLine(blueDepotPilePose, blueDepotPileBackPose))
                 .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileBackPose.getHeading())
-                .addPath(new BezierLine(blueDepotPileBackPose, blueDepotPilePose))
-                .setLinearHeadingInterpolation(blueDepotPileBackPose.getHeading(), blueDepotPilePose.getHeading())
-                .addPath(new BezierLine(blueDepotPilePose, blueDepotPileBackPose))
-                .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileBackPose.getHeading())
+                //.addPath(new BezierLine(blueDepotPileBackPose, blueDepotPilePose))
+                //.setLinearHeadingInterpolation(blueDepotPileBackPose.getHeading(), blueDepotPilePose.getHeading())
+                //.addPath(new BezierLine(blueDepotPilePose, blueDepotPileBackPose))
+                //.setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileBackPose.getHeading())
                 .addPath(new BezierLine(blueDepotPileBackPose, blueDepotPileAnglePose))
                 .setLinearHeadingInterpolation(blueDepotPileBackPose.getHeading(), blueDepotPileAnglePose.getHeading())
+                .addPath(new BezierLine(blueDepotPileAnglePose, blueDepotPileAnglePose2))
+                .setLinearHeadingInterpolation(blueDepotPileBackPose.getHeading(), blueDepotPileAnglePose.getHeading())
+                .addPath(new BezierLine(blueDepotPileAnglePose2, blueDepotPileAnglePose))
+                .setLinearHeadingInterpolation(blueDepotPileAnglePose2.getHeading(), blueDepotPileAnglePose.getHeading())
                 .build();
 
         uncollectDepotBlue = robot.follower.pathBuilder()

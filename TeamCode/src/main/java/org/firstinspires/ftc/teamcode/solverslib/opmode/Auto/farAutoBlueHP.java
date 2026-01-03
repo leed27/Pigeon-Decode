@@ -42,10 +42,11 @@ public class farAutoBlueHP extends CommandOpMode{
 
     private final Pose blueDepotPilePose = new Pose(10, 10, Math.toRadians(180));
     private final Pose blueDepotPileAnglePose = new Pose(10.5, 10, Math.toRadians(200));
+    private final Pose blueDepotPileAnglePose2 = new Pose(12.5, 10, Math.toRadians(200));
     private final Pose blueDepotPileBackPose = new Pose(20, 9, Math.toRadians(180));
     private final Pose blueDepotPileForwardPose = new Pose(10, 9, Math.toRadians(180));
     private final Pose blueDepotControlPose = new Pose(37,10);
-    private final Pose humanPlayerForwardPose = new Pose(10.5, 13.664, Math.toRadians(180));
+    private final Pose humanPlayerForwardPose = new Pose(12.5, 13.664, Math.toRadians(180));
     private final Pose humanPlayerBackPose = new Pose(24, 13.664, Math.toRadians(180));
 
 
@@ -76,12 +77,16 @@ public class farAutoBlueHP extends CommandOpMode{
         collectDepotBlue = robot.follower.pathBuilder()
                 .addPath(new BezierLine(blueDepotPilePose, blueDepotPileBackPose))
                 .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileBackPose.getHeading())
-                .addPath(new BezierLine(blueDepotPileBackPose, blueDepotPilePose))
-                .setLinearHeadingInterpolation(blueDepotPileBackPose.getHeading(), blueDepotPilePose.getHeading())
-                .addPath(new BezierLine(blueDepotPilePose, blueDepotPileBackPose))
-                .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileBackPose.getHeading())
+                //.addPath(new BezierLine(blueDepotPileBackPose, blueDepotPilePose))
+                //.setLinearHeadingInterpolation(blueDepotPileBackPose.getHeading(), blueDepotPilePose.getHeading())
+                //.addPath(new BezierLine(blueDepotPilePose, blueDepotPileBackPose))
+                //.setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), blueDepotPileBackPose.getHeading())
                 .addPath(new BezierLine(blueDepotPileBackPose, blueDepotPileAnglePose))
                 .setLinearHeadingInterpolation(blueDepotPileBackPose.getHeading(), blueDepotPileAnglePose.getHeading())
+                .addPath(new BezierLine(blueDepotPileAnglePose, blueDepotPileAnglePose2))
+                .setLinearHeadingInterpolation(blueDepotPileBackPose.getHeading(), blueDepotPileAnglePose.getHeading())
+                .addPath(new BezierLine(blueDepotPileAnglePose2, blueDepotPileAnglePose))
+                .setLinearHeadingInterpolation(blueDepotPileAnglePose2.getHeading(), blueDepotPileAnglePose.getHeading())
                 .build();
 
         uncollectDepotBlue = robot.follower.pathBuilder()
@@ -139,9 +144,10 @@ public class farAutoBlueHP extends CommandOpMode{
                 //new WaitCommand(6000),
                 new InstantCommand(() -> robot.intake.start()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1)),
-                new FollowPathCommand(robot.follower, grabDepotBlue, false).withTimeout(2500),
+                new FollowPathCommand(robot.follower, grabDepotBlue, false).withTimeout(3000),
                 //start intake
-                new FollowPathCommand(robot.follower, collectDepotBlue, false).withTimeout(1500),
+                new FollowPathCommand(robot.follower, collectDepotBlue, false).withTimeout(2000),
+                new WaitCommand(500),
                 //stop intake
                 new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1))
@@ -184,6 +190,22 @@ public class farAutoBlueHP extends CommandOpMode{
                 new RepeatCommand(
                         new AutoShootInAutoFAR()
                 ).withTimeout(4000),
+
+                //new WaitCommand(3000),
+                //new InstantCommand(() -> robot.outtake.stop()),
+                new InstantCommand(() -> robot.intake.stop()),
+                new InstantCommand(() -> robot.stopperServo.set(0.56))
+
+        );
+    }
+
+    public SequentialCommandGroup shootHumanPlayer2() {
+        return new SequentialCommandGroup(
+                new FollowPathCommand(robot.follower, shootHumanPlayer, true),
+                new InstantCommand(() -> robot.stopperServo.set(0.47)),
+                new RepeatCommand(
+                        new AutoShootInAutoFAR()
+                ).withTimeout(2500),
 
                 //new WaitCommand(3000),
                 //new InstantCommand(() -> robot.outtake.stop()),
@@ -270,7 +292,7 @@ public class farAutoBlueHP extends CommandOpMode{
                             grabHumanPlayer(),
                             shootHumanPlayer(),
                             grabHumanPlayer(),
-                            shootHumanPlayer(),
+                            shootHumanPlayer2(),
                             shootToPark()
                     )
             );

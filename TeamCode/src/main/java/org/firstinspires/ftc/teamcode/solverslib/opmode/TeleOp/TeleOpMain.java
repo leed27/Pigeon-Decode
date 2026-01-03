@@ -61,15 +61,17 @@ public class TeleOpMain extends CommandOpMode {
 
         register(robot.intake, robot.outtake, robot.lights);
         /// LIGHTS
-        lightsState = Lights.LightsState.SHOOTER_VALID;
         driver = new GamepadEx(gamepad1);
         driver2 = new GamepadEx(gamepad2);
 
         robot.stopperServo.set(0.56);
 
-        robot.prism.clearAllAnimations();
+        //robot.prism.clearAllAnimations();
 
-        robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid);
+//        robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.transpo);
+
+//        robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.fading);
+        //robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.fading2);
         //robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.solid);
 
 
@@ -82,33 +84,33 @@ public class TeleOpMain extends CommandOpMode {
                         new InstantCommand(() -> robot.intake.start())
         );
 
-        driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenHeld(
+        /*driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(
                 new ParallelCommandGroup(
-                        //new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.snake1))
-                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.snake2))
+                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.fading2)),
+                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.fading))
                 )
-        );
+        );*/
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.intake.stop()),
-                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid))
-                        //new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.solid))
+                        new InstantCommand(() -> robot.intake.stop())
+//                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid)),
+//                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.solid))
                 )
         );
         driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(
                         new InstantCommand(() -> robot.intake.reverse())
         );
-        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenHeld(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.snake2))
-                        //new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.snake2))
-                )
-        );
+//        driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenPressed(
+//                new ParallelCommandGroup(
+//                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.fading2)),
+//                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.fading))
+//                )
+//        );
         driver.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.intake.stop()),
-                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid))
-                        //new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid))
+                        new InstantCommand(() -> robot.intake.stop())
+//                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid)),
+//                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.solid))
                 )
 
         );
@@ -166,24 +168,24 @@ public class TeleOpMain extends CommandOpMode {
 
 
         /// CLOSE SHOOTING
-        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whileHeld(
-
-                new ParallelCommandGroup(
-                        new AutoShootInAuto()
-                        //new InstantCommand(() -> robot.outtake.reverseShoot())
-                )
-
-        );
-
-        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenReleased(
-
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.outtake.stop()),
-                        new InstantCommand(() -> robot.intake.stop())
-                        //new InstantCommand(() -> robot.outtake.reverseShoot())
-                )
-
-        );
+//        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whileHeld(
+//
+//                new ParallelCommandGroup(
+//                        new AutoShootInAuto()
+//                        //new InstantCommand(() -> robot.outtake.reverseShoot())
+//                )
+//
+//        );
+//
+//        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenReleased(
+//
+//                new ParallelCommandGroup(
+//                        new InstantCommand(() -> robot.outtake.stop()),
+//                        new InstantCommand(() -> robot.intake.stop())
+//                        //new InstantCommand(() -> robot.outtake.reverseShoot())
+//                )
+//
+//        );
 
         /// MANUAL STOPPER SERVO ADJUSTMENT
 
@@ -356,6 +358,20 @@ public class TeleOpMain extends CommandOpMode {
 
         );
 
+        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenPressed(
+                //
+                new InstantCommand(() -> {
+                    if(robot.kickerServo.get() == 0){
+                        robot.kickerServo.set(0.6);
+                    }else{
+                        robot.kickerServo.set(0);
+                    }
+
+                }
+                )
+
+        );
+
         super.run();
     }
 
@@ -384,6 +400,16 @@ public class TeleOpMain extends CommandOpMode {
             gameTimer = new ElapsedTime();
         }
 
+        //robot.prism.clearAllAnimations();
+
+        //robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid);
+
+//        robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.fading);
+//        robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.fading2);
+
+        lightsState = Lights.LightsState.SHOOTER_VALID;
+
+        robot.prism.loadAnimationsFromArtboard(GoBildaPrismDriver.Artboard.ARTBOARD_0);
 
         // DO NOT REMOVE! Runs FTCLib Command Scheudler
         super.run();
@@ -443,7 +469,7 @@ public class TeleOpMain extends CommandOpMode {
 
 
         telemetry.addData("Status", "Running");
-        //telemetry.addData("loop times", elapsedtime.milliseconds());
+        telemetry.addData("loop times", elapsedtime.milliseconds());
         //telemetry.addData("follower busy", robot.follower.isBusy());
         telemetry.addData("x", robot.follower.getPose().getX());
         telemetry.addData("y", robot.follower.getPose().getY());
