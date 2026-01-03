@@ -197,7 +197,7 @@ public class closeAutoBluePush extends CommandOpMode{
 
     public SequentialCommandGroup scoreTopBlue() {
         return new SequentialCommandGroup(
-                new FollowPathCommand(robot.follower, shootTopBlue, false),
+                new FollowPathCommand(robot.follower, shootTopBlue, true),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
                 new RepeatCommand(
@@ -239,7 +239,7 @@ public class closeAutoBluePush extends CommandOpMode{
     public SequentialCommandGroup scoreMiddleBlue() {
         return new SequentialCommandGroup(
                 new FollowPathCommand(robot.follower, goBackMiddleBlue, true),
-                new FollowPathCommand(robot.follower, shootMiddleBlue, false),
+                new FollowPathCommand(robot.follower, shootMiddleBlue, true),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
                 new RepeatCommand(

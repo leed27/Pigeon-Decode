@@ -30,7 +30,7 @@ public class farAutoBlue3 extends CommandOpMode{
 
     // ALL PATHS
     private final Pose startPose = new Pose(88, 9, Math.toRadians(90)).mirror();
-    private final Pose shootPose = new Pose(88, 15, Math.toRadians(63.5)).mirror();
+    private final Pose shootPose = new Pose(88, 15, Math.toRadians(67)).mirror();
     /// blue paths6
     ///
     private final Pose blueDepotPilePose = new Pose(10, 10, Math.toRadians(180));
@@ -256,6 +256,7 @@ public class farAutoBlue3 extends CommandOpMode{
         robot.follower.setStartingPose(startPose);
         robot.follower.setMaxPower(1);
 
+        waitForStart();
         schedule(
 //                    // DO NOT REMOVE: updates follower to follow path
                 new RunCommand(() -> robot.follower.update()),

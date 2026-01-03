@@ -30,7 +30,7 @@ public class farAutoBlue extends CommandOpMode{
 
     // ALL PATHS
     private final Pose startPose = new Pose(88, 9, Math.toRadians(90)).mirror();
-    private final Pose shootPose = new Pose(88, 15, Math.toRadians(63.5)).mirror();
+    private final Pose shootPose = new Pose(88, 15, Math.toRadians(67)).mirror();
     /// blue paths6
     ///
 

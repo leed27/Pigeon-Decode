@@ -253,6 +253,7 @@ public class farAutoRed3 extends CommandOpMode{
         robot.follower.setStartingPose(startPose);
         robot.follower.setMaxPower(1);
 
+        waitForStart();
         schedule(
 //                    // DO NOT REMOVE: updates follower to follow path
                 new RunCommand(() -> robot.follower.update()),
