@@ -38,7 +38,9 @@ public class TeleOpMain extends CommandOpMode {
     public static int speed = 1200;
 
     public static double targetHeading;
+    boolean startIntake = false;
     boolean autoShootDisabled = false;
+    double howFar = 0;
 
 
 
@@ -92,7 +94,8 @@ public class TeleOpMain extends CommandOpMode {
         );*/
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.intake.stop())
+                        new InstantCommand(() -> robot.intake.stop()),
+                        new InstantCommand(() -> startIntake = false)
 //                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid)),
 //                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.solid))
                 )
@@ -362,10 +365,15 @@ public class TeleOpMain extends CommandOpMode {
                 //
                 new InstantCommand(() -> {
                     if(robot.kickerServo.get() == 0){
-                        robot.kickerServo.set(0.6);
+                        robot.kickerServo.set(0.58);
+                        autoShootDisabled = true;
+
                     }else{
                         robot.kickerServo.set(0);
+                        autoShootDisabled = false;
                     }
+                    robot.outtake.stop();
+
 
                 }
                 )
@@ -415,6 +423,13 @@ public class TeleOpMain extends CommandOpMode {
         super.run();
 
 
+        if(goalColor == GoalColor.RED_GOAL){
+            howFar = Math.sqrt(Math.pow(((144-robot.follower.getPose().getY())/(12)), 2) + Math.pow(((144-robot.follower.getPose().getX())/(12)),2));
+        }else{
+            howFar = Math.sqrt(Math.pow(((144-robot.follower.getPose().getY())/(12)), 2) + Math.pow(((-robot.follower.getPose().getX())/(12)),2));
+        }
+
+
         //speed = robot.outtake.shootAutoGenerator();
         targetHeading = robot.outtake.autoAlign();
         speed = robot.outtake.autoShoot2();
@@ -431,21 +446,52 @@ public class TeleOpMain extends CommandOpMode {
             if(gamepad2.triangle){
                 robot.outtake.stop();
             }else{
-                robot.outtake.shootCustom(speed +(adjustSpeed));
+                robot.outtake.shootCustom(speed +(adjustSpeed)+20);
             }
 
 
-
             if(gamepad2.right_bumper){
-                robot.outtake.shootCustom(speed +(adjustSpeed));
+
+                if(howFar < 8){
+                    robot.outtake.shootCustom(speed +(adjustSpeed)+30);
+                    robot.stopperServo.set(.47);
+                    /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
+                    if(robot.leftShooter.getVelocity() > speed +adjustSpeed+10 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5) && !robot.follower.isBusy()){
+                        startIntake = true;
+                        //robot.intake.startNoHood();
+                    }
+
+                    if(startIntake){
+                        robot.intake.startNoHood();
+                    }else{
+                        robot.intake.stopExceptShooter();
+                    }
+                }else{
+                    robot.outtake.shootCustom(speed +(adjustSpeed));
                 robot.stopperServo.set(.47);
-                /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE
-                if(robot.leftShooter.getVelocity() > speed +adjustSpeed-20 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
+                /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
+                if(robot.leftShooter.getVelocity() > speed +adjustSpeed && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5) && !robot.follower.isBusy()){
+
                     robot.intake.startNoHood();
                 }else{
                     robot.intake.stopExceptShooter();
                 }
+                }
+
+
             }
+
+//            if(gamepad2.right_bumper){
+//                robot.outtake.shootCustom(speed +(adjustSpeed));
+//                robot.stopperServo.set(.47);
+//                /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
+//                if(robot.leftShooter.getVelocity() > speed +adjustSpeed && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5) && !robot.follower.isBusy()){
+//
+//                    //robot.intake.startNoHood();
+//                }else{
+//                    robot.intake.stopExceptShooter();
+//                }
+//            }
 
         }
 

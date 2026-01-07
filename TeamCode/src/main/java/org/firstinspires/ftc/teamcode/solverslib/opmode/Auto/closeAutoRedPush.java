@@ -183,7 +183,7 @@ public class closeAutoRedPush extends CommandOpMode{
 
     public SequentialCommandGroup grabTopBlue() {
         return new SequentialCommandGroup(
-                new FollowPathCommand(robot.follower, grabTopBlue, false),
+                new FollowPathCommand(robot.follower, grabTopBlue, true),
                 new InstantCommand(() -> robot.follower.setMaxPower(.7)),
                 //start intake
                 new InstantCommand(() -> robot.intake.start()),
@@ -212,7 +212,7 @@ public class closeAutoRedPush extends CommandOpMode{
 
     public SequentialCommandGroup grabMiddleBlue() {
         return new SequentialCommandGroup(
-                new FollowPathCommand(robot.follower, grabMiddleBlue, false),
+                new FollowPathCommand(robot.follower, grabMiddleBlue, true),
                 new InstantCommand(() -> robot.follower.setMaxPower(.7)),
                 //start intake
                 new InstantCommand(() -> robot.intake.startCustom(1)),

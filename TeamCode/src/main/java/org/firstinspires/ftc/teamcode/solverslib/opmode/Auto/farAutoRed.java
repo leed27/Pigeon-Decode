@@ -36,7 +36,7 @@ public class farAutoRed extends CommandOpMode{
 
     private final Pose parkPose = new Pose(108,14, Math.toRadians(70));
     private final Pose blueBottomPilePose = new Pose(50, 36, Math.toRadians(180)).mirror();
-    private final Pose blueBottomPileForwardPose = new Pose(13, 36, Math.toRadians(180)).mirror();
+    private final Pose blueBottomPileForwardPose = new Pose(11.5, 36, Math.toRadians(180)).mirror();
 
     private final Pose blueDepotPilePose = new Pose(10, 10, Math.toRadians(180)).mirror();
     private final Pose blueDepotPileAnglePose = new Pose(10.5, 10, Math.toRadians(200)).mirror();
@@ -141,7 +141,7 @@ public class farAutoRed extends CommandOpMode{
         return new SequentialCommandGroup(
                 //new WaitCommand(6000),
                 new FollowPathCommand(robot.follower, grabEndBlue, false),
-                new InstantCommand(() -> robot.follower.setMaxPower(.3)),
+                new InstantCommand(() -> robot.follower.setMaxPower(.7)),
                 //start intake
                 new InstantCommand(() -> robot.intake.startCustom(1)),
                 new FollowPathCommand(robot.follower, collectEndBlue, false).withTimeout(3000),
