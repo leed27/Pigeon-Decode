@@ -55,6 +55,9 @@ public class TeleOpMainSolo extends CommandOpMode {
     public static int adjustSpeed = 0;
     public static double targetHeading;
     boolean autoShootDisabled = false;
+    boolean startIntake = false;
+    double howFar = 0;
+
 
 
 
@@ -252,6 +255,7 @@ public class TeleOpMainSolo extends CommandOpMode {
                 new ParallelCommandGroup(
                         //new InstantCommand(() -> robot.outtake.stop()),
                         new InstantCommand(() -> robot.intake.stop()),
+                        new InstantCommand(() -> startIntake = false),
                         new InstantCommand(() -> robot.stopperServo.set(0.56)),
                         new SequentialCommandGroup(
                                 new InstantCommand(() -> robot.follower.breakFollowing()),
@@ -260,6 +264,25 @@ public class TeleOpMainSolo extends CommandOpMode {
                         )
                 )
 
+
+        );
+
+        driver.getGamepadButton(GamepadKeys.Button.SQUARE).whenPressed(
+                //
+                new InstantCommand(() -> {
+                    if(robot.kickerServo.get() == 0){
+                        robot.kickerServo.set(0.58);
+                        autoShootDisabled = true;
+
+                    }else{
+                        robot.kickerServo.set(0);
+                        autoShootDisabled = false;
+                    }
+                    robot.outtake.stop();
+
+
+                }
+                )
 
         );
 
@@ -304,10 +327,16 @@ public class TeleOpMainSolo extends CommandOpMode {
         // DO NOT REMOVE! Runs FTCLib Command Scheudler
         super.run();
 
+        if(goalColor == GoalColor.RED_GOAL){
+            howFar = Math.sqrt(Math.pow(((144-robot.follower.getPose().getY())/(12)), 2) + Math.pow(((144-robot.follower.getPose().getX())/(12)),2));
+        }else{
+            howFar = Math.sqrt(Math.pow(((144-robot.follower.getPose().getY())/(12)), 2) + Math.pow(((-robot.follower.getPose().getX())/(12)),2));
+        }
+
         targetHeading = robot.outtake.autoAlign();
 
         speed = robot.outtake.autoShoot2();
-        if(speed == -1){
+        if(speed == -1 || autoShootDisabled){
         }else{
 
 
@@ -315,17 +344,35 @@ public class TeleOpMainSolo extends CommandOpMode {
             if(gamepad1.triangle){
                 robot.outtake.stop();
             }else{
-                robot.outtake.shootCustom(speed+(adjustSpeed));
+                robot.outtake.shootCustom(speed+(adjustSpeed)+20);
             }
             if(gamepad1.left_trigger > 0.5){
 
 
-                robot.stopperServo.set(0.47);
-                /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE
-                if(robot.leftShooter.getVelocity() > speed-20 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)){
-                    robot.intake.startNoHood();
+                if(howFar < 8){
+                    robot.outtake.shootCustom(speed +(adjustSpeed)+30);
+                    robot.stopperServo.set(.47);
+                    /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
+                    if(robot.leftShooter.getVelocity() > speed +adjustSpeed+10 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5) && !robot.follower.isBusy()){
+                        startIntake = true;
+                        //robot.intake.startNoHood();
+                    }
+
+                    if(startIntake){
+                        robot.intake.startNoHood();
+                    }else{
+                        robot.intake.stopExceptShooter();
+                    }
                 }else{
-                    robot.intake.stopExceptShooter();
+                    robot.outtake.shootCustom(speed +(adjustSpeed));
+                    robot.stopperServo.set(.47);
+                    /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
+                    if(robot.leftShooter.getVelocity() > speed +adjustSpeed && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5) && !robot.follower.isBusy()){
+
+                        robot.intake.startNoHood();
+                    }else{
+                        robot.intake.stopExceptShooter();
+                    }
                 }
             }
 

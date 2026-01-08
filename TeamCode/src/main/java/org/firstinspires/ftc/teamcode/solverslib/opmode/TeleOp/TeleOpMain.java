@@ -94,8 +94,7 @@ public class TeleOpMain extends CommandOpMode {
         );*/
         driver.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
                 new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.intake.stop()),
-                        new InstantCommand(() -> startIntake = false)
+                        new InstantCommand(() -> robot.intake.stop())
 //                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid)),
 //                        new InstantCommand(() -> robot.prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.solid))
                 )
@@ -333,6 +332,7 @@ public class TeleOpMain extends CommandOpMode {
                 new ParallelCommandGroup(
                         //new InstantCommand(() -> robot.outtake.stop()),
                         new InstantCommand(() -> robot.intake.stop()),
+                        new InstantCommand(() -> startIntake = false),
                         new InstantCommand(() -> robot.stopperServo.set(.56)),
                         new SequentialCommandGroup(
                                 new InstantCommand(() -> robot.follower.breakFollowing()),
