@@ -45,6 +45,9 @@ public class cycleCloseBlue extends CommandOpMode{
     private final Pose angleGatePose = new Pose(11.5499, 61, Math.toRadians(155));
     private final Pose angleGateBackPose = new Pose(13.5499, 59, Math.toRadians(155));
 
+    private final Pose openGatePose2 = new Pose(18, 69, Math.toRadians(180));
+    private final Pose intakeGatePose = new Pose(9, 57, Math.toRadians(110));
+
     private final Pose controlPose = new Pose(79, 37);
     private final Pose blueBottomPilePose = new Pose(51, 36, Math.toRadians(180));
     private final Pose blueBottomPileForwardPose = new Pose(15, 36, Math.toRadians(180));
@@ -56,12 +59,29 @@ public class cycleCloseBlue extends CommandOpMode{
     private final Pose parkPose = new Pose(34, 80, Math.toRadians(135));
     private Path grabTopBlue;
     private PathChain shootPreloads, collectTopBlue, shootTopBlue, grabMiddleBlue, goBackMiddleBlue, goBackMiddleBlue2, collectMiddleBlue, readyGateBlue, openGateBlue, shootMiddleBlue, grabEndBlue, collectEndBlue, goBackEndBlue, shootEndBlue, park, cycleGateBlue, shootCycleGateBlue, backCycleGateBlue, forwardCycleGateBlue;
+    private PathChain tapGate, stealGate, stealToShoot;
 
     public void generatePath() {
         // PEDRO VISUALIZER: https://visualizer.pedropathing.com
 
         // Starting Pose (update this as well):
         //robot.follower.setStartingPose(startPose);
+
+        tapGate = robot.follower.pathBuilder()
+                .addPath(new BezierLine(blueTopShootPose, openGatePose2))
+                .setConstantHeadingInterpolation(openGatePose2.getHeading())
+                .build();
+
+        stealGate = robot.follower.pathBuilder()
+                .addPath(new BezierCurve(openGatePose2, new Pose(18.5, 60.25), intakeGatePose))
+                .setLinearHeadingInterpolation(openGatePose2.getHeading(), intakeGatePose.getHeading())
+                .build();
+
+        stealToShoot=  robot.follower.pathBuilder()
+                .addPath(new BezierLine(intakeGatePose, blueTopShootPose))
+                .setLinearHeadingInterpolation(intakeGatePose.getHeading(), blueTopShootPose.getHeading())
+                .build();
+
 
         shootPreloads = robot.follower.pathBuilder()
                 .addPath(new BezierLine(startPose, blueTopShootPose))
@@ -160,6 +180,56 @@ public class cycleCloseBlue extends CommandOpMode{
 
     }
 
+    public SequentialCommandGroup grabTopBlue() {
+        return new SequentialCommandGroup(
+                new FollowPathCommand(robot.follower, grabTopBlue, true),
+                new InstantCommand(() -> robot.follower.setMaxPower(.7)),
+                //start intake
+                new InstantCommand(() -> robot.intake.start()),
+                new FollowPathCommand(robot.follower, collectTopBlue, false).withTimeout(3000),
+                new WaitCommand(500),
+                //stop intake
+                new InstantCommand(() ->robot.intake.stop()),
+                new InstantCommand(() -> robot.follower.setMaxPower(1))
+        );
+    }
+
+    public SequentialCommandGroup tapGateAndShoot() {
+        return new SequentialCommandGroup(
+                new FollowPathCommand(robot.follower, tapGate, true),
+                new WaitCommand(500),
+                new InstantCommand(() -> robot.follower.setMaxPower(.7)),
+                //start intake
+                new InstantCommand(() -> robot.intake.start()),
+                new FollowPathCommand(robot.follower, stealGate, true).withTimeout(3000),
+                new WaitCommand(2000),
+                //stop intake
+                new InstantCommand(() ->robot.intake.stop()),
+                new InstantCommand(() -> robot.follower.setMaxPower(1)),
+                new FollowPathCommand(robot.follower, stealToShoot, true),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1090),
+                new RepeatCommand(
+                        new RapidShoot()
+                ).withTimeout(1000)
+        );
+    }
+
+    public SequentialCommandGroup scoreTopBlue() {
+        return new SequentialCommandGroup(
+                new FollowPathCommand(robot.follower, shootTopBlue, true),
+                new InstantCommand(() -> robot.stopperServo.set(.47)),
+                new WaitCommand(500),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1090),
+                new RepeatCommand(
+                        new RapidShoot()
+                ).withTimeout(1000),
+
+                //new WaitCommand(3000),
+                new InstantCommand(() -> robot.intake.stop()),
+                new InstantCommand(() -> robot.stopperServo.set(.56))
+
+        );
+    }
     public SequentialCommandGroup scorePreload() {
         return new SequentialCommandGroup(
                 new WaitCommand(100),
@@ -395,13 +465,17 @@ public class cycleCloseBlue extends CommandOpMode{
 
                         grabMiddleBlue(),
 
-                        openGate(),
+                        scoreMiddleBlue(),
 
-                        scoreMiddleBlue2(),
+                        tapGateAndShoot(),
 
-                        cycleGate(),
+                        grabTopBlue(),
 
-                        scoreGate(),
+                        scoreTopBlue(),
+
+                        grabBottomBlue(),
+
+                        scoreBottomBlue(),
 
                         parkAndStuff()
                 )

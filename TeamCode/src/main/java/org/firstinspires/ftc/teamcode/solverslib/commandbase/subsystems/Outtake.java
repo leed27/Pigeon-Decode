@@ -140,7 +140,7 @@ public class Outtake extends SubsystemBase {
         return Math.atan2((aimPosY-robot.follower.getPose().getY()), aimPosX-robot.follower.getPose().getX());
     }
     public int shootAutoGenerator(){
-
+        /*
         double x = robot.follower.getPose().getX();
         double y = robot.follower.getPose().getY();
         final double height = 2.6;
@@ -175,6 +175,8 @@ public class Outtake extends SubsystemBase {
             }
             return (int) (launcherVelClose.get(newSpeedInFeet));
         }
+        */
+        return 25;
 
     }
 
