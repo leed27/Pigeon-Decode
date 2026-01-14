@@ -38,13 +38,13 @@ public class closeAutoBlue extends CommandOpMode{
 
     private final Pose blueTopPileForwardPose = new Pose(17, 84, Math.toRadians(180)); //e
     private final Pose blueMiddlePilePose = new Pose(51, 59, Math.toRadians(180));
-    private final Pose blueMiddlePileForwardPose = new Pose(15, 59, Math.toRadians(180));
+    private final Pose blueMiddlePileForwardPose = new Pose(12, 59, Math.toRadians(180));
 
     private final Pose readyGatePose = new Pose(27, 59, Math.toRadians(180)); //old X = 30
     private final Pose openGatePose = new Pose(18, 69, Math.toRadians(180));
     private final Pose controlPose = new Pose(79, 37);
     private final Pose blueBottomPilePose = new Pose(51, 36, Math.toRadians(180));
-    private final Pose blueBottomPileForwardPose = new Pose(15, 36, Math.toRadians(180));
+    private final Pose blueBottomPileForwardPose = new Pose(11, 36, Math.toRadians(180));
     private final Pose blueTopShootPose = new Pose(51,96, Math.toRadians(144)); //old angle: 150
     private final Pose blueTopShootPose2 = new Pose(51,96, Math.toRadians(135));
 
@@ -166,8 +166,7 @@ public class closeAutoBlue extends CommandOpMode{
                 new InstantCommand(() -> robot.intake.start()),
                 new FollowPathCommand(robot.follower, collectTopBlue, false).withTimeout(3000),
                 new WaitCommand(500),
-                //stop intake
-                new InstantCommand(() ->robot.intake.stop()),
+                //stop intak
                 new InstantCommand(() -> robot.follower.setMaxPower(1))
         );
     }
@@ -175,6 +174,7 @@ public class closeAutoBlue extends CommandOpMode{
     public SequentialCommandGroup scoreTopBlue() {
         return new SequentialCommandGroup(
                 new FollowPathCommand(robot.follower, shootTopBlue, true),
+                new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
                 new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1090),
@@ -254,7 +254,7 @@ public class closeAutoBlue extends CommandOpMode{
                 new InstantCommand(() -> robot.follower.setMaxPower(.6)),
                 //start intake
                 new InstantCommand(() -> robot.intake.startCustom(1)),
-                new FollowPathCommand(robot.follower, collectEndBlue, false).withTimeout(3000),
+                new FollowPathCommand(robot.follower, collectEndBlue, false).withTimeout(3500),
                 new WaitCommand(500),
                 //new FollowPathCommand(robot.follower, goBackEndBlue, false),
                 new InstantCommand(() -> robot.follower.setMaxPower(.8)),

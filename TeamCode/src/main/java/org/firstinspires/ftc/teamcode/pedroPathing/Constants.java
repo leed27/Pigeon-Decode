@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants()
             .mass(12.3)
-            .holdPointHeadingScaling(1) //apparently the fix to the weird turnto pid?
+            //.holdPointHeadingScaling(1) //apparently the fix to the weird turnto pid?
             .forwardZeroPowerAcceleration(-28.21169772728104)
             .lateralZeroPowerAcceleration(-66.36080174688745)
             .useSecondaryTranslationalPIDF(false)
@@ -25,9 +25,9 @@ public class Constants {
             .useSecondaryDrivePIDF(false)
             .centripetalScaling(0.0005)
             .translationalPIDFCoefficients(new PIDFCoefficients(.2, 0, 0.02, 0))
-            .headingPIDFCoefficients(new PIDFCoefficients(1.5, 0, 0.04, 0))
+            .headingPIDFCoefficients(new PIDFCoefficients(2, 0, 0.04, 0))
             .drivePIDFCoefficients(
-                    new FilteredPIDFCoefficients(0.02, 0, 0.00000001, 0.6, 0.04)
+                    new FilteredPIDFCoefficients(0.025, 0, 0.00000001, 0.6, 0.04)
             );
 
     public static MecanumConstants driveConstants = new MecanumConstants()
@@ -57,7 +57,7 @@ public class Constants {
     public static PathConstraints pathConstraints = new PathConstraints(
             0.95,
             100,
-            1.5,
+            1,
             1
     );
 
