@@ -79,7 +79,8 @@ public class TeleOpMainSolo extends CommandOpMode {
 
         register(robot.intake, robot.outtake, robot.lights);
         /// LIGHTS
-        lightsState = Lights.LightsState.SHOOTER_VALID;
+        robot.lights.constantColor = robot.lights.ORANGE;
+        lightsState = Lights.LightsState.CONSTANT_COLOR;
         driver = new GamepadEx(gamepad1);
 
         robot.stopperServo.set(0.56);

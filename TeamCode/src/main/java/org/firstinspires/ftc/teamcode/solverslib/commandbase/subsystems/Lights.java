@@ -17,7 +17,7 @@ public class Lights extends SubsystemBase {
     private final Robot robot = Robot.getInstance();
 
     public double RED = 0.28;
-    public double ORANGE = 0.33;
+    public double ORANGE = 0.30;
     public double YELLOW = 0.39;
     public double SAGE = 0.44;
     public double GREEN = 0.5;
