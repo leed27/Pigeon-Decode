@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.solverslib.opmode.TeleOp;
 
+import static org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Lights.lightsState;
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.GoalColor;
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.OpModeType;
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.autoEndPose;
@@ -30,9 +31,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.teamcode.Prism.Color;
+import org.firstinspires.ftc.teamcode.Prism.Direction;
+import org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver;
+import org.firstinspires.ftc.teamcode.Prism.PrismAnimations;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShoot;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAuto;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
+import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Lights;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
 import java.util.List;
@@ -46,6 +52,7 @@ public class BabyOp extends CommandOpMode {
     public static int speed = 1000;
     public static int adjustSpeed = 0;
 
+    GoBildaPrismDriver prism;
 
     public ElapsedTime elapsedtime;
     private final Robot robot = Robot.getInstance();
@@ -61,16 +68,42 @@ public class BabyOp extends CommandOpMode {
         robot.init(hardwareMap);
         elapsedtime = new ElapsedTime();
         elapsedtime.reset();
+        prism = hardwareMap.get(GoBildaPrismDriver.class, "prism");
 
-        register(robot.intake, robot.outtake);
+
+        register(robot.intake, robot.outtake, robot.lights);
         driver = new GamepadEx(gamepad1);
         driver2 = new GamepadEx(gamepad2);
+
+        robot.lights.constantColor = robot.lights.ORANGE;
+        lightsState = Lights.LightsState.CONSTANT_COLOR;
 
         robot.stopperServo.set(0.56);
 
         /// this is what slows it down i think probably
         robot.follower.setMaxPower(0.5);
 
+        PrismAnimations.Solid solid = new PrismAnimations.Solid(new Color(225, 30, 0));
+        PrismAnimations.Solid transpo = new PrismAnimations.Solid(Color.TRANSPARENT);
+        PrismAnimations.Snakes snake1 = new PrismAnimations.Snakes(3, 3, 5, Color.TRANSPARENT, (float) (Math.PI/120.0F), Direction.Forward, new Color (225, 30, 0));
+        PrismAnimations.Snakes snake2 = new PrismAnimations.Snakes(3, 3, 5, Color.TRANSPARENT, (float) (Math.PI/120.0F), Direction.Forward, new Color (225, 30, 0));
+        PrismAnimations.SineWave fading = new PrismAnimations.SineWave(new Color (225, 30, 0),  Color.TRANSPARENT, 6, (float) (Math.PI/36.0F), 0.3F, Direction.Forward);
+        PrismAnimations.SineWave fading2 = new PrismAnimations.SineWave(new Color (225, 30, 0),  Color.TRANSPARENT, 6, (float) (Math.PI/36.0F), 0.3F, Direction.Forward);
+
+        solid.setBrightness(100);
+        solid.setStartIndex(0);
+        solid.setStopIndex(12);
+
+        snake1.setBrightness(100);
+        snake1.setStartIndex(0);
+        snake1.setStopIndex(5);
+
+        snake2.setBrightness(100);
+        snake2.setStartIndex(6);
+        snake2.setStopIndex(11);
+
+        fading.setBrightness(100);
+        fading2.setBrightness(100);
 
         //drive = new MecanumDrive(robot.leftFront, robot.rightFront, robot.leftRear, robot.rightRear);
 
@@ -145,6 +178,8 @@ public class BabyOp extends CommandOpMode {
 
 
 
+        prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.fading);
+        prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.fading2);
 
 
         super.run();
@@ -152,6 +187,9 @@ public class BabyOp extends CommandOpMode {
 
     @Override
     public void run() {
+
+        //prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_1, robot.fading2);
+
         // Keep all the has movement init for until when TeleOp starts
         // This is like the init but when the program is actually started
         if (gameTimer == null) {
@@ -211,6 +249,8 @@ public class BabyOp extends CommandOpMode {
 
     @Override
     public void end() {
+
         autoEndPose = robot.follower.getPose();
+        prism.insertAndUpdateAnimation(GoBildaPrismDriver.LayerHeight.LAYER_0, robot.solid);
     }
 }
