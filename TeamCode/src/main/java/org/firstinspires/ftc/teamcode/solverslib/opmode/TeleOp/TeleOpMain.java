@@ -451,8 +451,9 @@ public class TeleOpMain extends CommandOpMode {
 
 
             if(gamepad2.right_bumper){
+                robot.outtake.rapidShooting(adjustSpeed);
 
-                if(howFar < 8){
+                /*if(howFar < 8){
                     robot.outtake.shootCustom(speed +(adjustSpeed)+30);
                     robot.stopperServo.set(.47);
                     /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
@@ -468,15 +469,14 @@ public class TeleOpMain extends CommandOpMode {
                     }
                 }else{
                     robot.outtake.shootCustom(speed +(adjustSpeed));
-                robot.stopperServo.set(.47);
+                    robot.stopperServo.set(.47);
                 /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
-                if(robot.leftShooter.getVelocity() > speed +adjustSpeed && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5) && !robot.follower.isBusy()){
-
-                    robot.intake.startNoHood();
-                }else{
-                    robot.intake.stopExceptShooter();
-                }
-                }
+                    if(robot.leftShooter.getVelocity() > speed +adjustSpeed && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5) && !robot.follower.isBusy()){
+                        robot.intake.startNoHood();
+                    }else{
+                        robot.intake.stopExceptShooter();
+                    }
+                }*/
 
 
             }

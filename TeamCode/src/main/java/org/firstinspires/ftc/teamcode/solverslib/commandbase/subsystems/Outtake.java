@@ -4,7 +4,10 @@ import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
 import static java.lang.Double.NaN;
 
+import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.seattlesolvers.solverslib.command.WaitCommand;
+import com.seattlesolvers.solverslib.command.WaitUntilCommand;
 import com.seattlesolvers.solverslib.util.InterpLUT;
 
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
@@ -76,6 +79,48 @@ public class Outtake extends SubsystemBase {
         lookUpFar.createLUT();
     }
 
+
+    public void rapidShooting(int adjustSpeed){
+        double howFar = distance();
+        int speed = autoShoot2();
+        boolean startIntake = false;
+        double targetHeading = autoAlign();
+        int overShoot;
+
+        if(howFar < 5){
+            overShoot = 20;
+        }else if(howFar < 7){
+            overShoot = 30;
+        }else if(howFar < 10){
+            overShoot = 50;
+        }else if(howFar < 13){
+            overShoot = 75;
+        }else{
+            overShoot = 100;
+        }
+
+
+        shootCustom(speed + adjustSpeed + overShoot);
+        robot.stopperServo.set(.47);
+        /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
+        if(robot.leftShooter.getVelocity() > speed + adjustSpeed + 10
+                && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)
+                && !robot.follower.isBusy()){
+            if(howFar > 10){
+                new InstantCommand(() -> new WaitCommand(500));
+            }
+            startIntake = true;
+            //robot.intake.startNoHood();
+        }
+
+        if(startIntake){
+            robot.intake.startNoHood();
+        }else{
+            robot.intake.stopExceptShooter();
+        }
+
+    }
+
     public int autoShoot2(){
         double x = robot.follower.getPose().getX();
         double y = robot.follower.getPose().getY();
@@ -103,6 +148,16 @@ public class Outtake extends SubsystemBase {
             return (int) (lookUpClose.get(howFar));
         }
 
+    }
+
+    public double distance(){
+        double x = robot.follower.getPose().getX();
+        double y = robot.follower.getPose().getY();
+        if(goalColor == GoalColor.RED_GOAL){
+            return Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((144-x)/(12)),2));
+        }else{
+            return Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((-x)/(12)),2));
+        }
     }
 
     public double autoAlign(){

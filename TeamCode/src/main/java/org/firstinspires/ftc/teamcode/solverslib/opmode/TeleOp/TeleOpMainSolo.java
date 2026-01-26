@@ -389,9 +389,10 @@ public class TeleOpMainSolo extends CommandOpMode {
             }else{
                 robot.outtake.shootCustom(speed+(adjustSpeed)+20);
             }
-            if(gamepad1.left_trigger > 0.5){
 
-                if(howFar < 7){
+            if(gamepad1.left_trigger > 0.5){
+                robot.outtake.rapidShooting(adjustSpeed);
+                /*if(howFar < 7){
                     robot.outtake.shootCustom(speed +(adjustSpeed)+30);
                     robot.stopperServo.set(.47);
 
@@ -420,7 +421,7 @@ public class TeleOpMainSolo extends CommandOpMode {
                     }else{
                         robot.intake.stopExceptShooter();
                     }
-                }
+                }*/
             }
 
 
