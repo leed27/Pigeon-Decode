@@ -61,6 +61,7 @@ public class TeleOpMainSolo extends CommandOpMode {
     boolean autoShootDisabled = false;
     boolean startIntake = false;
     double howFar = 0;
+    int overShoot;
 
     int x = 0;
 
@@ -382,16 +383,54 @@ public class TeleOpMainSolo extends CommandOpMode {
         if(speed == -1 || autoShootDisabled){
         }else{
 
+            if(howFar < 5){
+                overShoot = 20;
+            }else if(howFar < 7){
+                overShoot = 30;
+            }else if(howFar > 8){
+                overShoot = 0;
+            }
+
 
             /// UPDATES SHOOTER THROUGHOUT, NOT ONLY WHEN BUTTON IS PRESSED
             if(gamepad1.triangle){
                 robot.outtake.stop();
             }else{
-                robot.outtake.shootCustom(speed+(adjustSpeed)+20);
+                robot.outtake.shootCustom(speed+(adjustSpeed)+ overShoot);
             }
 
             if(gamepad1.left_trigger > 0.5){
-                robot.outtake.rapidShooting(adjustSpeed);
+                //robot.outtake.rapidShooting(adjustSpeed);
+
+                //robot.outtake.shootCustom(speed + adjustSpeed + overShoot);
+                robot.stopperServo.set(.47);
+
+                /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
+                if(robot.leftShooter.getVelocity() > speed + adjustSpeed + 10
+                        && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(2)
+                ){
+//            if(howFar > 10){
+//                new InstantCommand(() -> new WaitCommand(500));
+//            }
+                    startIntake = true;
+                    //robot.intake.startNoHood();
+                }
+
+                if(startIntake){
+                    if(howFar < 8){
+                        robot.intake.startNoHood();
+                    }else{
+                        if(robot.leftShooter.getVelocity() > speed +adjustSpeed && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(2) && robot.follower.getAngularVelocity() < .2){
+
+                            robot.intake.startNoHood();
+                        }else{
+                            robot.intake.stopExceptShooter();
+                        }
+                    }
+                }else{
+                    robot.intake.stopExceptShooter();
+                }
+
                 /*if(howFar < 7){
                     robot.outtake.shootCustom(speed +(adjustSpeed)+30);
                     robot.stopperServo.set(.47);

@@ -102,13 +102,14 @@ public class Outtake extends SubsystemBase {
 
         shootCustom(speed + adjustSpeed + overShoot);
         robot.stopperServo.set(.47);
+
         /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
         if(robot.leftShooter.getVelocity() > speed + adjustSpeed + 10
                 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)
-                && !robot.follower.isBusy()){
-            if(howFar > 10){
-                new InstantCommand(() -> new WaitCommand(500));
-            }
+                ){
+//            if(howFar > 10){
+//                new InstantCommand(() -> new WaitCommand(500));
+//            }
             startIntake = true;
             //robot.intake.startNoHood();
         }
@@ -169,10 +170,10 @@ public class Outtake extends SubsystemBase {
         double angleNeeded = 0;
 
         if(goalColor == GoalColor.BLUE_GOAL){
-            if((x+y)>= 135 && (x+y) <= 150){
+            if((x+y)>= 135 && (x+y) <= 170){
                 aimPosX = 0;
                 aimPosY = 144;
-            }else if((x+y) > 150){
+            }else if((x+y) > 170){
                 aimPosX = 0;
                 aimPosY = 135;
             }else{
@@ -180,10 +181,10 @@ public class Outtake extends SubsystemBase {
                 aimPosY = 144;
             }
         }else{
-            if((x-y)>= -9 && (x-y) <= 9){
+            if((x-y)>= -35 && (x-y) <= 29){
                 aimPosX = 144;
                 aimPosY = 144;
-            }else if((x-y) > 9){
+            }else if((x-y) > 29){
                 aimPosX = 135;
                 aimPosY = 144;
             }else{

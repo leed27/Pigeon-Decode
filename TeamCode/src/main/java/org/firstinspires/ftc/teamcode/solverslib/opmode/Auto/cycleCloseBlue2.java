@@ -48,7 +48,7 @@ public class cycleCloseBlue2 extends CommandOpMode{
 
     private final Pose openGatePose2 = new Pose(18, 67, Math.toRadians(180));
     private final Pose openGatePose3 = new Pose(19.5, 64, Math.toRadians(180));
-    private final Pose intakeGatePose = new Pose(8.5, 56.5, Math.toRadians(110));
+    private final Pose intakeGatePose = new Pose(8.5, 53, Math.toRadians(110));
 
     private final Pose controlPose = new Pose(79, 37);
     private final Pose blueBottomPilePose = new Pose(51, 36, Math.toRadians(180));
@@ -328,7 +328,7 @@ public class cycleCloseBlue2 extends CommandOpMode{
                 new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1090),
                 new RepeatCommand(
                         new RapidShoot()
-                ).withTimeout(500),
+                ).withTimeout(800),
 
                 //new WaitCommand(3000),
                 new InstantCommand(() -> robot.intake.stop()),
