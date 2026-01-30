@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootI
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.RapidShoot;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@Autonomous(name = "CYCLE & BEIZER TEST \uD83D\uDD34", group = "auto")
+@Autonomous(name = "15 BALL \uD83D\uDD34", group = "auto")
 public class cycleCloseRed2 extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
