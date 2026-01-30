@@ -41,7 +41,7 @@ public class closeAutoBlue9Pattern extends CommandOpMode{
     public PathChain FlipMiddle;
     public PathChain GetMiddleAndShoot;
 
-    private final Pose startPose = new Pose(29.105, 129.575, Math.toRadians(0));
+    private final Pose startPose = new Pose(27.61595273264401, 127.87296898079765, Math.toRadians(0));
 
     private final Pose blueTopShootPose = new Pose(51,96, Math.toRadians(144));
 
