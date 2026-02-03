@@ -383,13 +383,13 @@ public class TeleOpMainSolo extends CommandOpMode {
         if(speed == -1 || autoShootDisabled){
         }else{
 
-            if(howFar < 5){
-                overShoot = 20;
-            }else if(howFar < 7){
-                overShoot = 30;
-            }else if(howFar > 8){
-                overShoot = 0;
-            }
+//            if(howFar < 5){
+//                overShoot = 20;
+//            }else if(howFar < 7){
+//                overShoot = 30;
+//            }else if(howFar > 8){
+//                overShoot = 0;
+//            }
 
 
             /// UPDATES SHOOTER THROUGHOUT, NOT ONLY WHEN BUTTON IS PRESSED
@@ -406,8 +406,8 @@ public class TeleOpMainSolo extends CommandOpMode {
                 robot.stopperServo.set(.47);
 
                 /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
-                if(robot.leftShooter.getVelocity() > speed + adjustSpeed + 10
-                        && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(2)
+                if(robot.leftShooter.getVelocity() > speed + adjustSpeed
+                        && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(2) && robot.follower.getAngularVelocity() < .2
                 ){
 //            if(howFar > 10){
 //                new InstantCommand(() -> new WaitCommand(500));
@@ -417,7 +417,7 @@ public class TeleOpMainSolo extends CommandOpMode {
                 }
 
                 if(startIntake){
-                    if(howFar < 8){
+                    if(howFar < 20){
                         robot.intake.startNoHood();
                     }else{
                         if(robot.leftShooter.getVelocity() > speed +adjustSpeed && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(2) && robot.follower.getAngularVelocity() < .2){

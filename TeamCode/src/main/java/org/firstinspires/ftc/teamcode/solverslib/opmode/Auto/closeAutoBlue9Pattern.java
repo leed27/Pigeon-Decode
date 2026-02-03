@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
 
 
-@Autonomous(name = "CLOSE 9 BALL + PUSH \uD83D\uDD35", group = "auto")
+@Autonomous(name = "yv \uD83D\uDD35", group = "auto")
 public class closeAutoBlue9Pattern extends CommandOpMode{
 
     private final Robot robot = Robot.getInstance();

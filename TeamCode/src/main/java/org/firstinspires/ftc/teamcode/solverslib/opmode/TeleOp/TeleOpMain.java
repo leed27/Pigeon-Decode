@@ -36,6 +36,7 @@ public class TeleOpMain extends CommandOpMode {
     private MecanumDrive drive;
     public static int adjustSpeed = 0;
     public static int speed = 1200;
+    int overShoot = 0;
 
     public static double targetHeading;
     boolean startIntake = false;
@@ -437,47 +438,60 @@ public class TeleOpMain extends CommandOpMode {
         if(speed == -1 || autoShootDisabled){
         }else{
 
-            if(goalColor == GoalColor.RED_GOAL){
-                targetHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
-            }else{
-                targetHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
-            }
+//            if(goalColor == GoalColor.RED_GOAL){
+//                targetHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
+//            }else{
+//                targetHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
+//            }
+
+
+            /*if(howFar < 5){
+                overShoot = 20;
+            }else if(howFar < 7){
+                overShoot = 30;
+            }else if(howFar > 8){
+                overShoot = 0;
+            }*/
+
 
             if(gamepad2.triangle){
                 robot.outtake.stop();
             }else{
-                robot.outtake.shootCustom(speed +(adjustSpeed)+20);
+                robot.outtake.shootCustom(speed+(adjustSpeed)+ overShoot);
             }
 
 
             if(gamepad2.right_bumper){
-                robot.outtake.rapidShooting(adjustSpeed);
+                //robot.outtake.rapidShooting(adjustSpeed);
 
-                /*if(howFar < 8){
-                    robot.outtake.shootCustom(speed +(adjustSpeed)+30);
-                    robot.stopperServo.set(.47);
-                    /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
-                    if(robot.leftShooter.getVelocity() > speed +adjustSpeed+10 && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5) && !robot.follower.isBusy()){
-                        startIntake = true;
-                        //robot.intake.startNoHood();
-                    }
+                //robot.outtake.shootCustom(speed + adjustSpeed + overShoot);
+                robot.stopperServo.set(.47);
 
-                    if(startIntake){
+                /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
+                if(robot.leftShooter.getVelocity() > speed + adjustSpeed
+                        && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(2) && robot.follower.getAngularVelocity() < .2
+                ){
+//            if(howFar > 10){
+//                new InstantCommand(() -> new WaitCommand(500));
+//            }
+                    startIntake = true;
+                    //robot.intake.startNoHood();
+                }
+
+                if(startIntake){
+                    if(howFar < 20){
                         robot.intake.startNoHood();
                     }else{
-                        robot.intake.stopExceptShooter();
+                        if(robot.leftShooter.getVelocity() > speed +adjustSpeed && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(2) && robot.follower.getAngularVelocity() < .2){
+
+                            robot.intake.startNoHood();
+                        }else{
+                            robot.intake.stopExceptShooter();
+                        }
                     }
                 }else{
-                    robot.outtake.shootCustom(speed +(adjustSpeed));
-                    robot.stopperServo.set(.47);
-                /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
-                    if(robot.leftShooter.getVelocity() > speed +adjustSpeed && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5) && !robot.follower.isBusy()){
-                        robot.intake.startNoHood();
-                    }else{
-                        robot.intake.stopExceptShooter();
-                    }
-                }*/
-
+                    robot.intake.stopExceptShooter();
+                }
 
             }
 

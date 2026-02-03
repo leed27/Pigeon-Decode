@@ -12,12 +12,15 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class test extends LinearOpMode {
     //private DcMotor motor, motor2;
-    private Servo kicker;
+    private Servo kicker, kicker2;
 
 
     @Override
     public void runOpMode() {
-        kicker = hardwareMap.get(Servo.class, "kicker");
+        kicker = hardwareMap.get(Servo.class, "kickerServo");
+        kicker2 = hardwareMap.get(Servo.class, "kicker2Servo");
+        kicker2.setDirection(Servo.Direction.REVERSE);
+
 //        motor2 = hardwareMap.get(DcMotor.class, "shooter2");
 
 //        lightLeft = hardwareMap.get(Servo.class, "lightLeft");
@@ -31,19 +34,30 @@ public class test extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        kicker.setPosition(0.5);
+        kicker.setPosition(0.82);
+        kicker2.setPosition(0.82);
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
 
                 if(gamepad1.left_bumper){
-                    kicker.setPosition(kicker.getPosition()- 0.01);
+                    kicker.setPosition(kicker.getPosition()- 0.0005);
+                    kicker2.setPosition(kicker2.getPosition()- 0.0005);
                 }
                 if(gamepad1.right_bumper){
-                    kicker.setPosition(kicker.getPosition()+ 0.01);
+                    kicker.setPosition(kicker.getPosition()+ 0.0005);
+                    kicker2.setPosition(kicker2.getPosition()+ 0.0005);
+
+                }
+
+                if(gamepad1.circleWasPressed()){
+                    kicker.setPosition(0.3);
+                    kicker2.setPosition(0.3);
                 }
 
                 telemetry.addData("eriog", kicker.getPosition());
+                telemetry.addData("eriog", kicker2.getPosition());
+
                 telemetry.update();
 
 //                lightLeft.setPosition(0.3);

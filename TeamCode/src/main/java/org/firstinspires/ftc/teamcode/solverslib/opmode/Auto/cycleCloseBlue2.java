@@ -33,29 +33,31 @@ public class cycleCloseBlue2 extends CommandOpMode{
     //private final ArrayList<PathChain> paths = new ArrayList<>();
 
     // ALL PATHS
-    private final Pose startPose = new Pose(24.6, 128.4, Math.toRadians(144)); //e
+//    private final Pose startPose = new Pose(24.6, 128.4, Math.toRadians(144)); //e
+    private final Pose startPose = new Pose(33.2, 134.5, Math.toRadians(90)); //e
+
     /// blue paths
-    private final Pose blueTopPilePose = new Pose(51,84, Math.toRadians(180)); //e
+    private final Pose blueTopPilePose = new Pose(51,82, Math.toRadians(180)); //e
 
-    private final Pose blueTopPileForwardPose = new Pose(17, 84, Math.toRadians(180)); //e
-    private final Pose blueMiddlePilePose = new Pose(51, 57, Math.toRadians(180));
-    private final Pose blueMiddlePileForwardPose = new Pose(10, 57, Math.toRadians(180));
+    private final Pose blueTopPileForwardPose = new Pose(17, 82, Math.toRadians(180)); //e
+    private final Pose blueMiddlePilePose = new Pose(51, 59, Math.toRadians(180));
+    private final Pose blueMiddlePileForwardPose = new Pose(10, 59, Math.toRadians(180));
 
-    private final Pose readyGatePose = new Pose(27, 59, Math.toRadians(180)); //old X = 30
-    private final Pose openGatePose = new Pose(18, 69, Math.toRadians(180));
+    private final Pose readyGatePose = new Pose(27, 69, Math.toRadians(180)); //old X = 30
+    private final Pose openGatePose = new Pose(18, 75, Math.toRadians(180));
     private final Pose angleGatePose = new Pose(11.5499, 61, Math.toRadians(135));
     private final Pose angleGateBackPose = new Pose(13.5499, 59, Math.toRadians(155));
 
     private final Pose openGatePose2 = new Pose(18, 67, Math.toRadians(180));
-    private final Pose openGatePose3 = new Pose(19.5, 64, Math.toRadians(180));
+    private final Pose openGatePose3 = new Pose(18.5, 67, Math.toRadians(180));
     private final Pose intakeGatePose = new Pose(8.5, 53, Math.toRadians(110));
 
     private final Pose controlPose = new Pose(79, 37);
     private final Pose blueBottomPilePose = new Pose(51, 36, Math.toRadians(180));
     private final Pose blueBottomPileForwardPose = new Pose(10, 36, Math.toRadians(180));
-    private final Pose blueTopShootPose = new Pose(51,96, Math.toRadians(144));
+    private final Pose blueTopShootPose = new Pose(51,96, Math.toRadians(135));
 
-    private final Pose blueTopShootPoseFinal = new Pose(54,110, Math.toRadians(150));//old angle: 150
+    private final Pose blueTopShootPoseFinal = new Pose(54,110, Math.toRadians(144));//old angle: 150
     private final Pose blueTopShootPose2 = new Pose(51,96, Math.toRadians(135));
 
     private final Pose blueBottomShootPose =  new Pose(55, 15, Math.toRadians(120));
@@ -94,7 +96,8 @@ public class cycleCloseBlue2 extends CommandOpMode{
 
         shootPreloads = robot.follower.pathBuilder()
                 .addPath(new BezierLine(startPose, blueTopShootPose))
-                .setConstantHeadingInterpolation(startPose.getHeading())
+                .setLinearHeadingInterpolation(startPose.getHeading(), blueTopShootPose.getHeading())
+                //.setConstantHeadingInterpolation(startPose.getHeading())
                 .build();
 
         //BEIZIER TS
@@ -274,7 +277,7 @@ public class cycleCloseBlue2 extends CommandOpMode{
 
     public SequentialCommandGroup tapGateAndShoot() {
         return new SequentialCommandGroup(
-                new InstantCommand(() -> robot.follower.setMaxPower(0.7)),
+                new InstantCommand(() -> robot.follower.setMaxPower(0.85)),
                 new FollowPathCommand(robot.follower, tapGate, false),
                 new WaitCommand(200),
                 //start intake

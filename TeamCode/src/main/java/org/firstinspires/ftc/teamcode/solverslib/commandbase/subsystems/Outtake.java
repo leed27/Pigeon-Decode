@@ -51,16 +51,16 @@ public class Outtake extends SubsystemBase {
 
         //NORMAL TABLES THAT DIDDY APPROVES
         lookUpClose.add(0, 0);
-        lookUpClose.add(4.804, 1050);
-        lookUpClose.add(5.138, 1070);
-        lookUpClose.add(5.953, 1120);
-        lookUpClose.add(6.301, 1135);
-        lookUpClose.add(6.900, 1160);
-        lookUpClose.add(7.670, 1210);
-        lookUpClose.add(8.15, 1250);
-        lookUpClose.add(8.85, 1270);
-        lookUpClose.add(9.38, 1280);
-        lookUpClose.add(9.7, 1300);
+        lookUpClose.add(4.804, 1000);
+        lookUpClose.add(5.138, 1020);
+        lookUpClose.add(5.953, 1070);
+        lookUpClose.add(6.301, 1085);
+        lookUpClose.add(6.900, 1110);
+        lookUpClose.add(7.670, 1160);
+        lookUpClose.add(8.15, 1200);
+        lookUpClose.add(8.85, 1220);
+        lookUpClose.add(9.38, 1230);
+        lookUpClose.add(9.7, 1250);
         lookUpClose.add(10.3, 1350);
         lookUpClose.add(11, 1400);
         lookUpClose.add(11.7, 1420);
@@ -170,18 +170,18 @@ public class Outtake extends SubsystemBase {
         double angleNeeded = 0;
 
         if(goalColor == GoalColor.BLUE_GOAL){
-            if((x+y)>= 135 && (x+y) <= 170){
+            if((x+y)>= 115 && (x+y) <= 170 && y>=120){
                 aimPosX = 0;
                 aimPosY = 144;
             }else if((x+y) > 170){
                 aimPosX = 0;
-                aimPosY = 135;
+                aimPosY = 140;
             }else{
-                aimPosX = 6;
+                aimPosX = 1;
                 aimPosY = 144;
             }
         }else{
-            if((x-y)>= -35 && (x-y) <= 29){
+            if((x-y)>= -35 && (x-y) <= 29 && y>=120){
                 aimPosX = 144;
                 aimPosY = 144;
             }else if((x-y) > 29){
@@ -189,7 +189,7 @@ public class Outtake extends SubsystemBase {
                 aimPosY = 144;
             }else{
                 aimPosX = 144;
-                aimPosY = 135;
+                aimPosY = 143;
             }
         }
 
