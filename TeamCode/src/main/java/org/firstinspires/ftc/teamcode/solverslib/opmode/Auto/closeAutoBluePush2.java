@@ -40,19 +40,19 @@ public class closeAutoBluePush2 extends CommandOpMode{
 
 
     /// blue paths
-    private final Pose blueTopPilePose = new Pose(51,82, Math.toRadians(180)); //e
-    private final Pose blueTopPileForwardPose = new Pose(17, 82, Math.toRadians(180));
+    private final Pose blueTopPilePose = new Pose(51,84, Math.toRadians(180)); //e
+    private final Pose blueTopPileForwardPose = new Pose(17, 84, Math.toRadians(180));
     private final Pose blueMiddlePileForwardPose = new Pose(10, 59, Math.toRadians(180));
     private final Pose readyGatePose = new Pose(27, 69, Math.toRadians(180)); //old X = 30
-    private final Pose openGatePose = new Pose(18, 75, Math.toRadians(180));
+    private final Pose openGatePose = new Pose(18, 78, Math.toRadians(180));
 
-    private final Pose openGatePose2 = new Pose(9.983751846381093, 64.53323485967505, Math.toRadians(180));
+    private final Pose openGatePose2 = new Pose(13, 68, Math.toRadians(180));
     private final Pose blueBottomPileForwardPose = new Pose(10, 36, Math.toRadians(180));
     private final Pose blueTopShootPose = new Pose(51,96, Math.toRadians(135));
-    private final Pose prepPushPose = new Pose(63, 50, Math.toRadians(0));
+    private final Pose prepPushPose = new Pose(61, 50, Math.toRadians(0));
 
-    private final Pose getReadyPushPose = new Pose(63, 9, Math.toRadians(0));
-    private final Pose pushPose = new Pose(54, 9, Math.toRadians(0));
+    private final Pose getReadyPushPose = new Pose(61, 9, Math.toRadians(0));
+    private final Pose pushPose = new Pose(30, 9, Math.toRadians(0));
 
     private final Pose parkPose = new Pose(34, 80, Math.toRadians(135));
     private Path grabTopBlue;
@@ -107,8 +107,10 @@ public class closeAutoBluePush2 extends CommandOpMode{
                 .build();
 
         openGateBlue2 = robot.follower.pathBuilder()
-                .addPath(new BezierCurve(blueMiddlePileForwardPose, new Pose(49.80871491875922, 60.87296898079762), openGatePose2))
-                .setConstantHeadingInterpolation(blueMiddlePileForwardPose.getHeading())
+                .addPath(new BezierLine(blueMiddlePileForwardPose, readyGatePose))
+                .setConstantHeadingInterpolation(readyGatePose.getHeading())
+                .addPath(new BezierLine(readyGatePose, openGatePose2))
+                .setConstantHeadingInterpolation(openGatePose2.getHeading())
                 .build();
 
         readyGateBlue = robot.follower.pathBuilder()
@@ -122,7 +124,7 @@ public class closeAutoBluePush2 extends CommandOpMode{
                 .build();
 
         grabTopBlue = new Path(new BezierLine(blueTopShootPose, blueTopPilePose));
-        grabTopBlue.setLinearHeadingInterpolation(startPose.getHeading(), blueTopPilePose.getHeading());
+        grabTopBlue.setLinearHeadingInterpolation(blueTopShootPose.getHeading(), blueTopPilePose.getHeading());
 
         collectTopBlue = robot.follower.pathBuilder()
                 .addPath(new BezierLine( blueTopPilePose, blueTopPileForwardPose))
@@ -152,7 +154,7 @@ public class closeAutoBluePush2 extends CommandOpMode{
                 .build();
 
         pushToPark = robot.follower.pathBuilder()
-                .addPath(new BezierLine( pushPose, parkPose2))
+                .addPath(new BezierLine(pushPose, parkPose2))
                 .setConstantHeadingInterpolation(parkPose2.getHeading())
                 .build();
 
@@ -180,7 +182,7 @@ public class closeAutoBluePush2 extends CommandOpMode{
                 new WaitCommand(500),
                 //new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.follower.setMaxPower(0.7)),
-                new FollowPathCommand(robot.follower, openGateBlue2, true).withTimeout(500),
+                new FollowPathCommand(robot.follower, openGateBlue2, true).withTimeout(2500),
                 //new FollowPathCommand(robot.follower, readyGateBlue, true),
                 //new InstantCommand(() -> robot.follower.setMaxPower(0.7)),
                 //new FollowPathCommand(robot.follower, openGateBlue, true).withTimeout(500),
@@ -189,10 +191,10 @@ public class closeAutoBluePush2 extends CommandOpMode{
                 new FollowPathCommand(robot.follower, bezzieBackMiddle2, true),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1090),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
                 new RepeatCommand(
                         new RapidShoot()
-                ).withTimeout(700),
+                ).withTimeout(400),
 
                 //new WaitCommand(3000),
                 new InstantCommand(() -> robot.intake.stop()),
@@ -205,17 +207,17 @@ public class closeAutoBluePush2 extends CommandOpMode{
         return new SequentialCommandGroup(
                 new InstantCommand(() -> robot.intake.start()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1)),
-                new FollowPathCommand(robot.follower, grabAndCollectBottom, false).withTimeout(5000),
+                new FollowPathCommand(robot.follower, grabAndCollectBottom, false).withTimeout(5500),
                 new WaitCommand(500),
                 //new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1)),
                 new FollowPathCommand(robot.follower, bezzieBackBottom, true),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1090),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
                 new RepeatCommand(
                         new RapidShoot()
-                ).withTimeout(700)
+                ).withTimeout(400)
 
                 //new WaitCommand(3000),
                 //new InstantCommand(() -> robot.intake.stop()),
@@ -228,10 +230,10 @@ public class closeAutoBluePush2 extends CommandOpMode{
                 new FollowPathCommand(robot.follower, shootTopBlue, true),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1090),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
                 new RepeatCommand(
                         new RapidShoot()
-                ).withTimeout(500),
+                ).withTimeout(400),
 
                 //new WaitCommand(3000),
                 new InstantCommand(() -> robot.intake.stop()),
@@ -241,17 +243,16 @@ public class closeAutoBluePush2 extends CommandOpMode{
     }
     public SequentialCommandGroup scorePreload() {
         return new SequentialCommandGroup(
-                new WaitCommand(100),
                 new InstantCommand(() -> robot.follower.setMaxPower(1)),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
 //                new InstantCommand(() -> robot.outtake.shootAuto()),
 //
                 new FollowPathCommand(robot.follower, shootPreloads, true),
-                new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1090),
+                new WaitCommand(200),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
                 new RepeatCommand(
                         new RapidShoot()
-                ).withTimeout(800),
+                ).withTimeout(750),
 
                 //new WaitCommand(3000),
                 new InstantCommand(() -> robot.intake.stop()),
@@ -263,13 +264,13 @@ public class closeAutoBluePush2 extends CommandOpMode{
     public SequentialCommandGroup pushAndPark(){
         return new SequentialCommandGroup(
                 new InstantCommand(()->robot.follower.setMaxPower(1)),
-                new FollowPathCommand(robot.follower, prepPushing, false),
-                new InstantCommand(()->robot.follower.setMaxPower(0.65)),
-                new FollowPathCommand(robot.follower, getToPushing, true).withTimeout(2000),
+                new FollowPathCommand(robot.follower, prepPushing, false).withTimeout(1500),
+                new InstantCommand(()->robot.follower.setMaxPower(1)),
+                new FollowPathCommand(robot.follower, getToPushing, true).withTimeout(500),
                 new FollowPathCommand(robot.follower, pushTime, true).withTimeout(2000),
                 new WaitCommand(500),
-                new InstantCommand(()->robot.follower.setMaxPower(0.8)),
-                new FollowPathCommand(robot.follower, pushToPark, true)
+                new InstantCommand(()->robot.follower.setMaxPower(0.8))
+                //new FollowPathCommand(robot.follower, pushToPark, true)
         );
     }
 

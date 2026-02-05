@@ -122,9 +122,8 @@ public class cycleCloseBlue2 extends CommandOpMode{
                 .build();
 
 
-
         grabTopBlue = new Path(new BezierLine(blueTopShootPose, blueTopPilePose));
-        grabTopBlue.setLinearHeadingInterpolation(startPose.getHeading(), blueTopPilePose.getHeading());
+        grabTopBlue.setLinearHeadingInterpolation(blueTopShootPose.getHeading(), blueTopPilePose.getHeading());
 
         collectTopBlue = robot.follower.pathBuilder()
                 .addPath(new BezierLine( blueTopPilePose, blueTopPileForwardPose))
@@ -240,7 +239,7 @@ public class cycleCloseBlue2 extends CommandOpMode{
                 new FollowPathCommand(robot.follower, bezzieBackMiddle, true),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1090),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
                 new RepeatCommand(
                         new RapidShoot()
                 ).withTimeout(700),
@@ -263,7 +262,7 @@ public class cycleCloseBlue2 extends CommandOpMode{
                 new FollowPathCommand(robot.follower, bezzieBackBottom, true),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1090),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
                 new RepeatCommand(
                         new RapidShoot()
                 ).withTimeout(700)
@@ -295,7 +294,7 @@ public class cycleCloseBlue2 extends CommandOpMode{
                 new FollowPathCommand(robot.follower, stealToShoot, true),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1090),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
                 new RepeatCommand(
                         new RapidShoot()
                 ).withTimeout(700),
@@ -308,7 +307,7 @@ public class cycleCloseBlue2 extends CommandOpMode{
                 new FollowPathCommand(robot.follower, shootTopBlue, true),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1090),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
                 new RepeatCommand(
                         new RapidShoot()
                 ).withTimeout(500),
@@ -328,7 +327,7 @@ public class cycleCloseBlue2 extends CommandOpMode{
 //
                 new FollowPathCommand(robot.follower, shootPreloads, true),
                 new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1090),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
                 new RepeatCommand(
                         new RapidShoot()
                 ).withTimeout(800),
@@ -372,7 +371,7 @@ public class cycleCloseBlue2 extends CommandOpMode{
                 new FollowPathCommand(robot.follower, shootCycleGateBlue, true),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1090),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
                 new RepeatCommand(
                         new RapidShoot()
                 ).withTimeout(1000),
@@ -422,7 +421,7 @@ public class cycleCloseBlue2 extends CommandOpMode{
                 new FollowPathCommand(robot.follower, shootMiddleBlue, true),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1090),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
                 new RepeatCommand(
                         new RapidShoot()
                 ).withTimeout(1000),
