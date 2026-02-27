@@ -61,19 +61,19 @@ public class Outtake extends SubsystemBase {
         lookUpClose.add(8.85, 1220);
         lookUpClose.add(9.38, 1230);
         lookUpClose.add(9.7, 1250);
-        lookUpClose.add(10.3, 1350);
-        lookUpClose.add(11, 1400);
-        lookUpClose.add(11.7, 1420);
-        lookUpClose.add(12.15, 1450);
-        lookUpClose.add(13, 1480);
+        lookUpClose.add(10.3, 1370);
+        lookUpClose.add(11, 1420);
+        lookUpClose.add(11.7, 1450);
+        lookUpClose.add(12.15, 1470);
+        lookUpClose.add(13, 1520);
         lookUpClose.createLUT();
 
         lookUpFar.add(0, 0);
-        lookUpFar.add(10.5, 1470);
-        lookUpFar.add(11.436, 1490);
-        lookUpFar.add(12, 1510);
-        lookUpFar.add(13, 1540);
-        lookUpFar.add(14.06, 1570);
+        lookUpFar.add(10.5, 1300);
+        lookUpFar.add(11.436, 1340);
+        lookUpFar.add(12, 1360);
+        lookUpFar.add(13, 1390);
+        lookUpFar.add(14.06, 1420);
         lookUpFar.add(30, 1800); //when our odom wheels are rly off
 
         lookUpFar.createLUT();
@@ -94,9 +94,9 @@ public class Outtake extends SubsystemBase {
         }else if(howFar < 10){
             overShoot = 50;
         }else if(howFar < 13){
-            overShoot = 75;
+            overShoot = 0;
         }else{
-            overShoot = 100;
+            overShoot = 0;
         }
 
 
@@ -181,15 +181,15 @@ public class Outtake extends SubsystemBase {
                 aimPosY = 144;
             }
         }else{
-            if((x-y)>= -35 && (x-y) <= 29 && y>=120){
-                aimPosX = 144;
+            if((x-y)>= -40 && (x-y) <= 29){
+                aimPosX = 142;
                 aimPosY = 144;
             }else if((x-y) > 29){
                 aimPosX = 135;
                 aimPosY = 144;
             }else{
                 aimPosX = 144;
-                aimPosY = 143;
+                aimPosY = 137;
             }
         }
 
@@ -253,7 +253,7 @@ public class Outtake extends SubsystemBase {
     }
 
     public void shootAuto(){
-        if(robot.leftShooter.getVelocity() > 1090 && robot.rightShooter.getVelocity() > 1090){
+        if(robot.leftShooter.getVelocity() > 1070 && robot.rightShooter.getVelocity() > 1070){
             robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
             robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
             shooterReady = true;
@@ -269,7 +269,7 @@ public class Outtake extends SubsystemBase {
     }
 
     public void shootAutoFar(){
-        if(robot.leftShooter.getVelocity() > 1500 && robot.rightShooter.getVelocity() > 1500){
+        if(robot.leftShooter.getVelocity() > 1320 && robot.rightShooter.getVelocity() > 1320){
             robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
             robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
             shooterReady = true;

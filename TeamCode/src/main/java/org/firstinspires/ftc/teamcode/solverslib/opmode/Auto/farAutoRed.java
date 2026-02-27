@@ -30,7 +30,7 @@ public class farAutoRed extends CommandOpMode{
 
     // ALL PATHS
     private final Pose startPose = new Pose(88, 9, Math.toRadians(90));
-    private final Pose shootPose = new Pose(88, 15, Math.toRadians(67));
+    private final Pose shootPose = new Pose(88, 15, Math.toRadians(68.5));
     /// blue paths6
     ///
 
@@ -216,7 +216,7 @@ public class farAutoRed extends CommandOpMode{
     @Override
     public void initialize() {
         opModeType = OpModeType.AUTO;
-        goalColor = GoalColor.BLUE_GOAL;
+        goalColor = GoalColor.RED_GOAL;
         timer = new ElapsedTime();
         timer.reset();
 

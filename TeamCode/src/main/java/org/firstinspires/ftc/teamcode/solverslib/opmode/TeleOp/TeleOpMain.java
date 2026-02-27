@@ -221,17 +221,19 @@ public class TeleOpMain extends CommandOpMode {
         /// RELOCALIZATION
 
         driver2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(
-                //in the corner of field
+                //facing the wall
                 new InstantCommand(() -> {
                     if(goalColor == GoalColor.RED_GOAL){
                         robot.follower.setPose(new Pose(
-                                7.88, 8.759, Math.toRadians(90)
+                                11, 9, Math.toRadians(180)
                         ));
+                        gamepad1.rumbleBlips(3);
                         gamepad2.rumbleBlips(3);
                     }else{
                         robot.follower.setPose(new Pose(
-                                7.88, 8.759, Math.toRadians(90)
+                                11, 9, Math.toRadians(180)
                         ).mirror());
+                        gamepad1.rumbleBlips(3);
                         gamepad2.rumbleBlips(3);
                     }
 
@@ -248,11 +250,13 @@ public class TeleOpMain extends CommandOpMode {
                         robot.follower.setPose(new Pose(
                                 80, 136, Math.toRadians(90)
                         ));
+                        gamepad1.rumbleBlips(3);
                         gamepad2.rumbleBlips(3);
                     }else{
                         robot.follower.setPose(new Pose(
                                 80, 136, Math.toRadians(90)
                         ).mirror());
+                        gamepad1.rumbleBlips(3);
                         gamepad2.rumbleBlips(3);
                     }
 
@@ -314,7 +318,7 @@ public class TeleOpMain extends CommandOpMode {
                 new InstantCommand(() -> {
                     if(goalColor == GoalColor.RED_GOAL){
                         double newHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
-                        robot.follower.turnToDegrees(Math.toDegrees(targetHeading));
+                        robot.follower.turnTo(targetHeading);
                         robot.follower.setConstraints(new PathConstraints(
                                 0.995,
                                 200,
@@ -323,7 +327,7 @@ public class TeleOpMain extends CommandOpMode {
                         ));
                     }else{
                         double newHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
-                        robot.follower.turnToDegrees(Math.toDegrees(targetHeading));
+                        robot.follower.turnTo(targetHeading);
                     }}
                 )
         );
@@ -344,23 +348,25 @@ public class TeleOpMain extends CommandOpMode {
 
         );
 
-        driver2.getGamepadButton(GamepadKeys.Button.SHARE).whenPressed(
-                //
-                new InstantCommand(() -> {
-                    if(goalColor == GoalColor.BLUE_GOAL){
-                        gamepad1.rumble(1000);
-                        goalColor = GoalColor.RED_GOAL;
-                        lightsState = Lights.LightsState.SWITCH_SIDE;
-                    }else{
-                        gamepad1.rumble(1000);
-                        goalColor = GoalColor.BLUE_GOAL;
-                        lightsState = Lights.LightsState.SWITCH_SIDE;
-                    }
-
-                }
-                )
-
-        );
+//        driver2.getGamepadButton(GamepadKeys.Button.SHARE).whenPressed(
+//                //
+//                new InstantCommand(() -> {
+//                    if(goalColor == GoalColor.BLUE_GOAL){
+//                        gamepad1.rumble(1000);
+//                        gamepad2.rumble(1000);
+//                        goalColor = GoalColor.RED_GOAL;
+//                        lightsState = Lights.LightsState.SWITCH_SIDE;
+//                    }else{
+//                        gamepad1.rumble(1000);
+//                        gamepad2.rumble(1000);
+//                        goalColor = GoalColor.BLUE_GOAL;
+//                        lightsState = Lights.LightsState.SWITCH_SIDE;
+//                    }
+//
+//                }
+//                )
+//
+//        );
 
         driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenPressed(
                 //
@@ -436,7 +442,7 @@ public class TeleOpMain extends CommandOpMode {
         speed = robot.outtake.autoShoot2();
 
         if(speed == -1 || autoShootDisabled){
-        }else{
+        }else {
 
 //            if(goalColor == GoalColor.RED_GOAL){
 //                targetHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
@@ -454,23 +460,23 @@ public class TeleOpMain extends CommandOpMode {
             }*/
 
 
-            if(gamepad2.triangle){
+            if (gamepad2.triangle) {
                 robot.outtake.stop();
-            }else{
-                robot.outtake.shootCustom(speed+(adjustSpeed)+ overShoot);
+            } else {
+                robot.outtake.shootCustom(speed + (adjustSpeed) + overShoot);
             }
 
 
-            if(gamepad2.right_bumper){
+            if (gamepad2.right_bumper) {
                 //robot.outtake.rapidShooting(adjustSpeed);
 
                 //robot.outtake.shootCustom(speed + adjustSpeed + overShoot);
-                robot.stopperServo.set(.47);
+                robot.stopperServo.set(.4);
 
                 /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
-                if(robot.leftShooter.getVelocity() > speed + adjustSpeed
+                if (robot.leftShooter.getVelocity() > speed + adjustSpeed
                         && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(2) && robot.follower.getAngularVelocity() < .2
-                ){
+                ) {
 //            if(howFar > 10){
 //                new InstantCommand(() -> new WaitCommand(500));
 //            }
@@ -478,22 +484,26 @@ public class TeleOpMain extends CommandOpMode {
                     //robot.intake.startNoHood();
                 }
 
-                if(startIntake){
-                    if(howFar < 20){
+                if (howFar < 10) {
+                    if(startIntake){
                         robot.intake.startNoHood();
                     }else{
-                        if(robot.leftShooter.getVelocity() > speed +adjustSpeed && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(2) && robot.follower.getAngularVelocity() < .2){
-
-                            robot.intake.startNoHood();
-                        }else{
-                            robot.intake.stopExceptShooter();
-                        }
+                        robot.intake.stopExceptShooter();
                     }
-                }else{
-                    robot.intake.stopExceptShooter();
-                }
 
+                }
+                else{
+
+                    if (robot.leftShooter.getVelocity() > speed + adjustSpeed && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(2) && robot.follower.getAngularVelocity() < .2) {
+
+                        robot.intake.startNoHood();
+                    } else {
+                        robot.intake.stopExceptShooter();
+                    }
             }
+            }
+
+
 
 //            if(gamepad2.right_bumper){
 //                robot.outtake.shootCustom(speed +(adjustSpeed));
@@ -541,6 +551,7 @@ public class TeleOpMain extends CommandOpMode {
         telemetry.addData("FINAL SPEED", speed +adjustSpeed);
         telemetry.addData("how Far", Math.sqrt(Math.pow(((144-robot.follower.getPose().getY())/(12)), 2) + Math.pow(((-robot.follower.getPose().getX())/(12)),2)));
         telemetry.addData("team", goalColor);
+        telemetry.addData("targetheading", targetHeading);
         telemetry.addData("motor speed", robot.leftShooter.getVelocity());
         telemetry.addData("auto shoot disabled", autoShootDisabled);
         //telemetry.addData("SERVO POSITIONNNNN", robot.stopperServo.get());

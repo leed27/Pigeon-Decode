@@ -34,14 +34,16 @@ public class cycleCloseBlue2 extends CommandOpMode{
 
     // ALL PATHS
 //    private final Pose startPose = new Pose(24.6, 128.4, Math.toRadians(144)); //e
-    private final Pose startPose = new Pose(33.2, 134.5, Math.toRadians(90)); //e
+    //private final Pose startPose = new Pose(33.2, 134.5, Math.toRadians(90)); //e
+    private final Pose startPose = new Pose(33.2, 133.5, Math.toRadians(90)); //e
+
 
     /// blue paths
-    private final Pose blueTopPilePose = new Pose(51,82, Math.toRadians(180)); //e
+    private final Pose blueTopPilePose = new Pose(51,84, Math.toRadians(180)); //e
 
-    private final Pose blueTopPileForwardPose = new Pose(17, 82, Math.toRadians(180)); //e
+    private final Pose blueTopPileForwardPose = new Pose(16, 84, Math.toRadians(180)); //e
     private final Pose blueMiddlePilePose = new Pose(51, 59, Math.toRadians(180));
-    private final Pose blueMiddlePileForwardPose = new Pose(10, 59, Math.toRadians(180));
+    private final Pose blueMiddlePileForwardPose = new Pose(9, 59, Math.toRadians(180));
 
     private final Pose readyGatePose = new Pose(27, 69, Math.toRadians(180)); //old X = 30
     private final Pose openGatePose = new Pose(18, 75, Math.toRadians(180));
@@ -50,11 +52,11 @@ public class cycleCloseBlue2 extends CommandOpMode{
 
     private final Pose openGatePose2 = new Pose(18, 67, Math.toRadians(180));
     private final Pose openGatePose3 = new Pose(18.5, 67, Math.toRadians(180));
-    private final Pose intakeGatePose = new Pose(8.5, 53, Math.toRadians(110));
+    private final Pose intakeGatePose = new Pose(8.5, 55, Math.toRadians(110));
 
     private final Pose controlPose = new Pose(79, 37);
     private final Pose blueBottomPilePose = new Pose(51, 36, Math.toRadians(180));
-    private final Pose blueBottomPileForwardPose = new Pose(10, 36, Math.toRadians(180));
+    private final Pose blueBottomPileForwardPose = new Pose(9, 36, Math.toRadians(180));
     private final Pose blueTopShootPose = new Pose(51,96, Math.toRadians(135));
 
     private final Pose blueTopShootPoseFinal = new Pose(54,110, Math.toRadians(144));//old angle: 150
@@ -221,7 +223,7 @@ public class cycleCloseBlue2 extends CommandOpMode{
                 //start intake
                 new InstantCommand(() -> robot.intake.start()),
                 new FollowPathCommand(robot.follower, collectTopBlue, false).withTimeout(3000),
-                new WaitCommand(500),
+                //new WaitCommand(500),
                 //stop intake
                 //new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1))
@@ -233,13 +235,13 @@ public class cycleCloseBlue2 extends CommandOpMode{
                 new InstantCommand(() -> robot.intake.start()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1)),
                 new FollowPathCommand(robot.follower, grabAndCollectMiddle, false).withTimeout(5000),
-                new WaitCommand(500),
+                //new WaitCommand(500),
                 //new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1)),
                 new FollowPathCommand(robot.follower, bezzieBackMiddle, true),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1050),
                 new RepeatCommand(
                         new RapidShoot()
                 ).withTimeout(700),
@@ -256,13 +258,13 @@ public class cycleCloseBlue2 extends CommandOpMode{
                 new InstantCommand(() -> robot.intake.start()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1)),
                 new FollowPathCommand(robot.follower, grabAndCollectBottom, false).withTimeout(5000),
-                new WaitCommand(500),
+                //new WaitCommand(500),
                 //new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1)),
                 new FollowPathCommand(robot.follower, bezzieBackBottom, true),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1050),
                 new RepeatCommand(
                         new RapidShoot()
                 ).withTimeout(700)
@@ -289,12 +291,12 @@ public class cycleCloseBlue2 extends CommandOpMode{
                 ),
                 new WaitCommand(1000),
                 //stop intake
-                new InstantCommand(() ->robot.intake.stop()),
+                //new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1)),
                 new FollowPathCommand(robot.follower, stealToShoot, true),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1050),
                 new RepeatCommand(
                         new RapidShoot()
                 ).withTimeout(700),
@@ -307,7 +309,7 @@ public class cycleCloseBlue2 extends CommandOpMode{
                 new FollowPathCommand(robot.follower, shootTopBlue, true),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1050),
                 new RepeatCommand(
                         new RapidShoot()
                 ).withTimeout(500),
@@ -327,7 +329,7 @@ public class cycleCloseBlue2 extends CommandOpMode{
 //
                 new FollowPathCommand(robot.follower, shootPreloads, true),
                 new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1050),
                 new RepeatCommand(
                         new RapidShoot()
                 ).withTimeout(800),
@@ -371,7 +373,7 @@ public class cycleCloseBlue2 extends CommandOpMode{
                 new FollowPathCommand(robot.follower, shootCycleGateBlue, true),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1050),
                 new RepeatCommand(
                         new RapidShoot()
                 ).withTimeout(1000),
@@ -421,7 +423,7 @@ public class cycleCloseBlue2 extends CommandOpMode{
                 new FollowPathCommand(robot.follower, shootMiddleBlue, true),
                 new InstantCommand(() -> robot.stopperServo.set(.47)),
                 new WaitCommand(500),
-                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1070),
+                new WaitUntilCommand(() -> robot.leftShooter.getVelocity() > 1050),
                 new RepeatCommand(
                         new RapidShoot()
                 ).withTimeout(1000),

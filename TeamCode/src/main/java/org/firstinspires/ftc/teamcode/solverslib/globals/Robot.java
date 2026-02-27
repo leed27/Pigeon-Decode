@@ -39,6 +39,8 @@ public class Robot {
 
     public ServoEx hoodServo, stopperServo;
     public Servo lightLeft, lightRight;
+
+    public ServoEx leftServo, rightServo;
     public ServoEx kickerServo;
     public Follower follower;
     public PIDFController controller;

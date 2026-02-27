@@ -36,7 +36,7 @@ public class farAutoRedHP extends CommandOpMode{
     //private final ArrayList<PathChain> paths = new ArrayList<>();
 
     private final Pose startPose = new Pose(88, 9, Math.toRadians(90));
-    private final Pose shootPose = new Pose(88, 15, Math.toRadians(67));
+    private final Pose shootPose = new Pose(88, 15, Math.toRadians(69));
     /// blue paths6
     private final Pose parkPose = new Pose(108,14, Math.toRadians(70));
 
@@ -98,11 +98,11 @@ public class farAutoRedHP extends CommandOpMode{
                 .build();
 
         grabHumanPlayer = robot.follower.pathBuilder()
-                .addPath(new BezierLine(shootPose, humanPlayerForwardPose))
-                .setLinearHeadingInterpolation(shootPose.getHeading(), humanPlayerForwardPose.getHeading(), .5)
-                .addPath(new BezierLine(humanPlayerForwardPose, humanPlayerBackPose))
+                .addPath(new BezierLine(shootPose, blueDepotPileForwardPose))
+                .setLinearHeadingInterpolation(shootPose.getHeading(), humanPlayerForwardPose.getHeading(), .1)
+                .addPath(new BezierLine(blueDepotPileForwardPose, blueDepotPileBackPose))
                 .setConstantHeadingInterpolation(humanPlayerForwardPose.getHeading())
-                .addPath(new BezierLine(humanPlayerBackPose, humanPlayerForwardPose))
+                .addPath(new BezierLine(blueDepotPileBackPose, humanPlayerForwardPose))
                 .setConstantHeadingInterpolation(humanPlayerForwardPose.getHeading())
                 .build();
 
@@ -128,7 +128,7 @@ public class farAutoRedHP extends CommandOpMode{
                 new InstantCommand(() -> robot.stopperServo.set(0.47)),
                 new RepeatCommand(
                         new AutoShootInAutoFAR()
-                ).withTimeout(2800),
+                ).withTimeout(3000),
 
                 //new WaitCommand(3000),
                 //new InstantCommand(() -> robot.outtake.stop()),
@@ -161,7 +161,7 @@ public class farAutoRedHP extends CommandOpMode{
                 new WaitCommand(500),
                 new RepeatCommand(
                         new AutoShootInAutoFAR()
-                ).withTimeout(4000),
+                ).withTimeout(2500),
 
                 //new WaitCommand(3000),
                 //new InstantCommand(() -> robot.outtake.stop()),
@@ -175,7 +175,7 @@ public class farAutoRedHP extends CommandOpMode{
         return new SequentialCommandGroup(
                 new InstantCommand(() -> robot.intake.start()),
                 new InstantCommand(() -> robot.follower.setMaxPower(.8)),
-                new FollowPathCommand(robot.follower, grabHumanPlayer, false).withTimeout(5000),
+                new FollowPathCommand(robot.follower, grabHumanPlayer, false).withTimeout(4000),
                 //stop intake
                 new InstantCommand(() ->robot.intake.stop()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1))
@@ -186,9 +186,10 @@ public class farAutoRedHP extends CommandOpMode{
         return new SequentialCommandGroup(
                 new FollowPathCommand(robot.follower, shootHumanPlayer, true),
                 new InstantCommand(() -> robot.stopperServo.set(0.47)),
+                new WaitCommand(500),
                 new RepeatCommand(
                         new AutoShootInAutoFAR()
-                ).withTimeout(4000),
+                ).withTimeout(2500),
 
                 //new WaitCommand(3000),
                 //new InstantCommand(() -> robot.outtake.stop()),

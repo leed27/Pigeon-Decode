@@ -25,8 +25,8 @@ import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootI
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.RapidShoot;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@Autonomous(name = "12 BALL + PUSH \uD83D\uDD35", group = "auto")
-public class closeAutoBluePush2 extends CommandOpMode{
+@Autonomous(name = "12 BALL + PUSH \uD83D\uDD34", group = "auto")
+public class closeAutoRedPush2 extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
 
@@ -34,27 +34,27 @@ public class closeAutoBluePush2 extends CommandOpMode{
 
     // ALL PATHS
 //    private final Pose startPose = new Pose(24.6, 128.4, Math.toRadians(144)); //e
-    private final Pose startPose = new Pose(33.2, 134.5, Math.toRadians(90)); //e
+    private final Pose startPose = new Pose(33.2, 134.5, Math.toRadians(90)).mirror(); //e
 
-    private final Pose parkPose2 = new Pose(60, 30, Math.toRadians(0));
+    private final Pose parkPose2 = new Pose(60, 30, Math.toRadians(0)).mirror();
 
 
     /// blue paths
-    private final Pose blueTopPilePose = new Pose(51,84, Math.toRadians(180)); //e
-    private final Pose blueTopPileForwardPose = new Pose(17, 84, Math.toRadians(180));
-    private final Pose blueMiddlePileForwardPose = new Pose(10, 59, Math.toRadians(180));
-    private final Pose readyGatePose = new Pose(27, 63, Math.toRadians(180)); //old X = 30
-    private final Pose openGatePose = new Pose(18, 78, Math.toRadians(180));
+    private final Pose blueTopPilePose = new Pose(51,84, Math.toRadians(180)).mirror(); //e
+    private final Pose blueTopPileForwardPose = new Pose(17, 84, Math.toRadians(180)).mirror();
+    private final Pose blueMiddlePileForwardPose = new Pose(10, 59, Math.toRadians(180)).mirror();
+    private final Pose readyGatePose = new Pose(27, 63, Math.toRadians(180)).mirror(); //old X = 30
+    private final Pose openGatePose = new Pose(18, 78, Math.toRadians(180)).mirror();
 
-    private final Pose openGatePose2 = new Pose(13, 71, Math.toRadians(180));
-    private final Pose blueBottomPileForwardPose = new Pose(10, 36, Math.toRadians(180));
-    private final Pose blueTopShootPose = new Pose(51,96, Math.toRadians(135));
-    private final Pose prepPushPose = new Pose(61, 50, Math.toRadians(0));
+    private final Pose openGatePose2 = new Pose(13, 71, Math.toRadians(180)).mirror();
+    private final Pose blueBottomPileForwardPose = new Pose(10, 36, Math.toRadians(180)).mirror();
+    private final Pose blueTopShootPose = new Pose(51,96, Math.toRadians(135)).mirror();
+    private final Pose prepPushPose = new Pose(61, 50, Math.toRadians(0)).mirror();
 
-    private final Pose getReadyPushPose = new Pose(61, 9, Math.toRadians(0));
-    private final Pose pushPose = new Pose(30, 9, Math.toRadians(0));
+    private final Pose getReadyPushPose = new Pose(61, 9, Math.toRadians(0)).mirror();
+    private final Pose pushPose = new Pose(30, 9, Math.toRadians(0)).mirror();
 
-    private final Pose parkPose = new Pose(34, 80, Math.toRadians(135));
+    private final Pose parkPose = new Pose(34, 80, Math.toRadians(135)).mirror();
     private Path grabTopBlue;
     private PathChain shootPreloads, collectTopBlue, shootTopBlue;
 
@@ -76,7 +76,7 @@ public class closeAutoBluePush2 extends CommandOpMode{
 
         //BEIZIER TS
         grabAndCollectMiddle = robot.follower.pathBuilder()
-                .addPath(new BezierCurve( blueTopShootPose, new Pose(72, 54), blueMiddlePileForwardPose))
+                .addPath(new BezierCurve( blueTopShootPose, new Pose(72, 54).mirror(), blueMiddlePileForwardPose))
                 .setConstantHeadingInterpolation(blueMiddlePileForwardPose.getHeading())
                 .build();
 
@@ -87,22 +87,22 @@ public class closeAutoBluePush2 extends CommandOpMode{
                 .build();
 
         bezzieBackMiddle = robot.follower.pathBuilder()
-                .addPath(new BezierCurve( blueMiddlePileForwardPose, new Pose(55, 72), blueTopShootPose))
+                .addPath(new BezierCurve( blueMiddlePileForwardPose, new Pose(55, 72).mirror(), blueTopShootPose))
                 .setLinearHeadingInterpolation(blueMiddlePileForwardPose.getHeading(), blueTopShootPose.getHeading())
                 .build();
 
         bezzieBackMiddle2 = robot.follower.pathBuilder()
-                .addPath(new BezierCurve( openGatePose2, new Pose(60, 66), blueTopShootPose))
+                .addPath(new BezierCurve( openGatePose2, new Pose(55, 66).mirror(), blueTopShootPose))
                 .setLinearHeadingInterpolation(openGatePose2.getHeading(), blueTopShootPose.getHeading())
                 .build();
 
         grabAndCollectBottom = robot.follower.pathBuilder()
-                .addPath(new BezierCurve( blueTopShootPose, new Pose(69, 24), blueBottomPileForwardPose))
+                .addPath(new BezierCurve( blueTopShootPose, new Pose(69, 24).mirror(), blueBottomPileForwardPose))
                 .setConstantHeadingInterpolation(blueBottomPileForwardPose.getHeading())
                 .build();
 
         bezzieBackBottom = robot.follower.pathBuilder()
-                .addPath(new BezierCurve( blueBottomPileForwardPose, new Pose(73.5, 58.4), blueTopShootPose))
+                .addPath(new BezierCurve( blueBottomPileForwardPose, new Pose(73.5, 58.4).mirror(), blueTopShootPose))
                 .setLinearHeadingInterpolation(blueMiddlePileForwardPose.getHeading(), blueTopShootPose.getHeading())
                 .build();
 
@@ -281,7 +281,7 @@ public class closeAutoBluePush2 extends CommandOpMode{
     @Override
     public void initialize() {
         opModeType = OpModeType.AUTO;
-        goalColor = GoalColor.BLUE_GOAL;
+        goalColor = GoalColor.RED_GOAL;
         timer = new ElapsedTime();
         timer.reset();
 

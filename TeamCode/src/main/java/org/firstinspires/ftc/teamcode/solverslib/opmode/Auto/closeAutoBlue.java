@@ -32,7 +32,7 @@ public class closeAutoBlue extends CommandOpMode{
     //private final ArrayList<PathChain> paths = new ArrayList<>();
 
     // ALL PATHS
-    private final Pose startPose = new Pose(24.6, 128.4, Math.toRadians(144)); //e
+    private final Pose startPose = new Pose(33.2, 134.5, Math.toRadians(90)); //e
     /// blue paths
     private final Pose blueTopPilePose = new Pose(51,84, Math.toRadians(180)); //e
 
@@ -62,7 +62,7 @@ public class closeAutoBlue extends CommandOpMode{
 
         shootPreloads = robot.follower.pathBuilder()
                 .addPath(new BezierLine(startPose, blueTopShootPose))
-                .setConstantHeadingInterpolation(startPose.getHeading())
+                .setLinearHeadingInterpolation(startPose.getHeading(), blueTopShootPose.getHeading())
                 .build();
 
         grabTopBlue = new Path(new BezierLine(blueTopShootPose, blueTopPilePose));

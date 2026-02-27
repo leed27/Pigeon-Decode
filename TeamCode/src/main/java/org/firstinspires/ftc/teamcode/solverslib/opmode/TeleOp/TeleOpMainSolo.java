@@ -406,9 +406,9 @@ public class TeleOpMainSolo extends CommandOpMode {
                 robot.stopperServo.set(.47);
 
                 /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
-                if(robot.leftShooter.getVelocity() > speed + adjustSpeed
+                if (robot.leftShooter.getVelocity() > speed + adjustSpeed
                         && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(2) && robot.follower.getAngularVelocity() < .2
-                ){
+                ) {
 //            if(howFar > 10){
 //                new InstantCommand(() -> new WaitCommand(500));
 //            }
@@ -416,19 +416,22 @@ public class TeleOpMainSolo extends CommandOpMode {
                     //robot.intake.startNoHood();
                 }
 
-                if(startIntake){
-                    if(howFar < 20){
+                if (howFar < 10) {
+                    if(startIntake){
                         robot.intake.startNoHood();
                     }else{
-                        if(robot.leftShooter.getVelocity() > speed +adjustSpeed && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(2) && robot.follower.getAngularVelocity() < .2){
-
-                            robot.intake.startNoHood();
-                        }else{
-                            robot.intake.stopExceptShooter();
-                        }
+                        robot.intake.stopExceptShooter();
                     }
-                }else{
-                    robot.intake.stopExceptShooter();
+
+                }
+                else{
+
+                    if (robot.leftShooter.getVelocity() > speed + adjustSpeed && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(2) && robot.follower.getAngularVelocity() < .2) {
+
+                        robot.intake.startNoHood();
+                    } else {
+                        robot.intake.stopExceptShooter();
+                    }
                 }
 
                 /*if(howFar < 7){
