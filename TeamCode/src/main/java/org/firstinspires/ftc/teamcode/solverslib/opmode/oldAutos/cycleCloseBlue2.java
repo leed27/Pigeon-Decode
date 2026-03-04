@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.solverslib.opmode.Auto;
+package org.firstinspires.ftc.teamcode.solverslib.opmode.oldAutos;
 
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 

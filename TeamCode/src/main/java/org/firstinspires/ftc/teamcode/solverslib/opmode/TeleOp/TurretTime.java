@@ -27,6 +27,7 @@ import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
+import com.seattlesolvers.solverslib.util.InterpLUT;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -53,6 +54,8 @@ public class TurretTime extends CommandOpMode {
     public static int speed = 1000;
     public static int adjustSpeed = 0;
 
+    private final InterpLUT servoBoi = new InterpLUT();
+
     double turretPose = 0.5;
     double hoodPose = 0.3;
 
@@ -62,6 +65,20 @@ public class TurretTime extends CommandOpMode {
 
     public ElapsedTime elapsedtime;
     private final Robot robot = Robot.getInstance();
+
+    public double doIt(){
+        double targetAngle = Math.toDegrees(Math.atan2((144-robot.follower.getPose().getY()), 0-robot.follower.getPose().getX()));
+        double robotAngle = Math.toDegrees(robot.follower.getPose().getHeading());
+        double compensate = targetAngle - robotAngle;
+        if(compensate > 75){
+            return 0;
+        }
+        if(compensate < -75){
+            return 1;
+        }
+        return servoBoi.get(compensate);
+
+    }
 
 
     @Override
@@ -77,8 +94,30 @@ public class TurretTime extends CommandOpMode {
         prism = hardwareMap.get(GoBildaPrismDriver.class, "prism");
         hoodyServo = hardwareMap.get(Servo.class, "hoodyServo");
         turretTime = hardwareMap.get(Servo.class, "turretTime");
-        turretTime.setPosition(0.5);
+        //turretTime.setPosition(0.5);
         hoodyServo.setPosition(0.3);
+
+        servoBoi.add(-80, 1);
+        servoBoi.add(-60, .95);
+        servoBoi.add(-55, 0.9);
+        servoBoi.add(-50, 0.85);
+        servoBoi.add(-40, 0.8);
+        servoBoi.add(-35, 0.75);
+        servoBoi.add(-30, 0.7);
+        servoBoi.add(-25, 0.65);
+        servoBoi.add(-20, 0.6);
+        servoBoi.add(-10, 0.55);
+        servoBoi.add(-3, 0.5);
+        servoBoi.add(10, 0.45);
+        servoBoi.add(19, 0.4);
+        servoBoi.add(25, 0.35);
+        servoBoi.add(33, 0.3);
+        servoBoi.add(40, 0.2);
+        servoBoi.add(45, 0.15);
+        servoBoi.add(60, 0.1);
+        servoBoi.add(70, 0.05);
+        servoBoi.add(80, 0);
+        servoBoi.createLUT();
 
 
 
@@ -143,11 +182,17 @@ public class TurretTime extends CommandOpMode {
         );*/
 
         driver.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenReleased(
-                new InstantCommand(() -> turretTime.setPosition(0))
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> turretTime.setPosition(0)),
+                        new InstantCommand(() -> turretPose = 0)
+                )
 
         );
         driver.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenReleased(
-                new InstantCommand(() -> turretTime.setPosition(1))
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> turretTime.setPosition(1)),
+                        new InstantCommand(() -> turretPose = 1)
+                )
 
         );
         driver.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenReleased(
@@ -164,7 +209,7 @@ public class TurretTime extends CommandOpMode {
                 )
         );
 
-        driver.getGamepadButton(GamepadKeys.Button.XXXX).whenPressed(
+        driver.getGamepadButton(GamepadKeys.Button.CIRCLE).whenPressed(
                 //
                 new InstantCommand(() -> {
                     if(goalColor == GoalColor.RED_GOAL){
@@ -192,6 +237,14 @@ public class TurretTime extends CommandOpMode {
                 new InstantCommand(() -> hoodyServo.setPosition(1))
 
         );
+
+        driver.getGamepadButton(GamepadKeys.Button.SQUARE).whenReleased(
+                new ParallelCommandGroup(
+                        new InstantCommand(() -> turretTime.setPosition(doIt())),
+                        new InstantCommand(() -> turretPose = doIt())
+                )
+        );
+        /*
         driver.getGamepadButton(GamepadKeys.Button.SQUARE).whenReleased(
                 new ParallelCommandGroup(
                         new InstantCommand(() -> hoodyServo.setPosition(hoodPose-0.05)),
@@ -203,7 +256,7 @@ public class TurretTime extends CommandOpMode {
                         new InstantCommand(() -> hoodyServo.setPosition(hoodPose+0.05)),
                         new InstantCommand(() -> turretPose += 0.05)
                 )
-        );
+        );*/
 
 
 
@@ -259,6 +312,9 @@ public class TurretTime extends CommandOpMode {
         super.run();
     }
 
+
+
+
     @Override
     public void run() {
 
@@ -310,6 +366,8 @@ public class TurretTime extends CommandOpMode {
         telemetry.addData("x", robot.follower.getPose().getX());
         telemetry.addData("y", robot.follower.getPose().getY());
         telemetry.addData("angle", Math.toDegrees(robot.follower.getPose().getHeading()));
+        telemetry.addData("TURRET POSITION!!!!! ", turretPose);
+        telemetry.addData("ANGLE IT THINKS!!!!! ", servoBoi.get(turretPose));
 
         elapsedtime.reset();
 

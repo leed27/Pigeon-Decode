@@ -8,11 +8,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 //@Disabled
-@TeleOp(name= "servoTester", group="Linear Opmode")
+@TeleOp(name= "anything tester WOOOOO", group="Linear Opmode")
 
 public class servoTester extends LinearOpMode {
     //private DcMotor motor, motor2;
-    private Servo moveAbout;
+    //private Servo moveAbout;
+
+    private DcMotor frontRight, frontLeft, backRight, backLeft;
 
     private double servoTracker = 0;
 
@@ -20,7 +22,7 @@ public class servoTester extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        moveAbout = hardwareMap.get(Servo.class, "bob");
+        //moveAbout = hardwareMap.get(Servo.class, "bob");
 
 //        motor2 = hardwareMap.get(DcMotor.class, "shooter2");
 
@@ -32,6 +34,13 @@ public class servoTester extends LinearOpMode {
 //        lightRight.setPosition(0.3);
         //motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        frontLeft = hardwareMap.get(DcMotor.class, "leftFront");
+        frontRight = hardwareMap.get(DcMotor.class, "rightFront");
+        backLeft = hardwareMap.get(DcMotor.class, "leftRear");
+        backRight = hardwareMap.get(DcMotor.class, "rightRear");
+
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // Wait for the game to start (driver presses PLAY)
 
@@ -39,6 +48,33 @@ public class servoTester extends LinearOpMode {
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
+
+                if(gamepad1.circle){
+                    frontLeft.setPower(0.5);
+                    frontRight.setPower(0.5);
+                    backLeft.setPower(0.5);
+                    backRight.setPower(0.5);
+
+                }else{
+                    frontLeft.setPower(0);
+                    frontRight.setPower(0);
+                    backLeft.setPower(0);
+                    backRight.setPower(0);
+                }
+
+                if(gamepad1.square){
+                    frontLeft.setPower(-0.5);
+                    frontRight.setPower(-0.5);
+                    backLeft.setPower(-0.5);
+                    backRight.setPower(-0.5);
+                }else{
+                    frontLeft.setPower(0);
+                    frontRight.setPower(0);
+                    backLeft.setPower(0);
+                    backRight.setPower(0);
+                }
+
+                /*
 
                 if(gamepad1.left_bumper){
                     moveAbout.setPosition(0);
@@ -61,7 +97,7 @@ public class servoTester extends LinearOpMode {
                 }
 
                 telemetry.addData("eriog", moveAbout.getPosition());
-
+*/
                 telemetry.update();
 
 //                lightLeft.setPosition(0.3);

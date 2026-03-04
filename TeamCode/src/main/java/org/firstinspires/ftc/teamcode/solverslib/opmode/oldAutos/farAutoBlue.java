@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.solverslib.opmode.Auto;
+package org.firstinspires.ftc.teamcode.solverslib.opmode.oldAutos;
 
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
@@ -15,36 +15,35 @@ import com.seattlesolvers.solverslib.command.RepeatCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
-import com.seattlesolvers.solverslib.command.WaitUntilCommand;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@Autonomous(name = "FAR 9 BALL \uD83D\uDD34", group = "auto")
-public class farAutoRed extends CommandOpMode{
+@Autonomous(name = "FAR 9 BALL \uD83D\uDD35", group = "auto")
+public class farAutoBlue extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
 
     //private final ArrayList<PathChain> paths = new ArrayList<>();
 
     // ALL PATHS
-    private final Pose startPose = new Pose(88, 9, Math.toRadians(90));
-    private final Pose shootPose = new Pose(88, 15, Math.toRadians(68.5));
+    private final Pose startPose = new Pose(88, 9, Math.toRadians(90)).mirror();
+    private final Pose shootPose = new Pose(88, 15, Math.toRadians(67)).mirror();
     /// blue paths6
     ///
 
-    private final Pose parkPose = new Pose(108,14, Math.toRadians(70));
-    private final Pose blueBottomPilePose = new Pose(50, 36, Math.toRadians(180)).mirror();
-    private final Pose blueBottomPileForwardPose = new Pose(11.5, 36, Math.toRadians(180)).mirror();
+    private final Pose parkPose = new Pose(108,14, Math.toRadians(70)).mirror();
+    private final Pose blueBottomPilePose = new Pose(50, 36, Math.toRadians(180));
+    private final Pose blueBottomPileForwardPose = new Pose(11, 36, Math.toRadians(180));
 
-    private final Pose blueDepotPilePose = new Pose(10, 10, Math.toRadians(180)).mirror();
-    private final Pose blueDepotPileAnglePose = new Pose(10.5, 10, Math.toRadians(200)).mirror();
-    private final Pose blueDepotPileAnglePose2 = new Pose(12.5, 10, Math.toRadians(200)).mirror();
-    private final Pose blueDepotPileBackPose = new Pose(20, 9, Math.toRadians(180)).mirror();
+    private final Pose blueDepotPilePose = new Pose(10, 10, Math.toRadians(180));
+    private final Pose blueDepotPileAnglePose = new Pose(10.5, 10, Math.toRadians(200));
+    private final Pose blueDepotPileAnglePose2 = new Pose(12.5, 10, Math.toRadians(200));
+    private final Pose blueDepotPileBackPose = new Pose(20, 9, Math.toRadians(180));
 
     //private final Pose blueDepotPilePose = new Pose(9, 33, Math.toRadians(250));
-    private final Pose blueDepotPileForwardPose = new Pose(9, 9, Math.toRadians(250)).mirror();
+    private final Pose blueDepotPileForwardPose = new Pose(9, 9, Math.toRadians(250));
     private PathChain startToShoot, grabEndBlue, collectEndBlue, uncollectDepotBlue, shootEndBlue, grabDepotBlue, collectDepotBlue, shootDepotBlue, shootToPark;
 
     public void generatePath() {
@@ -216,7 +215,7 @@ public class farAutoRed extends CommandOpMode{
     @Override
     public void initialize() {
         opModeType = OpModeType.AUTO;
-        goalColor = GoalColor.RED_GOAL;
+        goalColor = GoalColor.BLUE_GOAL;
         timer = new ElapsedTime();
         timer.reset();
 

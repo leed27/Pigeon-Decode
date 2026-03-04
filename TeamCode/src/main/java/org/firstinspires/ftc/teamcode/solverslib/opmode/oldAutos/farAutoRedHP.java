@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.solverslib.opmode.Auto;
+package org.firstinspires.ftc.teamcode.solverslib.opmode.oldAutos;
 
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.GoalColor;
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.OpModeType;
@@ -8,7 +8,6 @@ import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.opModeTy
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.shooterReady;
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.test;
 
-import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
@@ -26,30 +25,28 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@Autonomous(name = "FAR HP \uD83D\uDD35", group = "auto")
-public class farAutoBlueHP extends CommandOpMode{
+@Autonomous(name = "FAR HP \uD83D\uDD34", group = "auto")
+public class farAutoRedHP extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
     private boolean delayEnabled;
 
+
     //private final ArrayList<PathChain> paths = new ArrayList<>();
 
-    // ALL PATHS
-    private final Pose startPose = new Pose(88, 9, Math.toRadians(90)).mirror();
-    private final Pose shootPose = new Pose(88, 15, Math.toRadians(67)).mirror();
+    private final Pose startPose = new Pose(88, 9, Math.toRadians(90));
+    private final Pose shootPose = new Pose(88, 15, Math.toRadians(69));
     /// blue paths6
-    private final Pose parkPose = new Pose(108,14, Math.toRadians(70)).mirror();
+    private final Pose parkPose = new Pose(108,14, Math.toRadians(70));
 
-    private final Pose blueDepotPilePose = new Pose(10, 10, Math.toRadians(180));
-    private final Pose blueDepotPileAnglePose = new Pose(10.5, 10, Math.toRadians(200));
-    private final Pose blueDepotPileAnglePose2 = new Pose(12.5, 10, Math.toRadians(200));
-    private final Pose blueDepotPileBackPose = new Pose(20, 9, Math.toRadians(180));
-    private final Pose blueDepotPileForwardPose = new Pose(10, 9, Math.toRadians(180));
-    private final Pose blueDepotControlPose = new Pose(37,10);
-    private final Pose humanPlayerForwardPose = new Pose(12.5, 13.664, Math.toRadians(180));
-    private final Pose humanPlayerBackPose = new Pose(24, 13.664, Math.toRadians(180));
-
-
+    private final Pose blueDepotPilePose = new Pose(10, 10, Math.toRadians(180)).mirror();
+    private final Pose blueDepotPileAnglePose = new Pose(10.5, 10, Math.toRadians(200)).mirror();
+    private final Pose blueDepotPileAnglePose2 = new Pose(12.5, 10, Math.toRadians(200)).mirror();
+    private final Pose blueDepotPileBackPose = new Pose(20, 9, Math.toRadians(180)).mirror();
+    private final Pose blueDepotPileForwardPose = new Pose(10, 9, Math.toRadians(180)).mirror();
+    private final Pose blueDepotControlPose = new Pose(37,10).mirror();
+    private final Pose humanPlayerForwardPose = new Pose(12.5, 13.664, Math.toRadians(180)).mirror();
+    private final Pose humanPlayerBackPose = new Pose(24, 13.664, Math.toRadians(180)).mirror();
     private PathChain startToShoot, grabEndBlue, collectEndBlue, uncollectDepotBlue, shootEndBlue, grabDepotBlue, collectDepotBlue, shootDepotBlue, grabHumanPlayer, shootHumanPlayer, shootToPark;
 
     public void generatePath() {
@@ -95,8 +92,8 @@ public class farAutoBlueHP extends CommandOpMode{
                 .build();
 
         shootDepotBlue = robot.follower.pathBuilder()
-                .addPath(new BezierLine(blueDepotPileBackPose, shootPose))
-                .setLinearHeadingInterpolation(blueDepotPileBackPose.getHeading(), shootPose.getHeading(), .8)
+                .addPath(new BezierLine(blueDepotPilePose, shootPose))
+                .setLinearHeadingInterpolation(blueDepotPilePose.getHeading(), shootPose.getHeading(), .8)
                 .build();
 
         grabHumanPlayer = robot.follower.pathBuilder()
@@ -109,7 +106,7 @@ public class farAutoBlueHP extends CommandOpMode{
                 .build();
 
         shootHumanPlayer = robot.follower.pathBuilder()
-                .addPath(new BezierLine(blueDepotPileForwardPose, shootPose))
+                .addPath(new BezierLine(humanPlayerForwardPose, shootPose))
                 .setLinearHeadingInterpolation(humanPlayerForwardPose.getHeading(), shootPose.getHeading(), .8)
                 .build();
 
@@ -118,6 +115,7 @@ public class farAutoBlueHP extends CommandOpMode{
                 .addPath(new BezierLine(shootPose, parkPose))
                 .setLinearHeadingInterpolation(shootPose.getHeading(), parkPose.getHeading())
                 .build();
+
 
     }
 
@@ -144,9 +142,9 @@ public class farAutoBlueHP extends CommandOpMode{
                 //new WaitCommand(6000),
                 new InstantCommand(() -> robot.intake.start()),
                 new InstantCommand(() -> robot.follower.setMaxPower(1)),
-                new FollowPathCommand(robot.follower, grabDepotBlue, false).withTimeout(3000),
+                new FollowPathCommand(robot.follower, grabDepotBlue, false).withTimeout(2500),
                 //start intake
-                new FollowPathCommand(robot.follower, collectDepotBlue, false).withTimeout(2000),
+                new FollowPathCommand(robot.follower, collectDepotBlue, false).withTimeout(1500),
                 new WaitCommand(500),
                 //stop intake
                 new InstantCommand(() ->robot.intake.stop()),
@@ -200,22 +198,6 @@ public class farAutoBlueHP extends CommandOpMode{
         );
     }
 
-    public SequentialCommandGroup shootHumanPlayer2() {
-        return new SequentialCommandGroup(
-                new FollowPathCommand(robot.follower, shootHumanPlayer, true),
-                new InstantCommand(() -> robot.stopperServo.set(0.47)),
-                new RepeatCommand(
-                        new AutoShootInAutoFAR()
-                ).withTimeout(2500),
-
-                //new WaitCommand(3000),
-                //new InstantCommand(() -> robot.outtake.stop()),
-                new InstantCommand(() -> robot.intake.stop()),
-                new InstantCommand(() -> robot.stopperServo.set(0.56))
-
-        );
-    }
-
     public SequentialCommandGroup shootToPark() {
         return new SequentialCommandGroup(
                 new FollowPathCommand(robot.follower, shootToPark, true).withTimeout(3000)
@@ -225,10 +207,11 @@ public class farAutoBlueHP extends CommandOpMode{
 
 
 
+
     @Override
     public void initialize() {
         opModeType = OpModeType.AUTO;
-        goalColor = GoalColor.BLUE_GOAL;
+        goalColor = GoalColor.RED_GOAL;
         timer = new ElapsedTime();
         timer.reset();
 
@@ -293,7 +276,7 @@ public class farAutoBlueHP extends CommandOpMode{
                             grabHumanPlayer(),
                             shootHumanPlayer(),
                             grabHumanPlayer(),
-                            shootHumanPlayer2(),
+                            shootHumanPlayer(),
                             shootToPark()
                     )
             );
@@ -312,15 +295,21 @@ public class farAutoBlueHP extends CommandOpMode{
                             shootHumanPlayer(),
                             grabHumanPlayer(),
                             shootHumanPlayer(),
+                            grabHumanPlayer(),
+                            shootHumanPlayer(),
                             shootToPark()
                     )
             );
         }
+
+
+
+
     }
 
     @Override
     public void initialize_loop(){
-
+//
 //        if(gamepad1.square){
 //            delayEnabled = true;
 //        }
@@ -332,7 +321,6 @@ public class farAutoBlueHP extends CommandOpMode{
         telemetry.addData("Square to ADD delay", "Circle to REMOVE delay");
         telemetry.addData("add delay?", delayEnabled);
         telemetry.update();
-        //drawOnlyCurrent();
     }
 
     @Override
@@ -340,7 +328,6 @@ public class farAutoBlueHP extends CommandOpMode{
         super.run();
 
         robot.outtake.shootAutoFar();
-
 
         telemetry.addData("timer", timer.milliseconds());
 
