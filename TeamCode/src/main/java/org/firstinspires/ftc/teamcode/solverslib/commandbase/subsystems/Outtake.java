@@ -80,121 +80,121 @@ public class Outtake extends SubsystemBase {
     }
 
 
-    public void rapidShooting(int adjustSpeed){
-        double howFar = distance();
-        int speed = autoShoot2();
-        boolean startIntake = false;
-        double targetHeading = autoAlign();
-        int overShoot;
-
-        if(howFar < 5){
-            overShoot = 20;
-        }else if(howFar < 7){
-            overShoot = 30;
-        }else if(howFar < 10){
-            overShoot = 50;
-        }else if(howFar < 13){
-            overShoot = 0;
-        }else{
-            overShoot = 0;
-        }
-
-
-        shootCustom(speed + adjustSpeed + overShoot);
-        robot.stopperServo.set(.47);
-
-        /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
-        if(robot.leftShooter.getVelocity() > speed + adjustSpeed + 10
-                && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)
-                ){
+//    public void rapidShooting(int adjustSpeed){
+//        double howFar = distance();
+//        int speed = autoShoot2();
+//        boolean startIntake = false;
+//        double targetHeading = autoAlign();
+//        int overShoot;
+//
+//        if(howFar < 5){
+//            overShoot = 20;
+//        }else if(howFar < 7){
+//            overShoot = 30;
+//        }else if(howFar < 10){
+//            overShoot = 50;
+//        }else if(howFar < 13){
+//            overShoot = 0;
+//        }else{
+//            overShoot = 0;
+//        }
+//
+//
+//        shootCustom(speed + adjustSpeed + overShoot);
+//        robot.stopperServo.set(.47);
+//
+//        /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
+//        if(robot.leftShooter.getVelocity() > speed + adjustSpeed + 10
+//                && Math.abs(robot.follower.getPose().getHeading() - targetHeading) < Math.toRadians(5)
+//                ){
+////            if(howFar > 10){
+////                new InstantCommand(() -> new WaitCommand(500));
+////            }
+//            startIntake = true;
+//            //robot.intake.startNoHood();
+//        }
+//
+//        if(startIntake){
+//            robot.intake.startNoHood();
+//        }else{
+//            robot.intake.stopExceptShooter();
+//        }
+//
+//    }
+//
+//    public int autoShoot2(){
+//        double x = robot.follower.getPose().getX();
+//        double y = robot.follower.getPose().getY();
+//
+//        double howFar = 0;
+//
+//        if(goalColor == GoalColor.RED_GOAL){
+//            howFar = Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((144-x)/(12)),2));
+//        }else{
+//            howFar = Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((-x)/(12)),2));
+//        }
+//
+//        if(howFar <= 2 || howFar >= 18){
+//            return -1;
+//        }
+//
+//        if(y < 55){
+//            robot.hoodServo.set(.7);
+//            return (int) (lookUpFar.get(howFar));
+//        }else{
+//            robot.hoodServo.set(.5);
 //            if(howFar > 10){
-//                new InstantCommand(() -> new WaitCommand(500));
+//                return -1;
 //            }
-            startIntake = true;
-            //robot.intake.startNoHood();
-        }
-
-        if(startIntake){
-            robot.intake.startNoHood();
-        }else{
-            robot.intake.stopExceptShooter();
-        }
-
-    }
-
-    public int autoShoot2(){
-        double x = robot.follower.getPose().getX();
-        double y = robot.follower.getPose().getY();
-
-        double howFar = 0;
-
-        if(goalColor == GoalColor.RED_GOAL){
-            howFar = Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((144-x)/(12)),2));
-        }else{
-            howFar = Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((-x)/(12)),2));
-        }
-
-        if(howFar <= 2 || howFar >= 18){
-            return -1;
-        }
-
-        if(y < 55){
-            robot.hoodServo.set(.7);
-            return (int) (lookUpFar.get(howFar));
-        }else{
-            robot.hoodServo.set(.5);
-            if(howFar > 10){
-                return -1;
-            }
-            return (int) (lookUpClose.get(howFar));
-        }
-
-    }
-
-    public double distance(){
-        double x = robot.follower.getPose().getX();
-        double y = robot.follower.getPose().getY();
-        if(goalColor == GoalColor.RED_GOAL){
-            return Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((144-x)/(12)),2));
-        }else{
-            return Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((-x)/(12)),2));
-        }
-    }
-
-    public double autoAlign(){
-        double x = robot.follower.getPose().getX();
-        double y = robot.follower.getPose().getY();
-        double aimPosX = 0;
-        double aimPosY = 0;
-
-        double angleNeeded = 0;
-
-        if(goalColor == GoalColor.BLUE_GOAL){
-            if((x+y)>= 115 && (x+y) <= 170 && y>=120){
-                aimPosX = 0;
-                aimPosY = 144;
-            }else if((x+y) > 170){
-                aimPosX = 0;
-                aimPosY = 140;
-            }else{
-                aimPosX = 1;
-                aimPosY = 144;
-            }
-        }else{
-            if((x-y)>= -40 && (x-y) <= 29){
-                aimPosX = 142;
-                aimPosY = 144;
-            }else if((x-y) > 29){
-                aimPosX = 135;
-                aimPosY = 144;
-            }else{
-                aimPosX = 144;
-                aimPosY = 137;
-            }
-        }
-
-        return Math.atan2((aimPosY-robot.follower.getPose().getY()), aimPosX-robot.follower.getPose().getX());
-    }
+//            return (int) (lookUpClose.get(howFar));
+//        }
+//
+//    }
+//
+//    public double distance(){
+//        double x = robot.follower.getPose().getX();
+//        double y = robot.follower.getPose().getY();
+//        if(goalColor == GoalColor.RED_GOAL){
+//            return Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((144-x)/(12)),2));
+//        }else{
+//            return Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((-x)/(12)),2));
+//        }
+//    }
+//
+//    public double autoAlign(){
+//        double x = robot.follower.getPose().getX();
+//        double y = robot.follower.getPose().getY();
+//        double aimPosX = 0;
+//        double aimPosY = 0;
+//
+//        double angleNeeded = 0;
+//
+//        if(goalColor == GoalColor.BLUE_GOAL){
+//            if((x+y)>= 115 && (x+y) <= 170 && y>=120){
+//                aimPosX = 0;
+//                aimPosY = 144;
+//            }else if((x+y) > 170){
+//                aimPosX = 0;
+//                aimPosY = 140;
+//            }else{
+//                aimPosX = 1;
+//                aimPosY = 144;
+//            }
+//        }else{
+//            if((x-y)>= -40 && (x-y) <= 29){
+//                aimPosX = 142;
+//                aimPosY = 144;
+//            }else if((x-y) > 29){
+//                aimPosX = 135;
+//                aimPosY = 144;
+//            }else{
+//                aimPosX = 144;
+//                aimPosY = 137;
+//            }
+//        }
+//
+//        return Math.atan2((aimPosY-robot.follower.getPose().getY()), aimPosX-robot.follower.getPose().getX());
+//    }
     public int shootAutoGenerator(){
         /*
         double x = robot.follower.getPose().getX();
@@ -317,20 +317,6 @@ public class Outtake extends SubsystemBase {
         robot.rightShooter.set(-1);
     }
 
-
-//    public void reverseShoot(){
-//        if(robot.leftShooter.getVelocity() > -1100 && robot.rightShooter.getVelocity() > -1100){
-//            robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
-//            robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
-//            shooterReady = true;
-//        }else{
-////            robot.leftShooter.setVelocity(1300);
-////            robot.rightShooter.setVelocity(1300);
-//            robot.leftShooter.set(-1);
-//            robot.rightShooter.set(-1);
-//            shooterReady = false;
-//        }
-//    }
 
     public void stop(){
         robot.leftShooter.setVelocity(0);

@@ -5,24 +5,20 @@ import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 import com.pedropathing.control.PIDFController;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.PoseTracker;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
+import com.seattlesolvers.solverslib.hardware.motors.CRServo;
 import com.seattlesolvers.solverslib.hardware.motors.Motor;
 import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 import com.seattlesolvers.solverslib.hardware.motors.MotorGroup;
 import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
 
-import org.firstinspires.ftc.teamcode.Prism.Color;
-import org.firstinspires.ftc.teamcode.Prism.Direction;
-import org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver;
 import org.firstinspires.ftc.teamcode.Prism.PrismAnimations;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Intake;
-import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Lights;
+//import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Lights;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Outtake;
-import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import java.util.List;
 
@@ -30,18 +26,20 @@ public class Robot {
     public MotorEx leftFront, leftRear, rightRear, rightFront; //drivetrain wheels
 
     public MotorEx leftShooter, rightShooter;
-    public MotorEx leftIntake, rightIntake;
+    public MotorEx turretMotor;
+    public MotorEx intakeMotor;
 
     //lights go OOOOOO
-    public GoBildaPrismDriver prism;
+    //public GoBildaPrismDriver prism;
     public MotorGroup launchMotors;
     public Motor.Encoder launchEncoder;
 
     public ServoEx hoodServo, stopperServo;
-    public Servo lightLeft, lightRight;
 
-    public ServoEx leftServo, rightServo;
     public ServoEx kickerServo;
+    public ServoEx intakeServo;
+    public CRServo transferServo;
+
     public Follower follower;
     public PIDFController controller;
     public PoseTracker poseUpdater;
@@ -52,7 +50,7 @@ public class Robot {
 
     public Intake intake;
     public Outtake outtake;
-    public Lights lights;
+    //public Lights lights;
     public PrismAnimations.Solid solid, transpo;
 
     public PrismAnimations.Snakes snake1, snake2;
@@ -72,85 +70,82 @@ public class Robot {
     /// run only after robot instance has been made
     public void init(HardwareMap hardwareMap) {
         rightFront = new MotorEx(hardwareMap, "rightFront", Motor.GoBILDA.RPM_435);
-        leftFront = new MotorEx(hardwareMap, "leftFront", Motor.GoBILDA.RPM_435);
-        rightRear = new MotorEx(hardwareMap, "rightRear", Motor.GoBILDA.RPM_435);
-        leftRear = new MotorEx(hardwareMap, "leftRear", Motor.GoBILDA.RPM_435);
-
-        leftShooter = new MotorEx(hardwareMap, "shooterLeft");
-        rightShooter = new MotorEx(hardwareMap, "shooterRight");
-
-        rightIntake = new MotorEx(hardwareMap, "rightIntake", Motor.GoBILDA.RPM_1150);
-
-        leftIntake = new MotorEx(hardwareMap, "leftIntake", Motor.GoBILDA.RPM_1150);
-        leftIntake.setInverted(true);
-
-        hoodServo = new ServoEx(hardwareMap, "hoodServo");
-        stopperServo = new ServoEx(hardwareMap, "stopperServo");
-
-        kickerServo = new ServoEx(hardwareMap, "kicker");
-
-
-        lightLeft = hardwareMap.get(Servo.class, "lightLeft");
-        lightRight = hardwareMap.get(Servo.class, "lightRight");
-
-        prism = hardwareMap.get(GoBildaPrismDriver.class, "prism");
-
-        solid = new PrismAnimations.Solid(new Color (225, 30, 0));
-        transpo = new PrismAnimations.Solid(Color.TRANSPARENT);
-        snake1 = new PrismAnimations.Snakes(3, 3, 5, Color.TRANSPARENT, (float) (Math.PI/120.0F), Direction.Forward, new Color (225, 30, 0));
-        snake2 = new PrismAnimations.Snakes(3, 3, 5, Color.TRANSPARENT, (float) (Math.PI/120.0F), Direction.Forward, new Color (225, 30, 0));
-        fading = new PrismAnimations.SineWave(new Color (225, 30, 0),  Color.TRANSPARENT, 6, (float) (Math.PI/36.0F), 0.3F, Direction.Forward);
-        fading2 = new PrismAnimations.SineWave(new Color (225, 30, 0),  Color.TRANSPARENT, 6, (float) (Math.PI/36.0F), 0.3F, Direction.Forward);
-
-        solid.setBrightness(100);
-        solid.setStartIndex(0);
-        solid.setStopIndex(12);
-
-        snake1.setBrightness(100);
-        snake1.setStartIndex(0);
-        snake1.setStopIndex(5);
-
-        snake2.setBrightness(100);
-        snake2.setStartIndex(6);
-        snake2.setStopIndex(11);
-
-        fading.setBrightness(100);
-        fading2.setBrightness(100);
-
-
-
-
-//
         rightFront.setInverted(true);
-        rightRear.setInverted(true);
+        leftFront = new MotorEx(hardwareMap, "leftFront", Motor.GoBILDA.RPM_435);
         leftFront.setInverted(true);
+        rightRear = new MotorEx(hardwareMap, "rightRear", Motor.GoBILDA.RPM_435);
+        rightRear.setInverted(true);
+        leftRear = new MotorEx(hardwareMap, "leftRear", Motor.GoBILDA.RPM_435);
         leftRear.setInverted(true);
 
-        leftShooter.setInverted(true);
-        leftShooter.setRunMode(Motor.RunMode.RawPower);
-        rightShooter.setRunMode(Motor.RunMode.RawPower);
+//        leftShooter = new MotorEx(hardwareMap, "shooterLeft");
+//        rightShooter = new MotorEx(hardwareMap, "shooterRight");
 
-        leftShooter.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-        rightShooter.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        intakeMotor = new MotorEx(hardwareMap, "intake", Motor.GoBILDA.RPM_1150);
+        intakeMotor.setInverted(false);
 
-        launchMotors = new MotorGroup(
-                new MotorEx(hardwareMap, "shooterLeft") //left launch
-                        .setCachingTolerance(0.01)
-                        .setInverted(true),
-                new MotorEx(hardwareMap, "shooterRight") //right launch
-                        .setCachingTolerance(0.01)
-        );
+        //turretMotor = new MotorEx(hardwareMap, "turretMotor", Motor.GoBILDA.RPM_1150);
+
+        intakeServo = new ServoEx(hardwareMap, "intakeServo");
+        //limit: .75 hits the top
+        transferServo = new CRServo(hardwareMap, "transferServo");
+        transferServo.setInverted(true);
+
+        //hoodServo = new ServoEx(hardwareMap, "hoodServo");
+        stopperServo = new ServoEx(hardwareMap, "stopperServo");
+
+        //kickerServo = new ServoEx(hardwareMap, "kicker");
+
+
+        //prism = hardwareMap.get(GoBildaPrismDriver.class, "prism");
+
+//        solid = new PrismAnimations.Solid(new Color (225, 30, 0));
+//        transpo = new PrismAnimations.Solid(Color.TRANSPARENT);
+//        snake1 = new PrismAnimations.Snakes(3, 3, 5, Color.TRANSPARENT, (float) (Math.PI/120.0F), Direction.Forward, new Color (225, 30, 0));
+//        snake2 = new PrismAnimations.Snakes(3, 3, 5, Color.TRANSPARENT, (float) (Math.PI/120.0F), Direction.Forward, new Color (225, 30, 0));
+//        fading = new PrismAnimations.SineWave(new Color (225, 30, 0),  Color.TRANSPARENT, 6, (float) (Math.PI/36.0F), 0.3F, Direction.Forward);
+//        fading2 = new PrismAnimations.SineWave(new Color (225, 30, 0),  Color.TRANSPARENT, 6, (float) (Math.PI/36.0F), 0.3F, Direction.Forward);
 //
-        launchEncoder = new Motor(hardwareMap, "shooterRight").encoder;
+//        solid.setBrightness(100);
+//        solid.setStartIndex(0);
+//        solid.setStopIndex(12);
+//
+//        snake1.setBrightness(100);
+//        snake1.setStartIndex(0);
+//        snake1.setStopIndex(5);
+//
+//        snake2.setBrightness(100);
+//        snake2.setStartIndex(6);
+//        snake2.setStopIndex(11);
+//
+//        fading.setBrightness(100);
+//        fading2.setBrightness(100);
+
+
+
+
+//        leftShooter.setInverted(true);
+//        leftShooter.setRunMode(Motor.RunMode.RawPower);
+//        rightShooter.setRunMode(Motor.RunMode.RawPower);
+//
+//        leftShooter.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+//        rightShooter.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+//
+//        launchMotors = new MotorGroup(
+//                new MotorEx(hardwareMap, "shooterLeft") //left launch
+//                        .setCachingTolerance(0.01)
+//                        .setInverted(true),
+//                new MotorEx(hardwareMap, "shooterRight") //right launch
+//                        .setCachingTolerance(0.01)
+//        );
+////
+//        launchEncoder = new Motor(hardwareMap, "shooterRight").encoder;
         //launchEncoder.setDirection(Motor.Direction.REVERSE);
-//
-//        slidesEncoder = new Motor(hardwareMap, "left_horizontal").encoder;
-//
-        follower = Constants.createFollower(hardwareMap);
-        controller = new PIDFController(follower.constants.coefficientsHeadingPIDF);
+////
+//        follower = Constants.createFollower(hardwareMap);
+//        controller = new PIDFController(follower.constants.coefficientsHeadingPIDF);
 
 
-        //poseUpdater = new PoseTracker(hardwareMap);
 
         //for optimizing loop times
         // Bulk reading enabled!
@@ -167,12 +162,12 @@ public class Robot {
         }
 
         intake = new Intake();
-        outtake = new Outtake();
-        lights = new Lights();
+        //outtake = new Outtake();
+        //lights = new Lights();
 
         if(opModeType.equals(OpModeType.TELEOP)) {
-            follower.setStartingPose(autoEndPose);
-            follower.startTeleopDrive();
+//            follower.setStartingPose(autoEndPose);
+//            follower.startTeleopDrive();
 
         } else{
             //follower.setStartingPose(new Pose(0, 0, 0));
@@ -181,7 +176,7 @@ public class Robot {
 
     /// RUN WHATEVER IS IN THE INIT METHODS IN THE SUBSYSTEMS!!
     public void initHasMovement() {
-        outtake.init();
+        //outtake.init();
         //intake.init();
         //kickServo.setPosition(0.5);
     }

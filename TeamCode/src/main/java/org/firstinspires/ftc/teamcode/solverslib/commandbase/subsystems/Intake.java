@@ -11,44 +11,34 @@ public class Intake extends SubsystemBase {
     }
 
     public void start(){
-        robot.leftIntake.set(1);
-        robot.rightIntake.set(1);
-        //robot.hoodServo.set(0.7);
-        //robot.leftShooter.set(-0.5);
-        //robot.rightShooter.set(-0.5);
+        robot.intakeServo.set(0.3);
+        robot.intakeMotor.set(1);
     }
 
     public void startCustom(double speed){
-        robot.leftIntake.set(speed);
-        robot.rightIntake.set(speed);
-        //robot.hoodServo.set(0.7);
-//        robot.leftShooter.set(-0.5);
-//        robot.rightShooter.set(-0.5);
+        robot.intakeMotor.set(speed);
     }
 
     public void startNoHood(){
-        robot.leftIntake.set(1);
-        robot.rightIntake.set(1);
+        robot.intakeMotor.set(1);
     }
 
-
     public void stop(){
-        robot.leftIntake.set(0);
-        robot.rightIntake.set(0);
-        //robot.leftShooter.set(0);
-        //robot.rightShooter.set(0);
+        robot.intakeServo.set(0.05);
+        robot.intakeMotor.set(0);
+    }
+
+    public void stopUp(){
+        robot.intakeServo.set(0.75);
+        robot.intakeMotor.set(0);
     }
 
     public void stopExceptShooter(){
-        robot.leftIntake.set(0);
-        robot.rightIntake.set(0);
+        robot.intakeMotor.set(0);
     }
 
     public void reverse(){
-        robot.leftIntake.set(-1);
-        robot.rightIntake.set(-1);
-        //robot.leftShooter.set(-0.5);
-        //robot.rightShooter.set(-0.5);
+        robot.intakeMotor.set(-1);
     }
 
 
