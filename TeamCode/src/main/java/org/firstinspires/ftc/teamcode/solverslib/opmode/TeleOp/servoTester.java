@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name= "servoTester", group="Linear Opmode")
 
 public class servoTester extends LinearOpMode {
-    //private DcMotor motor, motor2;
+    private DcMotor motor, motor2;
     private Servo moveAbout;
 
     private double servoTracker = 0;
@@ -20,9 +20,12 @@ public class servoTester extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        moveAbout = hardwareMap.get(Servo.class, "bob");
+//        moveAbout = hardwareMap.get(Servo.class, "hoodServo");
+//        moveAbout.setDirection(Servo.Direction.REVERSE);
 
-//        motor2 = hardwareMap.get(DcMotor.class, "shooter2");
+        motor = hardwareMap.get(DcMotor.class, "shooterLeft");
+        motor2 = hardwareMap.get(DcMotor.class, "shooterRight");
+        motor2.setDirection(DcMotorSimple.Direction.REVERSE);
 
 //        lightLeft = hardwareMap.get(Servo.class, "lightLeft");
 //        lightRight = hardwareMap.get(Servo.class, "lightRight");
@@ -39,49 +42,49 @@ public class servoTester extends LinearOpMode {
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
-
-                if(gamepad1.left_bumper){
-                    moveAbout.setPosition(0);
-                    servoTracker = 0;
-                }
-                if(gamepad1.right_bumper){
-                    moveAbout.setPosition(1);
-                    servoTracker = 1;
-
-                }
-
-                if(gamepad1.circleWasPressed()){
-                    servoTracker += 0.05;
-                    moveAbout.setPosition(servoTracker);
-                }
-
-                if(gamepad1.squareWasPressed()){
-                    servoTracker -= 0.05;
-                    moveAbout.setPosition(servoTracker);
-                }
-
-                telemetry.addData("eriog", moveAbout.getPosition());
-
-                telemetry.update();
+//
+//                if(gamepad1.left_bumper){
+//                    moveAbout.setPosition(0);
+//                    servoTracker = 0;
+//                }
+//                if(gamepad1.right_bumper){
+//                    moveAbout.setPosition(1);
+//                    servoTracker = 1;
+//
+//                }
+//
+//                if(gamepad1.circleWasPressed()){
+//                    servoTracker += 0.05;
+//                    moveAbout.setPosition(servoTracker);
+//                }
+//
+//                if(gamepad1.squareWasPressed()){
+//                    servoTracker -= 0.05;
+//                    moveAbout.setPosition(servoTracker);
+//                }
+//
+//                telemetry.addData("eriog", moveAbout.getPosition());
+//
+//                telemetry.update();
 
 //                lightLeft.setPosition(0.3);
 //                lightRight.setPosition(0.3);
-//                if(gamepad1.square){
-//                    motor.setPower(1);
-//                }else if(gamepad1.triangle){
-//                    motor2.setPower(1);
-//                }else if(gamepad1.left_bumper){
-//                    motor.setPower(1);
-//                    motor2.setPower(1);
-//                }else if(gamepad1.right_bumper){
-//                    motor.setPower(0.3);
-//                    motor2.setPower(0.3);
-//                }
-//
-//                else{
-//                    motor.setPower(0);
-//                    motor2.setPower(0);
-//                }
+                if(gamepad1.square){
+                    motor.setPower(1);
+                }else if(gamepad1.triangle){
+                    motor2.setPower(1);
+                }else if(gamepad1.left_bumper){
+                    motor.setPower(1);
+                    motor2.setPower(1);
+                }else if(gamepad1.right_bumper){
+                    motor.setPower(0.3);
+                    motor2.setPower(0.3);
+                }
+
+                else{
+                    motor.setPower(0);
+                    motor2.setPower(0);
+                }
             }
         }
 

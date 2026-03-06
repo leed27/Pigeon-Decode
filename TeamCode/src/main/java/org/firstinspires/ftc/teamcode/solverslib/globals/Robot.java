@@ -78,8 +78,8 @@ public class Robot {
         leftRear = new MotorEx(hardwareMap, "leftRear", Motor.GoBILDA.RPM_435);
         leftRear.setInverted(true);
 
-//        leftShooter = new MotorEx(hardwareMap, "shooterLeft");
-//        rightShooter = new MotorEx(hardwareMap, "shooterRight");
+        leftShooter = new MotorEx(hardwareMap, "shooterLeft");
+        rightShooter = new MotorEx(hardwareMap, "shooterRight");
 
         intakeMotor = new MotorEx(hardwareMap, "intake", Motor.GoBILDA.RPM_1150);
         intakeMotor.setInverted(false);
@@ -91,7 +91,8 @@ public class Robot {
         transferServo = new CRServo(hardwareMap, "transferServo");
         transferServo.setInverted(true);
 
-        //hoodServo = new ServoEx(hardwareMap, "hoodServo");
+        hoodServo = new ServoEx(hardwareMap, "hoodServo");
+        //limit: .5
         stopperServo = new ServoEx(hardwareMap, "stopperServo");
 
         //kickerServo = new ServoEx(hardwareMap, "kicker");

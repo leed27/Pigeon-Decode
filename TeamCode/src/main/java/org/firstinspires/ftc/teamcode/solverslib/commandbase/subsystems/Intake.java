@@ -13,6 +13,7 @@ public class Intake extends SubsystemBase {
     public void start(){
         robot.intakeServo.set(0.3);
         robot.intakeMotor.set(1);
+        robot.transferServo.set(-1);
     }
 
     public void startCustom(double speed){
@@ -38,6 +39,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void reverse(){
+        robot.intakeServo.set(0.3);
         robot.intakeMotor.set(-1);
     }
 
