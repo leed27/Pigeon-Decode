@@ -6,6 +6,7 @@ import com.pedropathing.control.PIDFController;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.PoseTracker;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.LynxConstants;
@@ -26,7 +27,7 @@ public class Robot {
     public MotorEx leftFront, leftRear, rightRear, rightFront; //drivetrain wheels
 
     public MotorEx leftShooter, rightShooter;
-    public MotorEx turretMotor;
+    public DcMotor turretMotor;
     public MotorEx intakeMotor;
 
     //lights go OOOOOO
@@ -85,6 +86,8 @@ public class Robot {
         intakeMotor.setInverted(false);
 
         //turretMotor = new MotorEx(hardwareMap, "turretMotor", Motor.GoBILDA.RPM_1150);
+        turretMotor = hardwareMap.get(DcMotor.class, "turretMotor");
+        turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         intakeServo = new ServoEx(hardwareMap, "intakeServo");
         //limit: .75 hits the top
