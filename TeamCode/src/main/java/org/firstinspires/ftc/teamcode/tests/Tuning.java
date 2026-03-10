@@ -4,7 +4,7 @@ import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.opModeTy
 
 import android.util.Log;
 
-import com.acmerobotics.dashboard.config.Config;
+//import com.acmerobotics.dashboard.config.Config;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.solverslib.globals.Globals;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
 @Disabled
-@Config
+//@Config
 @TeleOp(name = "LaunchMotorTuner", group = "Motor")
 public class Tuning extends CommandOpMode {
     public static double P = 0.004;

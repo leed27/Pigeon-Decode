@@ -12,10 +12,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.InstantCommand;
+import com.seattlesolvers.solverslib.command.RepeatCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
+import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
+import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
 @Autonomous(name = "HP CYCLE \uD83D\uDD35", group = "auto")
@@ -49,7 +52,7 @@ public class farAutoBlue extends CommandOpMode{
                 .setConstantHeadingInterpolation(180)
                 .build();
 
-        goToIntake = robot.follower.pathBuilder()
+        goToIntake2 = robot.follower.pathBuilder()
                 .addPath(new BezierLine(goBack, secondIntake))
                 .setConstantHeadingInterpolation(180)
                 .build();
@@ -65,14 +68,32 @@ public class farAutoBlue extends CommandOpMode{
 
     public SequentialCommandGroup shootPreloads() {
         return new SequentialCommandGroup(
-                new WaitCommand(100)
+                new WaitCommand(100),
+                new InstantCommand(() -> robot.turretMotor.setTargetPosition(0)),
+                new InstantCommand(() -> robot.outtake.shootAutoFar()),
+                new InstantCommand(() -> robot.intake.start()),
+                new InstantCommand(() -> robot.stopperServo.set(.5)),
+                new RepeatCommand(
+                        new AutoShootInAutoFAR()
+                ).withTimeout(2000),
+                new InstantCommand(() -> robot.stopperServo.set(.1))
 
         );
     }
     public SequentialCommandGroup fullCycle() {
         //DYLAN LETS JS DO IT IN ONE GROUP CUZ KINDA REPITIVE
         return new SequentialCommandGroup(
-                new WaitCommand(100)
+                new FollowPathCommand(robot.follower, goToIntake, false).withTimeout(3000),
+                new FollowPathCommand(robot.follower, backUp, false).withTimeout(1000),
+                new FollowPathCommand(robot.follower, goToIntake2, false).withTimeout(3000),
+                new FollowPathCommand(robot.follower, goToShoot, false).withTimeout(3000),
+                new InstantCommand(() -> robot.outtake.shootAutoFar()),
+                new InstantCommand(() -> robot.intake.start()),
+                new InstantCommand(() -> robot.stopperServo.set(.5)),
+                new RepeatCommand(
+                        new AutoShootInAutoFAR()
+                ).withTimeout(2000),
+                new InstantCommand(() -> robot.stopperServo.set(.1))
 
         );
     }
@@ -88,40 +109,16 @@ public class farAutoBlue extends CommandOpMode{
         timer = new ElapsedTime();
         timer.reset();
 
+
+
         // DO NOT REMOVE! Resetting FTCLib Command Scheduler
         super.reset();
 
         robot.init(hardwareMap);
 
-        robot.stopperServo.set(0.56);
+        robot.stopperServo.set(0.15);
 
-
-//        Limelight3A limelight;
-//
-//        limelight = hardwareMap.get(Limelight3A.class, "limelight");
-//        limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
-//        limelight.start(); // This tells Limelight to start looking!
-//
-//        limelight.pipelineSwitch(1); // pipleline 1 is our AprilTags pipeline
-//
-//        LLResult result = limelight.getLatestResult();
-//
-//        List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults(); // fiducials are special markers (like AprilTags)
-//        for (LLResultTypes.FiducialResult fiducial : fiducials) {
-//            int id = fiducial.getFiducialId(); // The ID number of the fiducial
-//            if(id == 21){
-//                randomizationMotif = RandomizationMotif.GREEN_LEFT;
-//            }else if(id == 22){
-//                randomizationMotif = RandomizationMotif.GREEN_MIDDLE;
-//            }else if(id == 23){
-//                randomizationMotif = RandomizationMotif.GREEN_RIGHT;
-//            }else{
-//                //failsafe
-//                randomizationMotif = RandomizationMotif.GREEN_LEFT;
-//            }
-//        }
-//
-//
+        //robot.turretMotor.stopAndResetEncoder();
 
         // Initialize subsystems
         register(robot.intake, robot.outtake);
@@ -187,6 +184,7 @@ public class farAutoBlue extends CommandOpMode{
 
     @Override
     public void end() {
+        turretEncoder = robot.turretMotor.getCurrentPosition();
         autoEndPose = robot.follower.getPose();
     }
 }

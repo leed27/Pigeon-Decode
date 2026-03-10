@@ -2,7 +2,8 @@ package org.firstinspires.ftc.teamcode.solverslib.globals;
 
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
-import com.pedropathing.control.PIDFController;
+import com.pedropathing.geometry.Pose;
+import com.seattlesolvers.solverslib.controller.PIDFController;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.PoseTracker;
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -17,6 +18,7 @@ import com.seattlesolvers.solverslib.hardware.motors.MotorGroup;
 import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
 
 import org.firstinspires.ftc.teamcode.Prism.PrismAnimations;
+import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Intake;
 //import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Lights;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Outtake;
@@ -42,7 +44,11 @@ public class Robot {
     public CRServo transferServo;
 
     public Follower follower;
-    public PIDFController controller;
+    public static double p = 0.007;
+    public static double i = 0;
+    public static double d = .0006;
+    public static double f = 0.0005;
+    public static final PIDFController singlePIDF = new PIDFController(p,i,d, f);
     public PoseTracker poseUpdater;
 
     /// the next two are for optimizing loop times
@@ -81,6 +87,7 @@ public class Robot {
 
         leftShooter = new MotorEx(hardwareMap, "shooterLeft");
         rightShooter = new MotorEx(hardwareMap, "shooterRight");
+        rightShooter.setInverted(true);
 
         intakeMotor = new MotorEx(hardwareMap, "intake", Motor.GoBILDA.RPM_1150);
         intakeMotor.setInverted(false);
@@ -88,6 +95,9 @@ public class Robot {
         //turretMotor = new MotorEx(hardwareMap, "turretMotor", Motor.GoBILDA.RPM_1150);
         turretMotor = hardwareMap.get(DcMotor.class, "turretMotor");
         turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        singlePIDF.setTolerance(5, 10);
+
+        //turretMotor.setMode();
 
         intakeServo = new ServoEx(hardwareMap, "intakeServo");
         //limit: .75 hits the top
@@ -146,7 +156,7 @@ public class Robot {
 //        launchEncoder = new Motor(hardwareMap, "shooterRight").encoder;
         //launchEncoder.setDirection(Motor.Direction.REVERSE);
 ////
-//        follower = Constants.createFollower(hardwareMap);
+        follower = Constants.createFollower(hardwareMap);
 //        controller = new PIDFController(follower.constants.coefficientsHeadingPIDF);
 
 
@@ -166,21 +176,21 @@ public class Robot {
         }
 
         intake = new Intake();
-        //outtake = new Outtake();
+        outtake = new Outtake();
         //lights = new Lights();
 
         if(opModeType.equals(OpModeType.TELEOP)) {
-//            follower.setStartingPose(autoEndPose);
-//            follower.startTeleopDrive();
+            follower.setStartingPose(autoEndPose);
+            follower.startTeleopDrive();
 
         } else{
-            //follower.setStartingPose(new Pose(0, 0, 0));
+            follower.setStartingPose(new Pose(0, 0, 0));
         }
     }
 
     /// RUN WHATEVER IS IN THE INIT METHODS IN THE SUBSYSTEMS!!
     public void initHasMovement() {
-        //outtake.init();
+        outtake.init();
         //intake.init();
         //kickServo.setPosition(0.5);
     }

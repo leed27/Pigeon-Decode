@@ -16,10 +16,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Constants {
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .mass(12.3)
+            .mass(10.2)
             //.holdPointHeadingScaling(1) //apparently the fix to the weird turnto pid?
-            .forwardZeroPowerAcceleration(-28.21169772728104)
-            .lateralZeroPowerAcceleration(-66.36080174688745)
+            .forwardZeroPowerAcceleration(-32.060741473762704)
+            .lateralZeroPowerAcceleration(-60.39367529716955)
             .useSecondaryTranslationalPIDF(false)
             .useSecondaryHeadingPIDF(false)
             .useSecondaryDrivePIDF(false)
@@ -39,20 +39,20 @@ public class Constants {
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .xVelocity(76.8146967850332)
-            .yVelocity(59.8814389686885);
+            .xVelocity(79.35478823203741)
+            .yVelocity(66.37040458138534);
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(-.5)
-            .strafePodX(-3.75)
+            .forwardPodY(-1.5)
+            .strafePodX(-3.25)
             .distanceUnit(DistanceUnit.INCH)
             .hardwareMapName("pinpoint")
-            .yawScalar(1.0)
+            //.yawScalar(1.0)
             .encoderResolution(
                     GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD
             )
-            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
-            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
+            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
+            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
     public static PathConstraints pathConstraints = new PathConstraints(
             0.95,

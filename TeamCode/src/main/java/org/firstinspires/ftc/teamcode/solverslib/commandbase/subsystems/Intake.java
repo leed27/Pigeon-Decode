@@ -11,9 +11,9 @@ public class Intake extends SubsystemBase {
     }
 
     public void start(){
-        robot.intakeServo.set(0.3);
+        robot.intakeServo.set(0.25);
         robot.intakeMotor.set(1);
-        robot.transferServo.set(-1);
+        //robot.transferServo.set(-1);
     }
 
     public void startCustom(double speed){
@@ -25,7 +25,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void stop(){
-        robot.intakeServo.set(0.05);
+        robot.intakeServo.set(0.4);
         robot.intakeMotor.set(0);
     }
 

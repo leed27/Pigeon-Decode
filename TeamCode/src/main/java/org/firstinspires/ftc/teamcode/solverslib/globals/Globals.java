@@ -32,6 +32,7 @@ public class Globals {
     public static OpModeType opModeType;
 
     public static Pose autoEndPose = new Pose(15, 32, Math.toRadians(0)); //RIGHT ABOVE THE RED TAPE HP ZONE TAPE FACING BLUE
+    public static int turretEncoder = 0;
 
     public static Pose redParkPose = new Pose(38.5,33, Math.toRadians(90));
     public static Pose blueParkPose = redParkPose.mirror();

@@ -15,6 +15,7 @@ import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.RunCommand;
 import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
+import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
@@ -94,35 +95,40 @@ public class closeAutoBlue extends CommandOpMode{
 
     public SequentialCommandGroup scorePreload() {
         return new SequentialCommandGroup(
-                new WaitCommand(100)
+                new FollowPathCommand(robot.follower, shootPreloads, true),
+                new WaitCommand(1000)
 
         );
     }
 
     public SequentialCommandGroup grabTopBlue() {
         return new SequentialCommandGroup(
-                new WaitCommand(100)
+                new FollowPathCommand(robot.follower, getTop, true),
+                new WaitCommand(1000)
 
         );
     }
 
     public SequentialCommandGroup scoreTopBlue() {
         return new SequentialCommandGroup(
-                new WaitCommand(100)
+                new FollowPathCommand(robot.follower, shootTop, true),
+                new WaitCommand(1000)
 
         );
     }
 
     public SequentialCommandGroup grabMiddleBlue() {
         return new SequentialCommandGroup(
-                new WaitCommand(100)
+                new FollowPathCommand(robot.follower, getMiddle, true),
+                new WaitCommand(1000)
 
         );
     }
 
     public SequentialCommandGroup openGate() {
         return new SequentialCommandGroup(
-                new WaitCommand(100)
+                new FollowPathCommand(robot.follower, openGate, true),
+                new WaitCommand(1000)
 
         );
     }
@@ -131,21 +137,24 @@ public class closeAutoBlue extends CommandOpMode{
 
     public SequentialCommandGroup scoreGate() {
         return new SequentialCommandGroup(
-                new WaitCommand(100)
+                new FollowPathCommand(robot.follower, shootGate, true),
+                new WaitCommand(1000)
 
         );
     }
 
     public SequentialCommandGroup grabBottomBlue() {
         return new SequentialCommandGroup(
-                new WaitCommand(100)
+                new FollowPathCommand(robot.follower, getBottom, true),
+                new WaitCommand(1000)
 
         );
     }
 
     public SequentialCommandGroup scoreBottomBlue() {
         return new SequentialCommandGroup(
-                new WaitCommand(100)
+                new FollowPathCommand(robot.follower, shootBottom, true),
+                new WaitCommand(1000)
 
         );
     }
@@ -166,34 +175,9 @@ public class closeAutoBlue extends CommandOpMode{
 
         robot.init(hardwareMap);
 
-        robot.stopperServo.set(0.56);
+        robot.stopperServo.set(0.15);
 
 
-//        Limelight3A limelight;
-//
-//        limelight = hardwareMap.get(Limelight3A.class, "limelight");
-//        limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
-//        limelight.start(); // This tells Limelight to start looking!
-//
-//        limelight.pipelineSwitch(1); // pipleline 1 is our AprilTags pipeline
-//
-//        LLResult result = limelight.getLatestResult();
-//
-//        List<LLResultTypes.FiducialResult> fiducials = result.getFiducialResults(); // fiducials are special markers (like AprilTags)
-//        for (LLResultTypes.FiducialResult fiducial : fiducials) {
-//            int id = fiducial.getFiducialId(); // The ID number of the fiducial
-//            if(id == 21){
-//                randomizationMotif = RandomizationMotif.GREEN_LEFT;
-//            }else if(id == 22){
-//                randomizationMotif = RandomizationMotif.GREEN_MIDDLE;
-//            }else if(id == 23){
-//                randomizationMotif = RandomizationMotif.GREEN_RIGHT;
-//            }else{
-//                //failsafe
-//                randomizationMotif = RandomizationMotif.GREEN_LEFT;
-//            }
-//        }
-//
 //
 
         // Initialize subsystems
@@ -203,6 +187,8 @@ public class closeAutoBlue extends CommandOpMode{
         generatePath();
         robot.follower.setStartingPose(startPose);
         robot.follower.setMaxPower(1);
+
+        //robot.turretMotor.stopAndResetEncoder();
 
         schedule(
 //                    // DO NOT REMOVE: updates follower to follow path
@@ -273,6 +259,7 @@ public class closeAutoBlue extends CommandOpMode{
 
     @Override
     public void end() {
+        turretEncoder = robot.turretMotor.getCurrentPosition();
         autoEndPose = robot.follower.getPose();
     }
 }
