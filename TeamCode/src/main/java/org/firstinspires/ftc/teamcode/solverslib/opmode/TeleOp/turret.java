@@ -29,10 +29,10 @@ public class turret extends CommandOpMode {
     // maxPowerConstant, 1.0
     // P, 0.00_
 
-    public static double p = 0.007;
+    public static double p =0.009;
     public static double i = 0;
     public static double d = .0008;
-    public static double f = 0.0001;
+    public static double f = 0;//0.00005;
 
     public static int setPoint = -100;
     public static double maxPowerConstant = 1.0;
@@ -52,6 +52,11 @@ public class turret extends CommandOpMode {
         super.reset();
         //telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         robot.init(hardwareMap);
+
+        robot.turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
 
 
 
@@ -82,6 +87,12 @@ public class turret extends CommandOpMode {
         double power = Range.clip(singlePIDF.calculate(motorPos, setPoint), -maxPower, maxPower);
 
         robot.turretMotor.setPower(power);
+
+        if(gamepad1.circle){
+            setPoint = 100;
+        }else if(gamepad1.square){
+            setPoint = -100;
+        }
 
         for (LynxModule hub : robot.allHubs) {
             hub.clearBulkCache();

@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.solverslib.opmode.TeleOp;
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -16,12 +15,7 @@ import com.seattlesolvers.solverslib.drivebase.MecanumDrive;
 import com.seattlesolvers.solverslib.gamepad.GamepadEx;
 import com.seattlesolvers.solverslib.gamepad.GamepadKeys;
 
-import org.firstinspires.ftc.teamcode.Prism.Color;
-import org.firstinspires.ftc.teamcode.Prism.Direction;
 import org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver;
-import org.firstinspires.ftc.teamcode.Prism.PrismAnimations;
-import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShoot;
-import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAuto;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
@@ -36,6 +30,8 @@ public class TeleOpMain extends CommandOpMode {
     public static int adjustSpeed = 0;
     public static int speed = 1200;
     int overShoot = 0;
+       int motorPos;
+
 
     public static double targetHeading;
     boolean startIntake = false;
@@ -68,6 +64,10 @@ public class TeleOpMain extends CommandOpMode {
 
         robot.stopperServo.set(0.15);
         robot.intakeServo.set(0.3);
+
+        motorPos = robot.turretMotor.getCurrentPosition();
+
+
 
         //robot.prism.clearAllAnimations();
 
@@ -144,7 +144,10 @@ public class TeleOpMain extends CommandOpMode {
         driver.getGamepadButton(GamepadKeys.Button.CROSS).whenReleased(
                 new ParallelCommandGroup(
                         new InstantCommand(() -> robot.intake.stop()),
-                        new InstantCommand(() -> robot.stopperServo.set(0.1))
+                        new InstantCommand(() -> robot.stopperServo.set(0.1)),
+                        new InstantCommand(() -> startIntake = false)
+
+
                 )
 
         );
@@ -191,27 +194,27 @@ public class TeleOpMain extends CommandOpMode {
 
         /// MANUAL STOPPER SERVO ADJUSTMENT
 
-        driver.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
-
-                new InstantCommand(() -> robot.stopperServo.set(robot.stopperServo.get() - 0.05))
-
-        );
-
-        driver.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
-
-                new InstantCommand(() -> robot.stopperServo.set(robot.stopperServo.get() + 0.05))
-
-        );
+//        driver.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
+//
+//                new InstantCommand(() -> robot.stopperServo.set(robot.stopperServo.get() - 0.05))
+//
+//        );
+//
+//        driver.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
+//
+//                new InstantCommand(() -> robot.stopperServo.set(robot.stopperServo.get() + 0.05))
+//
+//        );
 
         /// BACKUP ADJUSTMENT SPEED IF LOCALIZATION DRIFTS
 
-        driver2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
+        driver.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
 
                 new InstantCommand(() -> adjustSpeed -= 10)
 
         );
 
-        driver2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
+        driver.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
 
                 new InstantCommand(() -> adjustSpeed += 10)
 
@@ -312,40 +315,40 @@ public class TeleOpMain extends CommandOpMode {
 //
 //        );
 
-        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(
-
-                new InstantCommand(() -> {
-                    if(goalColor == GoalColor.RED_GOAL){
-                        double newHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
-                        robot.follower.turnTo(targetHeading);
-                        robot.follower.setConstraints(new PathConstraints(
-                                0.995,
-                                200,
-                                1.5,
-                                1
-                        ));
-                    }else{
-                        double newHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
-                        robot.follower.turnTo(targetHeading);
-                    }}
-                )
-        );
-
-
-        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
-                new ParallelCommandGroup(
-                        //new InstantCommand(() -> robot.outtake.stop()),
-                        new InstantCommand(() -> robot.intake.stop()),
-                        new InstantCommand(() -> startIntake = false),
-                        new InstantCommand(() -> robot.stopperServo.set(.56)),
-                        new SequentialCommandGroup(
-                                new InstantCommand(() -> robot.follower.breakFollowing()),
-                                new InstantCommand(() -> robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true)),
-                                new InstantCommand(() -> robot.follower.startTeleopDrive())
-                        )
-                )
-
-        );
+//        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(
+//
+//                new InstantCommand(() -> {
+//                    if(goalColor == GoalColor.RED_GOAL){
+//                        double newHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
+//                        robot.follower.turnTo(targetHeading);
+//                        robot.follower.setConstraints(new PathConstraints(
+//                                0.995,
+//                                200,
+//                                1.5,
+//                                1
+//                        ));
+//                    }else{
+//                        double newHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
+//                        robot.follower.turnTo(targetHeading);
+//                    }}
+//                )
+//        );
+//
+//
+//        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
+//                new ParallelCommandGroup(
+//                        //new InstantCommand(() -> robot.outtake.stop()),
+//                        new InstantCommand(() -> robot.intake.stop()),
+//                        new InstantCommand(() -> startIntake = false),
+//                        new InstantCommand(() -> robot.stopperServo.set(.56)),
+//                        new SequentialCommandGroup(
+//                                new InstantCommand(() -> robot.follower.breakFollowing()),
+//                                new InstantCommand(() -> robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true)),
+//                                new InstantCommand(() -> robot.follower.startTeleopDrive())
+//                        )
+//                )
+//
+//        );
 
         driver.getGamepadButton(GamepadKeys.Button.SHARE).whenPressed(
                 //
@@ -429,16 +432,22 @@ public class TeleOpMain extends CommandOpMode {
         super.run();
 
         robot.singlePIDF.setSetPoint(robot.outtake.autoAlign());
+        motorPos = robot.turretMotor.getCurrentPosition();
+        double maxPower = (robot.f * motorPos) + 1;
+        double power = Range.clip(robot.singlePIDF.calculate(motorPos, robot.outtake.autoAlign()), -maxPower, maxPower);
 
         if(!robot.singlePIDF.atSetPoint() && gamepad1.square){
-            //motorPos = robot.turretMotor.getCurrentPosition();
+            motorPos = robot.turretMotor.getCurrentPosition();
 
 
-            double maxPower = (robot.f * robot.turretMotor.getCurrentPosition()) + 1;
-            double power = Range.clip(robot.singlePIDF.calculate(robot.turretMotor.getCurrentPosition(), robot.outtake.autoAlign()), -maxPower, maxPower);
 
             robot.turretMotor.setPower(power);
+        }else{
+            robot.turretMotor.setPower(0);
         }
+
+        telemetry.addData("motorPower", power);
+        telemetry.addData("max power", maxPower);
 
         if(goalColor == GoalColor.RED_GOAL){
             howFar = Math.sqrt(Math.pow(((144-robot.follower.getPose().getY())/(12)), 2) + Math.pow(((144-robot.follower.getPose().getX())/(12)),2));
@@ -450,6 +459,8 @@ public class TeleOpMain extends CommandOpMode {
         //speed = robot.outtake.shootAutoGenerator();
         targetHeading = robot.outtake.autoAlign();
         speed = robot.outtake.autoShoot2();
+
+        //robot.outtake.shootCustom(speed + adjustSpeed + overShoot);
 
         if(speed == -1 || autoShootDisabled){
         }else {
@@ -479,12 +490,14 @@ public class TeleOpMain extends CommandOpMode {
 
             if (gamepad1.cross) {
                 //robot.outtake.rapidShooting(adjustSpeed);
+                                robot.outtake.shootCustom(speed + (adjustSpeed) + overShoot);
 
-                //robot.outtake.shootCustom(speed + adjustSpeed + overShoot);
-                robot.stopperServo.set(.4);
+
+
+                robot.stopperServo.set(.5);
 
                 /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
-                if (robot.leftShooter.getVelocity() > speed + adjustSpeed
+                if (robot.leftShooter.getVelocity() > speed + adjustSpeed -20
                 ) {
 //            if(howFar > 10){
 //                new InstantCommand(() -> new WaitCommand(500));
@@ -493,23 +506,31 @@ public class TeleOpMain extends CommandOpMode {
                     //robot.intake.startNoHood();
                 }
 
-                if (howFar < 10) {
-                    if(startIntake){
-                        robot.intake.startNoHood();
-                    }else{
-                        robot.intake.stopExceptShooter();
-                    }
 
+                if(startIntake){
+                    robot.intake.startLower();
+                }else{
+                    robot.intake.stopExceptShooter();
                 }
-                else{
-
-                    if (robot.leftShooter.getVelocity() > speed + adjustSpeed) {
-
-                        robot.intake.startNoHood();
-                    } else {
-                        robot.intake.stopExceptShooter();
-                    }
-            }
+//                if (howFar < 10) {
+//                    if(startIntake){
+//                        robot.intake.startLower();
+//                    }else{
+//                        robot.intake.stopExceptShooter();
+//                    }
+//
+//                }
+//                else{
+//
+//                    if (robot.leftShooter.getVelocity() > speed + adjustSpeed) {
+//
+//                        robot.intake.startNoHood();
+//                    } else {
+//                        robot.intake.stopExceptShooter();
+//                    }
+//            }
+            }else{
+                robot.outtake.stop();
             }
 
 
@@ -562,7 +583,7 @@ public class TeleOpMain extends CommandOpMode {
         telemetry.addData("team", goalColor);
         telemetry.addData("targetheading", targetHeading);
         telemetry.addData("motor speed", robot.leftShooter.getVelocity());
-        telemetry.addData("auto shoot disabled", robot.turretMotor.getCurrentPosition());
+        telemetry.addData("turret REAL encoder position", robot.turretMotor.getCurrentPosition());
         //telemetry.addData("SERVO POSITIONNNNN", robot.stopperServo.get());
         elapsedtime.reset();
 

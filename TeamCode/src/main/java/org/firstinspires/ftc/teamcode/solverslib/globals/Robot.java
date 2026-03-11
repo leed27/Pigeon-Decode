@@ -44,10 +44,10 @@ public class Robot {
     public CRServo transferServo;
 
     public Follower follower;
-    public static double p = 0.007;
+    public static double p = 0.03;
     public static double i = 0;
-    public static double d = .0006;
-    public static double f = 0.0005;
+    public static double d = .0023;
+    public static double f = 0.000002;
     public static final PIDFController singlePIDF = new PIDFController(p,i,d, f);
     public PoseTracker poseUpdater;
 
@@ -94,8 +94,9 @@ public class Robot {
 
         //turretMotor = new MotorEx(hardwareMap, "turretMotor", Motor.GoBILDA.RPM_1150);
         turretMotor = hardwareMap.get(DcMotor.class, "turretMotor");
-        turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        singlePIDF.setTolerance(5, 10);
+        turretMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //singlePIDF.setTolerance(1, 10);
 
         //turretMotor.setMode();
 
@@ -183,9 +184,10 @@ public class Robot {
             follower.setStartingPose(autoEndPose);
             follower.startTeleopDrive();
 
-        } else{
-            follower.setStartingPose(new Pose(0, 0, 0));
         }
+//        else{
+//            follower.setStartingPose(new Pose(0, 0, 0));
+//        }
     }
 
     /// RUN WHATEVER IS IN THE INIT METHODS IN THE SUBSYSTEMS!!

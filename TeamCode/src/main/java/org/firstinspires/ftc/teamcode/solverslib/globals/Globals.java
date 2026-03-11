@@ -27,7 +27,7 @@ public class Globals {
     public static double test = 0;
     public static double xPos = 0;
     public static double yPos = 0;
-    public static GoalColor goalColor;
+    public static GoalColor goalColor = GoalColor.BLUE_GOAL;
 
     public static OpModeType opModeType;
 

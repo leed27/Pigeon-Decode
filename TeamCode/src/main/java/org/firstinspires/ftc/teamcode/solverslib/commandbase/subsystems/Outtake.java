@@ -2,12 +2,7 @@ package org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems;
 
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
-import static java.lang.Double.NaN;
-
-import com.seattlesolvers.solverslib.command.InstantCommand;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
-import com.seattlesolvers.solverslib.command.WaitCommand;
-import com.seattlesolvers.solverslib.command.WaitUntilCommand;
 import com.seattlesolvers.solverslib.util.InterpLUT;
 
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
@@ -73,21 +68,21 @@ public class Outtake extends SubsystemBase {
 
         //NORMAL TABLES THAT DIDDY APPROVES
         lookUpClose.add(0, 0);
-        lookUpClose.add(4.804, 1030);
-        lookUpClose.add(5.138, 1050);
-        lookUpClose.add(5.953, 1100);
-        lookUpClose.add(6.301, 1115);
-        lookUpClose.add(6.900, 1130);
-        lookUpClose.add(7.670, 1190);
-        lookUpClose.add(8.15, 1230);
-        lookUpClose.add(8.85, 1250);
-        lookUpClose.add(9.38, 1260);
-        lookUpClose.add(9.7, 1280);
-        lookUpClose.add(10.3, 1400);
-        lookUpClose.add(11, 1450);
-        lookUpClose.add(11.7, 1480);
-        lookUpClose.add(12.15, 1500);
-        lookUpClose.add(13, 1550);
+        lookUpClose.add(4.804, 1110);
+        lookUpClose.add(5.138, 1130);
+        lookUpClose.add(5.953, 1180);
+        lookUpClose.add(6.301, 1195);
+        lookUpClose.add(6.900, 1210);
+        lookUpClose.add(7.670, 1270);
+        lookUpClose.add(8.15, 1310);
+        lookUpClose.add(8.85, 1330);
+        lookUpClose.add(9.38, 1340);
+        lookUpClose.add(9.7, 1360);
+        lookUpClose.add(10.3, 1480);
+        lookUpClose.add(11, 1700);
+        lookUpClose.add(11.7, 1800);
+        lookUpClose.add(12.15, 1900);
+        lookUpClose.add(13, 2000);
         lookUpClose.createLUT();
 
 //        lookUpFar.add(0, 0);
@@ -137,7 +132,7 @@ public class Outtake extends SubsystemBase {
         }
 
         if(startIntake){
-            robot.intake.startNoHood();
+            robot.intake.startLower();
         }else{
             robot.intake.stopExceptShooter();
         }
@@ -239,7 +234,7 @@ public class Outtake extends SubsystemBase {
 //            return -200;
 //        }
 
-        return (int) (finalAngle*-1);
+        return (int) 45;//(finalAngle*-1);
     }
     public int shootAutoGenerator(){
         /*
@@ -331,7 +326,7 @@ public class Outtake extends SubsystemBase {
     }
 
     public void shootCustom(int speed){
-        if(robot.leftShooter.getVelocity() > speed && robot.rightShooter.getVelocity() > speed){
+        if(robot.leftShooter.getVelocity() > speed/* && robot.rightShooter.getVelocity() > speed*/){
             robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
             robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
             //shooterReady = true;
