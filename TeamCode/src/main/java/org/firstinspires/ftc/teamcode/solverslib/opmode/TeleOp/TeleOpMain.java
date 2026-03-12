@@ -63,6 +63,7 @@ public class TeleOpMain extends CommandOpMode {
         driver2 = new GamepadEx(gamepad2);
 
         robot.stopperServo.set(0.15);
+        robot.hoodServo.set(0);
         robot.intakeServo.set(0.3);
 
         motorPos = robot.turretMotor.getCurrentPosition();
@@ -460,7 +461,7 @@ public class TeleOpMain extends CommandOpMode {
         targetHeading = robot.outtake.autoAlign();
         speed = robot.outtake.autoShoot2();
 
-        //robot.outtake.shootCustom(speed + adjustSpeed + overShoot);
+        robot.outtake.shootCustom(speed + adjustSpeed + overShoot);
 
         if(speed == -1 || autoShootDisabled){
         }else {
@@ -487,17 +488,22 @@ public class TeleOpMain extends CommandOpMode {
 //                robot.outtake.shootCustom(speed + (adjustSpeed) + overShoot);
 //            }
 
+            if (howFar > 10) {
+                robot.hoodServo.set(0.27);
+            } else {
+                robot.hoodServo.set(0.1);
+            }
 
             if (gamepad1.cross) {
                 //robot.outtake.rapidShooting(adjustSpeed);
-                                robot.outtake.shootCustom(speed + (adjustSpeed) + overShoot);
+                //   robot.outtake.shootCustom(speed + (adjustSpeed) + overShoot);
 
 
 
                 robot.stopperServo.set(.5);
 
                 /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
-                if (robot.leftShooter.getVelocity() > speed + adjustSpeed -20
+                if (robot.leftShooter.getVelocity() > speed + adjustSpeed - 20
                 ) {
 //            if(howFar > 10){
 //                new InstantCommand(() -> new WaitCommand(500));
@@ -507,9 +513,9 @@ public class TeleOpMain extends CommandOpMode {
                 }
 
 
-                if(startIntake){
+                if (startIntake) {
                     robot.intake.startLower();
-                }else{
+                } else {
                     robot.intake.stopExceptShooter();
                 }
 //                if (howFar < 10) {
@@ -529,8 +535,9 @@ public class TeleOpMain extends CommandOpMode {
 //                        robot.intake.stopExceptShooter();
 //                    }
 //            }
-            }else{
-                robot.outtake.stop();
+//            }else{
+//                robot.outtake.stop();
+//            }
             }
 
 
@@ -583,6 +590,7 @@ public class TeleOpMain extends CommandOpMode {
         telemetry.addData("team", goalColor);
         telemetry.addData("targetheading", targetHeading);
         telemetry.addData("motor speed", robot.leftShooter.getVelocity());
+        telemetry.addData("start intake", startIntake);
         telemetry.addData("turret REAL encoder position", robot.turretMotor.getCurrentPosition());
         //telemetry.addData("SERVO POSITIONNNNN", robot.stopperServo.get());
         elapsedtime.reset();

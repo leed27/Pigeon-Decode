@@ -41,7 +41,7 @@ public class Robot {
 
     public ServoEx kickerServo;
     public ServoEx intakeServo;
-    public CRServo transferServo;
+    //public CRServo transferServo;
 
     public Follower follower;
     public static double p = 0.03;
@@ -102,8 +102,8 @@ public class Robot {
 
         intakeServo = new ServoEx(hardwareMap, "intakeServo");
         //limit: .75 hits the top
-        transferServo = new CRServo(hardwareMap, "transferServo");
-        transferServo.setInverted(true);
+//        transferServo = new CRServo(hardwareMap, "transferServo");
+//        transferServo.setInverted(true);
 
         hoodServo = new ServoEx(hardwareMap, "hoodServo");
         //limit: .5

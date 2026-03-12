@@ -178,13 +178,38 @@ public class Outtake extends SubsystemBase {
         }
     }
 //
-    public int autoAlign(){
-        double x = robot.follower.getPose().getX();
-        double y = robot.follower.getPose().getY();
-        double aimPosX = 0;
-        double aimPosY = 0;
+public int autoAlign(){
 
-        double angleNeeded = 0;
+    double x = robot.follower.getPose().getX();
+    double y = robot.follower.getPose().getY();
+    double botAngle = Math.toDegrees(robot.follower.getHeading());
+
+    double aimPosX;
+    double aimPosY;
+
+    if(goalColor == GoalColor.BLUE_GOAL){
+        aimPosX = 0;
+        aimPosY = 144;
+    }else{
+        aimPosX = 144;
+        aimPosY = 144;
+    }
+
+    double aimAngle = Math.toDegrees(Math.atan2(aimPosY - y, aimPosX - x));
+
+    if(aimAngle < 0) aimAngle += 360;   // ensure 0–360
+
+    double diff = aimAngle - botAngle;
+
+    if(diff > 180) diff -= 360;
+    if(diff < -180) diff += 360;
+
+    return (int) diff;
+
+
+
+
+
         /*
         if(goalColor == GoalColor.BLUE_GOAL){
             if((x+y)>= 115 && (x+y) <= 170 && y>=120){
@@ -209,14 +234,14 @@ public class Outtake extends SubsystemBase {
                 aimPosY = 137;
             }
         }*/
-        double angle;
+        /*double angle;
         if(goalColor == GoalColor.BLUE_GOAL) {
             angle = Math.toDegrees(Math.atan2((144 - robot.follower.getPose().getY()), -robot.follower.getPose().getX())) + 180;
         } else {
             angle = Math.toDegrees(Math.atan2((144 - robot.follower.getPose().getY()), 144 - robot.follower.getPose().getX())) + 180;
 
         }
-        double botAngle = Math.toDegrees(robot.follower.getHeading()) + 180;
+        //double botAngle = Math.toDegrees(robot.follower.getHeading()) + 180;
 
         double finalAngle;
         if(botAngle >= 180){
@@ -226,16 +251,16 @@ public class Outtake extends SubsystemBase {
         }
         if(finalAngle > 180){
             finalAngle -= 360;
-        }
+        }*/
 
-        //double angle = Math.atan2((aimPosY-robot.follower.getPose().getY()), aimPosX-robot.follower.getPose().getX());
+    //double angle = Math.atan2((aimPosY-robot.follower.getPose().getY()), aimPosX-robot.follower.getPose().getX());
 //        double angleDisplacement = Math.toDegrees(robot.follower.getPose().getHeading()) - Math.toDegrees(angle);
 //        if(angleDisplacement > 130 || angleDisplacement < -130){
 //            return -200;
 //        }
 
-        return (int) 45;//(finalAngle*-1);
-    }
+    //return (int) 45;//(finalAngle*-1);
+}
     public int shootAutoGenerator(){
         /*
         double x = robot.follower.getPose().getX();
