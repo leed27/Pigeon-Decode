@@ -8,6 +8,7 @@ import com.pedropathing.paths.PathChain;
 //import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.InstantCommand;
@@ -19,6 +20,7 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
+@Disabled
 
 @Autonomous(name = "FAR 9 BALL \uD83D\uDD34", group = "auto")
 public class farAutoRed extends CommandOpMode{

@@ -353,7 +353,7 @@ public int autoAlign(){
     }
 
     public void shootClose(){
-        if(robot.leftShooter.getVelocity() > 1250 && robot.rightShooter.getVelocity() > 1250){
+        if(robot.leftShooter.getVelocity() > 1250 /* && robot.rightShooter.getVelocity() > 1250*/){
             robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
             robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
             shooterReady = true;
@@ -369,7 +369,7 @@ public int autoAlign(){
     }
 
     public void shootAuto(){
-        if(robot.leftShooter.getVelocity() > 1100 && robot.rightShooter.getVelocity() > 1100){
+        if(robot.leftShooter.getVelocity() > 1100 /*&& robot.rightShooter.getVelocity() > 900*/){
             robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
             robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
             shooterReady = true;
@@ -413,7 +413,7 @@ public int autoAlign(){
             //shooterReady = false;
         }
 
-        if(robot.leftShooter.getVelocity() > speed-20 && robot.rightShooter.getVelocity() > speed-20){
+        if(robot.leftShooter.getVelocity() > speed-20 /*&& robot.rightShooter.getVelocity() > speed-20*/){
             shooterReady = true;
         }else{
             shooterReady = false;

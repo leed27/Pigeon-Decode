@@ -10,6 +10,7 @@ import com.pedropathing.paths.PathChain;
 //import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.InstantCommand;
@@ -22,7 +23,7 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.RapidShoot;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
-
+@Disabled
 @Autonomous(name = "12 BALL + PUSH \uD83D\uDD35", group = "auto")
 public class closeAutoBluePush2 extends CommandOpMode{
     private final Robot robot = Robot.getInstance();

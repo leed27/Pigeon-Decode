@@ -32,8 +32,8 @@ dependencies {
     implementation 'org.firstinspires.ftc:Vision:11.1.0'
 
     // SolversLib
-    implementation "org.solverslib:core:0.3.3" // core
-    implementation "org.solverslib:pedroPathing:0.3.3" // pedroPathing
+    implementation "org.solverslib:core:0.3.4" // core
+    implementation "org.solverslib:pedroPathing:0.3.4" // pedroPathing
 
     // Pedro Pathing
     implementation 'com.pedropathing:ftc:2.0.5'

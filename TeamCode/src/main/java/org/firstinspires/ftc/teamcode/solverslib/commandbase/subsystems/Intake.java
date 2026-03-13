@@ -11,7 +11,7 @@ public class Intake extends SubsystemBase {
     }
 
     public void start(){
-        robot.intakeServo.set(0.35);
+        robot.intakeServo.set(0.38);
         robot.intakeMotor.set(1);
         //robot.transferServo.set(-1);
     }

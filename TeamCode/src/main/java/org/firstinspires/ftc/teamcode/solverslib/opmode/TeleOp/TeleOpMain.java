@@ -28,6 +28,7 @@ public class TeleOpMain extends CommandOpMode {
     public GoBildaPrismDriver prism;
     private MecanumDrive drive;
     public static int adjustSpeed = 0;
+    public static int adjustAngle = 0;
     public static int speed = 1200;
     int overShoot = 0;
        int motorPos;
@@ -68,6 +69,8 @@ public class TeleOpMain extends CommandOpMode {
 
         motorPos = robot.turretMotor.getCurrentPosition();
 
+
+      //  robot.follower.setStartingPose(autoEndPose);
 
 
         //robot.prism.clearAllAnimations();
@@ -132,45 +135,6 @@ public class TeleOpMain extends CommandOpMode {
 
 
 
-        // REGULAR SHOOTING
-        driver.getGamepadButton(GamepadKeys.Button.CROSS).whileHeld(
-
-                new ParallelCommandGroup(
-//                        new InstantCommand(() -> robot.leftShooter.set(1)),
-//                        new InstantCommand(() -> robot.rightShooter.set(1)),
-                        new InstantCommand(() -> robot.stopperServo.set(0.5))                )
-
-        );
-
-        driver.getGamepadButton(GamepadKeys.Button.CROSS).whenReleased(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.intake.stop()),
-                        new InstantCommand(() -> robot.stopperServo.set(0.1)),
-                        new InstantCommand(() -> startIntake = false)
-
-
-                )
-
-        );
-
-        /// FAR SHOOTING
-        driver2.getGamepadButton(GamepadKeys.Button.CIRCLE).whileHeld(
-
-                new ParallelCommandGroup(
-//                        new InstantCommand(() -> robot.leftShooter.set(1)),
-//                        new InstantCommand(() -> robot.rightShooter.set(1)),
-                        new AutoShootInAutoFAR()
-                )
-
-        );
-
-        driver2.getGamepadButton(GamepadKeys.Button.CIRCLE).whenReleased(
-                new ParallelCommandGroup(
-                        new InstantCommand(() -> robot.outtake.stop()),
-                        new InstantCommand(() -> robot.intake.stop())
-                )
-
-        );
 
 
         /// CLOSE SHOOTING
@@ -209,21 +173,35 @@ public class TeleOpMain extends CommandOpMode {
 
         /// BACKUP ADJUSTMENT SPEED IF LOCALIZATION DRIFTS
 
-        driver.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
+        driver2.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(
 
                 new InstantCommand(() -> adjustSpeed -= 10)
 
         );
 
-        driver.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
+        driver2.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(
 
                 new InstantCommand(() -> adjustSpeed += 10)
 
         );
 
+        /// BACKUP ADJUSTMENT ANGLE IF TURRET DRIFTS
+
+        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenPressed(
+
+                new InstantCommand(() -> adjustAngle -= 2)
+
+        );
+
+        driver2.getGamepadButton(GamepadKeys.Button.CIRCLE).whenPressed(
+
+                new InstantCommand(() -> adjustAngle += 2)
+
+        );
+
         /// RELOCALIZATION
 
-        driver.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(
+        driver2.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(
                 //facing the wall
                 new InstantCommand(() -> {
                     if(goalColor == GoalColor.RED_GOAL){
@@ -245,19 +223,19 @@ public class TeleOpMain extends CommandOpMode {
 
         );
 
-        driver.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
+        driver2.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(
                 //
                 new InstantCommand(() -> {
 
                     if(goalColor == GoalColor.RED_GOAL){
                         robot.follower.setPose(new Pose(
-                                80, 136, Math.toRadians(90)
+                                79, 134, Math.toRadians(90)
                         ));
                         gamepad1.rumbleBlips(3);
                         gamepad2.rumbleBlips(3);
                     }else{
                         robot.follower.setPose(new Pose(
-                                80, 136, Math.toRadians(90)
+                                79, 134, Math.toRadians(90)
                         ).mirror());
                         gamepad1.rumbleBlips(3);
                         gamepad2.rumbleBlips(3);
@@ -271,87 +249,8 @@ public class TeleOpMain extends CommandOpMode {
 
 
 
-        /// AUTO SHOOTING
 
-        /// new hopefully fixable auto turning? post-note: doesn't work lol
-//        driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whileHeld(
-//
-//                new SequentialCommandGroup(
-//                        new InstantCommand(() -> {
-//                            double headingError;
-//                            if (robot.follower.getCurrentPath() == null) {
-//                                headingError = 0;
-//                            }else{
-//                                headingError = MathFunctions.getTurnDirection(robot.follower.getPose().getHeading(), targetHeading) * MathFunctions.getSmallestAngleDifference(robot.follower.getPose().getHeading(), targetHeading);
-//                            }
-//
-//
-//                            robot.controller.setCoefficients(robot.follower.constants.coefficientsHeadingPIDF);
-//                            robot.controller.updateError(headingError);
-//
-//
-//
-//                            robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, robot.controller.run());
-//
-//
-//                        }
-//
-//                        )
-//
-//                )
-//        );
-//
-//
-//        driver2.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenReleased(
-//                new ParallelCommandGroup(
-//                        new InstantCommand(() -> robot.outtake.stop()),
-//                        new InstantCommand(() -> robot.intake.stop()),
-//                        new InstantCommand(() -> robot.stopperServo.set(.56)),
-//                        new SequentialCommandGroup(
-//                                new InstantCommand(() -> robot.follower.breakFollowing()),
-//                                new InstantCommand(() -> robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true)),
-//                                new InstantCommand(() -> robot.follower.startTeleopDrive())
-//                        )
-//                )
-//
-//        );
-
-//        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(
-//
-//                new InstantCommand(() -> {
-//                    if(goalColor == GoalColor.RED_GOAL){
-//                        double newHeading = Math.atan2((144-robot.follower.getPose().getY()), (144-robot.follower.getPose().getX()));
-//                        robot.follower.turnTo(targetHeading);
-//                        robot.follower.setConstraints(new PathConstraints(
-//                                0.995,
-//                                200,
-//                                1.5,
-//                                1
-//                        ));
-//                    }else{
-//                        double newHeading = Math.atan2((144-robot.follower.getPose().getY()), -robot.follower.getPose().getX());
-//                        robot.follower.turnTo(targetHeading);
-//                    }}
-//                )
-//        );
-//
-//
-//        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
-//                new ParallelCommandGroup(
-//                        //new InstantCommand(() -> robot.outtake.stop()),
-//                        new InstantCommand(() -> robot.intake.stop()),
-//                        new InstantCommand(() -> startIntake = false),
-//                        new InstantCommand(() -> robot.stopperServo.set(.56)),
-//                        new SequentialCommandGroup(
-//                                new InstantCommand(() -> robot.follower.breakFollowing()),
-//                                new InstantCommand(() -> robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true)),
-//                                new InstantCommand(() -> robot.follower.startTeleopDrive())
-//                        )
-//                )
-//
-//        );
-
-        driver.getGamepadButton(GamepadKeys.Button.SHARE).whenPressed(
+        driver2.getGamepadButton(GamepadKeys.Button.SHARE).whenPressed(
                 //
                 new InstantCommand(() -> {
                     if(goalColor == GoalColor.BLUE_GOAL){
@@ -371,24 +270,24 @@ public class TeleOpMain extends CommandOpMode {
 
         );
 
-        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenPressed(
-                //
-                new InstantCommand(() -> {
-                    if(robot.kickerServo.get() == 0){
-                        robot.kickerServo.set(0.58);
-                        autoShootDisabled = true;
-
-                    }else{
-                        robot.kickerServo.set(0);
-                        autoShootDisabled = false;
-                    }
-                    robot.outtake.stop();
-
-
-                }
-                )
-
-        );
+//        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenPressed(
+//                //
+//                new InstantCommand(() -> {
+//                    if(robot.kickerServo.get() == 0){
+//                        robot.kickerServo.set(0.58);
+//                        autoShootDisabled = true;
+//
+//                    }else{
+//                        robot.kickerServo.set(0);
+//                        autoShootDisabled = false;
+//                    }
+//                    robot.outtake.stop();
+//
+//
+//                }
+//                )
+//
+//        );
 
         super.run();
     }
@@ -399,15 +298,6 @@ public class TeleOpMain extends CommandOpMode {
         // This is like the init but when the program is actually started
 //        Pose currentPose = robot.follower.getPose();
 //        double howFar = Math.pow(((144-robot.follower.getPose().getY())/(12)), 2) + Math.pow(((-robot.follower.getPose().getX())/(12)),2);
-//        howFar /= 12;
-        //easy FIX
-//        if(howFar < 4.5 || howFar > 16.7) {
-//            robot.lightLeft.setPosition(0.28);
-//            robot.lightRight.setPosition(0.28);
-//        }else{
-//            robot.lightLeft.setPosition(0.5);
-//            robot.lightRight.setPosition(0.5);
-//        }
 
 
 
@@ -432,12 +322,12 @@ public class TeleOpMain extends CommandOpMode {
         // DO NOT REMOVE! Runs FTCLib Command Scheudler
         super.run();
 
-        robot.singlePIDF.setSetPoint(robot.outtake.autoAlign());
+        robot.singlePIDF.setSetPoint(robot.outtake.autoAlign() + adjustAngle);
         motorPos = robot.turretMotor.getCurrentPosition();
         double maxPower = (robot.f * motorPos) + 1;
-        double power = Range.clip(robot.singlePIDF.calculate(motorPos, robot.outtake.autoAlign()), -maxPower, maxPower);
+        double power = Range.clip(robot.singlePIDF.calculate(motorPos, robot.outtake.autoAlign() + adjustAngle), -maxPower, maxPower);
 
-        if(!robot.singlePIDF.atSetPoint() && gamepad1.square){
+        if(!robot.singlePIDF.atSetPoint() && gamepad2.left_bumper){
             motorPos = robot.turretMotor.getCurrentPosition();
 
 
@@ -458,7 +348,7 @@ public class TeleOpMain extends CommandOpMode {
 
 
         //speed = robot.outtake.shootAutoGenerator();
-        targetHeading = robot.outtake.autoAlign();
+        targetHeading = robot.outtake.autoAlign() + adjustAngle;
         speed = robot.outtake.autoShoot2();
 
 
@@ -493,7 +383,7 @@ public class TeleOpMain extends CommandOpMode {
                 robot.hoodServo.set(0.1);
             }
 
-            if (gamepad1.cross) {
+            if (gamepad2.right_bumper) {
 
                 robot.outtake.shootCustom(speed + adjustSpeed + overShoot);
 
@@ -566,14 +456,6 @@ public class TeleOpMain extends CommandOpMode {
 
         robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
 
-        /// joystick override
-        if ((gamepad1.left_stick_y != 0 || gamepad1.left_stick_x != 0 || gamepad1.right_stick_x != 0 || gamepad1.right_stick_y != 0)&& robot.follower.isBusy()) {
-            //if(robot.follower.isBusy()){
-                robot.follower.breakFollowing();
-            //}
-            robot.follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
-            robot.follower.startTeleopDrive();
-        }
 
 
 
@@ -590,9 +472,9 @@ public class TeleOpMain extends CommandOpMode {
         telemetry.addData("FINAL SPEED", speed +adjustSpeed);
         telemetry.addData("how Far", Math.sqrt(Math.pow(((144-robot.follower.getPose().getY())/(12)), 2) + Math.pow(((-robot.follower.getPose().getX())/(12)),2)));
         telemetry.addData("team", goalColor);
-        telemetry.addData("targetheading", targetHeading);
+        telemetry.addData("targetheading", robot.outtake.autoAlign());
+        telemetry.addData("adjust angle", adjustAngle);
         telemetry.addData("motor speed", robot.leftShooter.getVelocity());
-        telemetry.addData("start intake", startIntake);
         telemetry.addData("turret REAL encoder position", robot.turretMotor.getCurrentPosition());
         //telemetry.addData("SERVO POSITIONNNNN", robot.stopperServo.get());
         elapsedtime.reset();
