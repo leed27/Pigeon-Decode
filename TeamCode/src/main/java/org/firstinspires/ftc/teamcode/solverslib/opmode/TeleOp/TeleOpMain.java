@@ -461,7 +461,6 @@ public class TeleOpMain extends CommandOpMode {
         targetHeading = robot.outtake.autoAlign();
         speed = robot.outtake.autoShoot2();
 
-        robot.outtake.shootCustom(speed + adjustSpeed + overShoot);
 
         if(speed == -1 || autoShootDisabled){
         }else {
@@ -495,6 +494,9 @@ public class TeleOpMain extends CommandOpMode {
             }
 
             if (gamepad1.cross) {
+
+                robot.outtake.shootCustom(speed + adjustSpeed + overShoot);
+
                 //robot.outtake.rapidShooting(adjustSpeed);
                 //   robot.outtake.shootCustom(speed + (adjustSpeed) + overShoot);
 
@@ -535,10 +537,10 @@ public class TeleOpMain extends CommandOpMode {
 //                        robot.intake.stopExceptShooter();
 //                    }
 //            }
-//            }else{
-//                robot.outtake.stop();
-//            }
+            }else{
+                robot.outtake.stop();
             }
+            //}
 
 
 

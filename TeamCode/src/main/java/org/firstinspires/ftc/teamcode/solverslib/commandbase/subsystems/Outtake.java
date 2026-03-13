@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems;
 
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
+import com.qualcomm.robotcore.util.Range;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.util.InterpLUT;
 
@@ -79,11 +80,17 @@ public class Outtake extends SubsystemBase {
         lookUpClose.add(9.38, 1340);
         lookUpClose.add(9.7, 1360);
         lookUpClose.add(10.3, 1480);
-        lookUpClose.add(11, 1700);
-        lookUpClose.add(11.7, 1800);
-        lookUpClose.add(12.15, 1900);
-        lookUpClose.add(13, 2000);
+        lookUpClose.add(11, 1530);
+        lookUpClose.add(11.3, 1560);
+        lookUpClose.add(11.7, 1610);
+        lookUpClose.add(12.15, 1660);
+        lookUpClose.add(13, 1700);
+        lookUpClose.add(14, 1750);
+        lookUpClose.add(15, 1800);
         lookUpClose.createLUT();
+
+
+        //lookUpFar.add(11.2, 1550);
 
 //        lookUpFar.add(0, 0);
 //        lookUpFar.add(10.5, 1300);
@@ -178,6 +185,49 @@ public class Outtake extends SubsystemBase {
         }
     }
 //
+
+    public void moveTurret(int angle){
+
+        int motorPos;
+
+        angle *= -1;
+
+        robot.singlePIDF.setSetPoint(angle);
+        motorPos = robot.turretMotor.getCurrentPosition();
+        double maxPower = (robot.f * motorPos) + 1;
+        double power = Range.clip(robot.singlePIDF.calculate(motorPos, angle), -maxPower, maxPower);
+
+        if(!robot.singlePIDF.atSetPoint()){
+            motorPos = robot.turretMotor.getCurrentPosition();
+
+
+
+            robot.turretMotor.setPower(power);
+        }else{
+            robot.turretMotor.setPower(0);
+        }
+    }
+
+    public void moveTurret(){
+
+        int motorPos;
+
+        robot.singlePIDF.setSetPoint(robot.outtake.autoAlign());
+        motorPos = robot.turretMotor.getCurrentPosition();
+        double maxPower = (robot.f * motorPos) + 1;
+        double power = Range.clip(robot.singlePIDF.calculate(motorPos, robot.outtake.autoAlign()), -maxPower, maxPower);
+
+        if(!robot.singlePIDF.atSetPoint()){
+            motorPos = robot.turretMotor.getCurrentPosition();
+
+
+
+            robot.turretMotor.setPower(power);
+        }else{
+            robot.turretMotor.setPower(0);
+        }
+    }
+
 public int autoAlign(){
 
     double x = robot.follower.getPose().getX();
@@ -319,7 +369,7 @@ public int autoAlign(){
     }
 
     public void shootAuto(){
-        if(robot.leftShooter.getVelocity() > 1070 && robot.rightShooter.getVelocity() > 1070){
+        if(robot.leftShooter.getVelocity() > 1100 && robot.rightShooter.getVelocity() > 1100){
             robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
             robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
             shooterReady = true;
@@ -335,7 +385,7 @@ public int autoAlign(){
     }
 
     public void shootAutoFar(){
-        if(robot.leftShooter.getVelocity() > 1600 && robot.rightShooter.getVelocity() > 1600){
+        if(robot.leftShooter.getVelocity() > 1500 /*&& robot.rightShooter.getVelocity() > 1400*/){
             robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
             robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
             shooterReady = true;
