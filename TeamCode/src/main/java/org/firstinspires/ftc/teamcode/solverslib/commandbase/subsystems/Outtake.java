@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems;
 
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
+import com.pedropathing.geometry.Pose;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.util.Range;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
 import com.seattlesolvers.solverslib.util.InterpLUT;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
 public class Outtake extends SubsystemBase {
@@ -174,6 +177,7 @@ public class Outtake extends SubsystemBase {
         }
 
     }
+
 
     public double distance(){
         double x = robot.follower.getPose().getX();

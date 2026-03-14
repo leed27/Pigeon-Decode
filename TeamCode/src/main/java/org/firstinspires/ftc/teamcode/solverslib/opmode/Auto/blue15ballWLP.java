@@ -19,17 +19,13 @@ import com.seattlesolvers.solverslib.command.SequentialCommandGroup;
 import com.seattlesolvers.solverslib.command.WaitCommand;
 import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
-import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAuto;
-import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.RapidShoot;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@Autonomous(name = "18 BALL (NO FINISHED) \uD83D\uDD35", group = "auto")
-public class closeAutoBlue4 extends CommandOpMode{
+@Autonomous(name = "15 BALL (2 GATE) \uD83D\uDD35", group = "auto")
+public class blue15ballWLP extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
-
-    public int shooterAngle = 47;
 
     //private final ArrayList<PathChain> paths = new ArrayList<>();
 
@@ -60,17 +56,17 @@ public class closeAutoBlue4 extends CommandOpMode{
 
         getMiddle = robot.follower.pathBuilder()
                 .addPath(new BezierCurve(shootPose, new Pose(69, 50), middlePose))
-                .setTangentHeadingInterpolation()
+                .setLinearHeadingInterpolation(shootPose.getHeading(), middlePose.getHeading())
                 .build();
 
         shootMiddle = robot.follower.pathBuilder()
                 .addPath(new BezierCurve(middlePose, new Pose(70,38), shootPose))
-                .setTangentHeadingInterpolation()
+                .setLinearHeadingInterpolation(middlePose.getHeading(), shootPose.getHeading())
                 .build();
 
         tapTheGate = robot.follower.pathBuilder()
                 .addPath(new BezierCurve(shootPose, new Pose(72, 24), tapGate))
-                .setTangentHeadingInterpolation()
+                .setLinearHeadingInterpolation(shootPose.getHeading(), tapGate.getHeading())
                 .build();
 
         openTheGate = robot.follower.pathBuilder()
@@ -80,8 +76,7 @@ public class closeAutoBlue4 extends CommandOpMode{
 
         shootGate = robot.follower.pathBuilder()
                 .addPath(new BezierCurve(openGate, new Pose(70,38), shootPose))
-                .setTangentHeadingInterpolation()
-                .setReversed()
+                .setLinearHeadingInterpolation(openGate.getHeading(), shootPose.getHeading())
                 .build();
 
         getTop = robot.follower.pathBuilder()
@@ -90,19 +85,18 @@ public class closeAutoBlue4 extends CommandOpMode{
                 .build();
 
         shootTop = robot.follower.pathBuilder()
-                .addPath(new BezierLine(topPose, shootPose))
-                .setConstantHeadingInterpolation(shootPose.getHeading())
+                .addPath(new BezierLine(topPose, shootPose2))
+                .setLinearHeadingInterpolation(topPose.getHeading(), shootPose2.getHeading())
                 .build();
 
         getBottom = robot.follower.pathBuilder()
                 .addPath(new BezierCurve(shootPose, new Pose(76.25, 18), bottomPose))
-                .setTangentHeadingInterpolation()
+                .setConstantHeadingInterpolation(shootPose.getHeading())
                 .build();
 
         shootBottom = robot.follower.pathBuilder()
                 .addPath(new BezierLine(bottomPose, shootPose2))
-                .setTangentHeadingInterpolation()
-                .setReversed()
+                .setConstantHeadingInterpolation(shootPose.getHeading())
                 .build();
 
 
@@ -251,17 +245,17 @@ public class closeAutoBlue4 extends CommandOpMode{
 
                         scoreGate(),
 
-                        //openGate(),
+                        openGate(),
 
-                        //scoreGate(),
+                        scoreGate(),
 
                         grabTopBlue(),
 
-                        scoreTopBlue(),
+                        scoreTopBlue()
 
-                        grabBottomBlue(),
+                        //grabBottomBlue(),
 
-                        scoreBottomBlue()
+                        //scoreBottomBlue()
                 )
         );
 
@@ -281,7 +275,7 @@ public class closeAutoBlue4 extends CommandOpMode{
     public void run() {
         super.run();
 
-        robot.outtake.moveTurret(shooterAngle);
+        robot.outtake.moveTurret(47);
 
         robot.outtake.shootAuto();
 
