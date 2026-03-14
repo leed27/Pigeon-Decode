@@ -69,14 +69,14 @@ public class Outtake extends SubsystemBase {
 
         //NORMAL TABLES THAT DIDDY APPROVES
         lookUpClose.add(0, 0);
-        lookUpClose.add(4.804, 1110);
-        lookUpClose.add(5.138, 1130);
-        lookUpClose.add(5.953, 1180);
-        lookUpClose.add(6.301, 1195);
-        lookUpClose.add(6.900, 1210);
-        lookUpClose.add(7.670, 1270);
-        lookUpClose.add(8.15, 1310);
-        lookUpClose.add(8.85, 1330);
+        lookUpClose.add(4.804, 1050);
+        lookUpClose.add(5.138, 1070);
+        lookUpClose.add(5.953, 1120);
+        lookUpClose.add(6.301, 1135);
+        lookUpClose.add(6.900, 1150);
+        lookUpClose.add(7.670, 1170);
+        lookUpClose.add(8.15, 1250);
+        lookUpClose.add(8.85, 1270);
         lookUpClose.add(9.38, 1340);
         lookUpClose.add(9.7, 1360);
         lookUpClose.add(10.3, 1480);

@@ -189,13 +189,13 @@ public class TeleOpMain extends CommandOpMode {
 
         driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenPressed(
 
-                new InstantCommand(() -> adjustAngle -= 2)
+                new InstantCommand(() -> adjustAngle += 2)
 
         );
 
         driver2.getGamepadButton(GamepadKeys.Button.CIRCLE).whenPressed(
 
-                new InstantCommand(() -> adjustAngle += 2)
+                new InstantCommand(() -> adjustAngle -= 2)
 
         );
 
@@ -269,6 +269,26 @@ public class TeleOpMain extends CommandOpMode {
                 )
 
         );
+
+        driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenPressed(
+                new InstantCommand(() -> robot.stopperServo.set(.5))
+        );
+
+
+                driver2.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).whenReleased(
+                //
+                new InstantCommand(() -> {
+                    robot.outtake.stop();
+                    robot.stopperServo.set(.15);
+                    robot.intake.stop();
+                    startIntake = false;
+                }
+                )
+
+        );
+
+
+
 
 //        driver2.getGamepadButton(GamepadKeys.Button.SQUARE).whenPressed(
 //                //
@@ -392,7 +412,6 @@ public class TeleOpMain extends CommandOpMode {
 
 
 
-                robot.stopperServo.set(.5);
 
                 /// ONLY START THE INTAKE ONCE THE SHOOTER VELOCITY IS MET AND ROBOT IS WITHIN 5 DEGREES OF TARGET ANGLE AND NOT BUSY
                 if (robot.leftShooter.getVelocity() > speed + adjustSpeed - 20
@@ -427,9 +446,11 @@ public class TeleOpMain extends CommandOpMode {
 //                        robot.intake.stopExceptShooter();
 //                    }
 //            }
-            }else{
-                robot.outtake.stop();
             }
+//            else{
+//                robot.outtake.stop();
+//                robot.stopperServo.set(.15);
+//            }
             //}
 
 
