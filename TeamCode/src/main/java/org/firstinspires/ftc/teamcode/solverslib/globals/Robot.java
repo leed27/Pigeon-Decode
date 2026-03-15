@@ -202,9 +202,9 @@ public class Robot {
             follower.startTeleopDrive();
 
         }
-//        else{
+        else{
 ////            follower.setStartingPose(new Pose(0, 0, 0));
-//        }
+        }
     }
 
     /// RUN WHATEVER IS IN THE INIT METHODS IN THE SUBSYSTEMS!!
