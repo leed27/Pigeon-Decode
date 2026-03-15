@@ -13,7 +13,7 @@ public class AutoShootInAuto extends ParallelCommandGroup {
     public AutoShootInAuto() {
         Robot robot = Robot.getInstance();
         addCommands(
-                new InstantCommand(() -> robot.hoodServo.set(0.5)),
+                //new InstantCommand(() -> robot.hoodServo.set(0.5)),
                 //new InstantCommand(() -> robot.stopperServo.set(0.56)),
                 new ConditionalCommand(
                         new InstantCommand(() -> robot.intake.startCustom(0.8)

@@ -290,7 +290,7 @@ public class TeleOpMain extends CommandOpMode {
                 //
                 new ParallelCommandGroup(
                 new InstantCommand(() -> {
-                    robot.outtake.stop();
+                    //robot.outtake.stop();
                     robot.stopperServo.set(.15);
                     robot.intake.stop();
                     startIntake = false;
@@ -538,8 +538,8 @@ public class TeleOpMain extends CommandOpMode {
 
     @Override
     public void end() {
-
-        //autoEndPose = robot.follower.getPose();
+        robot.follower.update();
+        autoEndPose = robot.follower.getPose();
         //robot.prism.clearAllAnimations();
     }
 }

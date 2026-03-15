@@ -196,6 +196,7 @@ public class blue6HPC extends CommandOpMode{
     @Override
     public void end() {
         turretEncoder = robot.turretMotor.getCurrentPosition();
+        robot.follower.update();
         autoEndPose = robot.follower.getPose();
     }
 }

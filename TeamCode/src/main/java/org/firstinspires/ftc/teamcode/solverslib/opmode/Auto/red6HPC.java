@@ -112,7 +112,7 @@ public class red6HPC extends CommandOpMode{
     @Override
     public void initialize() {
         opModeType = OpModeType.AUTO;
-        goalColor = GoalColor.BLUE_GOAL;
+        goalColor = GoalColor.RED_GOAL;
         timer = new ElapsedTime();
         timer.reset();
 
@@ -196,6 +196,7 @@ public class red6HPC extends CommandOpMode{
     @Override
     public void end() {
         turretEncoder = robot.turretMotor.getCurrentPosition();
+        robot.follower.update();
         autoEndPose = robot.follower.getPose();
     }
 }

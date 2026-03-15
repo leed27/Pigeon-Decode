@@ -27,7 +27,7 @@ public class RapidShoot extends ParallelCommandGroup {
         Robot robot = Robot.getInstance();
         addCommands(
                 //new InstantCommand(() -> robot.outtake.shootClose()),
-                new InstantCommand(() -> robot.hoodServo.set(0.5)),
+                //new InstantCommand(() -> robot.hoodServo.set(0.5)),
                 new InstantCommand(() -> robot.intake.start())
 //                new ConditionalCommand(
 //                        new InstantCommand(() -> robot.intake.startCustom(0.8)

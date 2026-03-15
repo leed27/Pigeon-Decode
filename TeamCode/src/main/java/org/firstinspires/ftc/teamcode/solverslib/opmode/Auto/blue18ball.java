@@ -316,6 +316,7 @@ public class blue18ball extends CommandOpMode{
     @Override
     public void end() {
         turretEncoder = robot.turretMotor.getCurrentPosition();
+        robot.follower.update();
         autoEndPose = robot.follower.getPose();
     }
 }

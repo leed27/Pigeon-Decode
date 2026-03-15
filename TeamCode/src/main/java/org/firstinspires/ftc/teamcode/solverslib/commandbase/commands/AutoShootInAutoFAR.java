@@ -12,7 +12,7 @@ public class AutoShootInAutoFAR extends ParallelCommandGroup{
         Robot robot = Robot.getInstance();
         addCommands(
                 new InstantCommand(() -> robot.outtake.shootAutoFar()),
-                new InstantCommand(() -> robot.hoodServo.set(0.7)),
+                //new InstantCommand(() -> robot.hoodServo.set(0.7)),
                 //new InstantCommand(() -> robot.stopperServo.set(0.47)),
                 new ConditionalCommand(
                         new InstantCommand(() -> robot.intake.startCustom(1)
