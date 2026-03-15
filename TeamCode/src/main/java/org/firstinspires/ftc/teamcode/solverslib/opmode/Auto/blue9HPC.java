@@ -31,7 +31,7 @@ public class blue9HPC extends CommandOpMode{
 
     // ALL PATHS
     private final Pose startPose = new Pose(41.5, 6.5, Math.toRadians(180));
-    private final Pose shootPose = new Pose(46, 11, Math.toRadians(180));
+    private final Pose shootPose = new Pose(47.5, 11, Math.toRadians(180));
     private final Pose bottomPose = new Pose(11, 36, Math.toRadians(180));
     private final Pose firstIntake = new Pose(9.5, 9, Math.toRadians(180));//e
     private final Pose goBack = new Pose(24, 11, Math.toRadians(180));

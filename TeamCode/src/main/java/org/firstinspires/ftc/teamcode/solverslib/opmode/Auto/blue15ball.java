@@ -22,7 +22,7 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.RapidShoot;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@Autonomous(name = "15 BALL (1 GATE) \uD83D\uDD35", group = "auto")
+@Autonomous(name = "15 BALL (1 GATE) BLUEEEEEEE", group = "auto")
 public class blue15ball extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
@@ -35,12 +35,12 @@ public class blue15ball extends CommandOpMode{
 
     private final Pose shootPose = new Pose(56, 84, Math.toRadians(180));//e
     private final Pose middlePose = new Pose(8.5, 60, Math.toRadians(180));
-    private final Pose tapGate = new Pose(12, 61, Math.toRadians(145));
+    private final Pose tapGate = new Pose(14.5, 66, Math.toRadians(160));
 
-    private final Pose openGate = new Pose(9,53, Math.toRadians(105));
+    private final Pose openGate = new Pose(11,54, Math.toRadians(130));
     private final Pose topPose = new Pose(11, 84, Math.toRadians(180));
-    private final Pose bottomPose = new Pose(9, 36, Math.toRadians(180));
-    private final Pose shootPose2 = new Pose(58, 104, Math.toRadians(190));
+    private final Pose bottomPose = new Pose(9, 37.5, Math.toRadians(180));
+    private final Pose shootPose2 = new Pose(58, 114, Math.toRadians(200));
     private PathChain shootPreloads, getMiddle, shootMiddle, tapTheGate, openTheGate, shootGate, getTop, shootTop, getBottom, shootBottom;
 
     public void generatePath() {
@@ -65,7 +65,7 @@ public class blue15ball extends CommandOpMode{
                 .build();
 
         tapTheGate = robot.follower.pathBuilder()
-                .addPath(new BezierCurve(shootPose, new Pose(72, 24), tapGate))
+                .addPath(new BezierCurve(shootPose, new Pose(65, 36), tapGate))
                 .setLinearHeadingInterpolation(shootPose.getHeading(), tapGate.getHeading())
                 .build();
 
@@ -75,7 +75,7 @@ public class blue15ball extends CommandOpMode{
                 .build();
 
         shootGate = robot.follower.pathBuilder()
-                .addPath(new BezierCurve(openGate, new Pose(70,38), shootPose))
+                .addPath(new BezierCurve(openGate, new Pose(65,44), shootPose))
                 .setLinearHeadingInterpolation(openGate.getHeading(), shootPose.getHeading())
                 .build();
 
@@ -90,7 +90,7 @@ public class blue15ball extends CommandOpMode{
                 .build();
 
         getBottom = robot.follower.pathBuilder()
-                .addPath(new BezierCurve(shootPose, new Pose(76.25, 18), bottomPose))
+                .addPath(new BezierCurve(shootPose, new Pose(76.25, 24), bottomPose))
                 .setConstantHeadingInterpolation(shootPose.getHeading())
                 .build();
 
@@ -156,10 +156,13 @@ public class blue15ball extends CommandOpMode{
     public SequentialCommandGroup openGate() {
         return new SequentialCommandGroup(
                 new InstantCommand(() -> robot.stopperServo.set(.1)),
+                new InstantCommand(() -> robot.intake.startHigh()),
                 new FollowPathCommand(robot.follower, tapTheGate, false),
+                new InstantCommand(() -> robot.follower.setMaxPower(.5)),
                 new WaitCommand(500),
                 new FollowPathCommand(robot.follower, openTheGate, true),
-                new WaitCommand(2000)
+                new WaitCommand(2000),
+                new InstantCommand(() -> robot.follower.setMaxPower(1))
 
         );
     }

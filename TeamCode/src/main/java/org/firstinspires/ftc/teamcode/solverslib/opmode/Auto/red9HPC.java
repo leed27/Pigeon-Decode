@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.solverslib.opmode.Auto;
 import static org.firstinspires.ftc.teamcode.solverslib.globals.Globals.*;
 
 import com.pedropathing.geometry.BezierLine;
+import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 //import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
@@ -21,21 +22,22 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@Autonomous(name = "6+HPC \uD83D\uDD35", group = "auto")
-public class blue6HPC extends CommandOpMode{
+@Autonomous(name = "9+HPC RED", group = "auto")
+public class red9HPC extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
 
     //private final ArrayList<PathChain> paths = new ArrayList<>();
 
     // ALL PATHS
-    private final Pose startPose = new Pose(41.5, 6.5, Math.toRadians(180));
-    private final Pose shootPose = new Pose(47.5, 11, Math.toRadians(180));
-    private final Pose firstIntake = new Pose(9.5, 9, Math.toRadians(180));//e
-    private final Pose goBack = new Pose(24, 11, Math.toRadians(180));
-    private final Pose secondIntake = new Pose(9.5, 11, Math.toRadians(180));
+    private final Pose startPose = new Pose(41.5, 6.5, Math.toRadians(180)).mirror();
+    private final Pose shootPose = new Pose(47.5, 11, Math.toRadians(180)).mirror();
+    private final Pose bottomPose = new Pose(11, 36, Math.toRadians(180)).mirror();
+    private final Pose firstIntake = new Pose(9.5, 9, Math.toRadians(180)).mirror();//e
+    private final Pose goBack = new Pose(24, 11, Math.toRadians(180)).mirror();
+    private final Pose secondIntake = new Pose(9.5, 11, Math.toRadians(180)).mirror();
     /// blue paths
-    private PathChain firstShoot, goToIntake, backUp, goToIntake2, goToShoot;
+    private PathChain firstShoot, getBottom, shootBottom, goToIntake, backUp, goToIntake2, goToShoot;
 
     public void generatePath() {
         // PEDRO VISUALIZER: https://visualizer.pedropathing.com
@@ -45,6 +47,16 @@ public class blue6HPC extends CommandOpMode{
 
         firstShoot = robot.follower.pathBuilder()
                 .addPath(new BezierLine(startPose, shootPose))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
+
+        getBottom = robot.follower.pathBuilder()
+                .addPath(new BezierCurve(shootPose, new Pose(65, 40).mirror(), bottomPose))
+                .setConstantHeadingInterpolation(Math.toRadians(180))
+                .build();
+
+        shootBottom = robot.follower.pathBuilder()
+                .addPath(new BezierLine(bottomPose, shootPose))
                 .setConstantHeadingInterpolation(Math.toRadians(180))
                 .build();
 
@@ -78,6 +90,22 @@ public class blue6HPC extends CommandOpMode{
                 new WaitCommand(100),
                 //new InstantCommand(() -> robot.outtake.shootAutoFar()),
                 new InstantCommand(() -> robot.intake.start()),
+                new InstantCommand(() -> robot.stopperServo.set(.5)),
+                new RepeatCommand(
+                        new AutoShootInAutoFAR()
+                ).withTimeout(5000),
+                new InstantCommand(() -> robot.stopperServo.set(.1))
+
+        );
+    }
+
+    public SequentialCommandGroup shootBottom() {
+        return new SequentialCommandGroup(
+                new InstantCommand(() -> robot.intake.start()),
+                new FollowPathCommand(robot.follower, getBottom, true),
+                new WaitCommand(100),
+                //new InstantCommand(() -> robot.outtake.shootAutoFar()),
+                new FollowPathCommand(robot.follower, shootBottom, true),
                 new InstantCommand(() -> robot.stopperServo.set(.5)),
                 new RepeatCommand(
                         new AutoShootInAutoFAR()
@@ -143,8 +171,8 @@ public class blue6HPC extends CommandOpMode{
                 new RunCommand(() -> robot.follower.update()),
 
                 new SequentialCommandGroup(
-                       shootPreloads(), fullCycle(),
-                        fullCycle(),  fullCycle(), fullCycle(), fullCycle()
+                        shootPreloads(), shootBottom(),
+                        fullCycle(),  fullCycle(), fullCycle()
                 )
         );
 
@@ -165,7 +193,7 @@ public class blue6HPC extends CommandOpMode{
         super.run();
 
         robot.outtake.shootAutoFar();
-        robot.outtake.moveTurret(77);
+        robot.outtake.moveTurret(-77);
 
         telemetry.addData("timer", timer.milliseconds());
 

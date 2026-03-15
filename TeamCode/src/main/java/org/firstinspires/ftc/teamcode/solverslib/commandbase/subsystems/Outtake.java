@@ -72,24 +72,34 @@ public class Outtake extends SubsystemBase {
 
         //NORMAL TABLES THAT DIDDY APPROVES
         lookUpClose.add(0, 0);
-        lookUpClose.add(4.804, 1050);
-        lookUpClose.add(5.138, 1070);
-        lookUpClose.add(5.953, 1120);
-        lookUpClose.add(6.301, 1135);
-        lookUpClose.add(6.900, 1150);
-        lookUpClose.add(7.670, 1170);
-        lookUpClose.add(8.15, 1250);
-        lookUpClose.add(8.85, 1270);
-        lookUpClose.add(9.38, 1340);
-        lookUpClose.add(9.7, 1360);
-        lookUpClose.add(10.3, 1480);
-        lookUpClose.add(11, 1530);
-        lookUpClose.add(11.3, 1560);
-        lookUpClose.add(11.7, 1610);
-        lookUpClose.add(12.15, 1660);
-        lookUpClose.add(13, 1700);
-        lookUpClose.add(14, 1750);
-        lookUpClose.add(15, 1800);
+        lookUpClose.add(3.5, 960);
+        lookUpClose.add(3.7, 990);
+        lookUpClose.add(3.9, 990);
+        lookUpClose.add(4, 1015);
+        lookUpClose.add(4.22, 1040);
+        lookUpClose.add(4.48, 1060);
+        lookUpClose.add(4.6, 1080);
+        lookUpClose.add(5.3, 1090);
+        lookUpClose.add(6, 1100);
+        lookUpClose.add(6.5, 1130);
+        lookUpClose.add(7, 1160);
+        lookUpClose.add(7.5, 1180);
+        lookUpClose.add(8, 1200);
+        lookUpClose.add(8.5, 1240);
+        lookUpClose.add(9, 1270);
+        lookUpClose.add(9.5, 1300);
+        lookUpClose.add(10, 1330);
+        lookUpClose.add(10.6, 1330);
+        lookUpClose.add(11, 1430);
+        lookUpClose.add(11.35, 1480);
+        lookUpClose.add(11.7, 1500);
+        lookUpClose.add(12, 1544);
+        lookUpClose.add(12.15, 1560);
+        lookUpClose.add(12.5, 1580);
+        lookUpClose.add(13, 1600);
+        lookUpClose.add(14, 1620);
+        lookUpClose.add(15, 1650);
+        lookUpClose.add(300, 2000);
         lookUpClose.createLUT();
 
 
@@ -161,20 +171,15 @@ public class Outtake extends SubsystemBase {
             howFar = Math.sqrt(Math.pow(((144-y)/(12)), 2) + Math.pow(((-x)/(12)),2));
         }
 
-        if(howFar <= 2 || howFar >= 13){
+        if(howFar <= 3.5 || howFar >= 16.6){
             return -1;
         }
 
-        if(y < 55){
-            //robot.hoodServo.set(.7);
-            return (int) (lookUpClose.get(howFar));
-        }else{
-            //robot.hoodServo.set(.5);
-            if(howFar > 10){
-                return -1;
-            }
-            return (int) (lookUpClose.get(howFar));
-        }
+        int returner =  (int) (lookUpClose.get(howFar));
+
+
+        return returner;
+
 
     }
 
@@ -257,6 +262,14 @@ public int autoAlign(){
 
     if(diff > 180) diff -= 360;
     if(diff < -180) diff += 360;
+
+    if(diff > 160){
+        return 160;
+    }
+
+    if(diff < -110){
+        return -110;
+    }
 
     return (int) diff;
 
@@ -357,7 +370,7 @@ public int autoAlign(){
     }
 
     public void shootClose(){
-        if(robot.leftShooter.getVelocity() > 1250 /* && robot.rightShooter.getVelocity() > 1250*/){
+        if(robot.leftShooter.getVelocity() > 1250 || robot.rightShooter.getVelocity() > 1250){
             robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
             robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
             shooterReady = true;
@@ -373,7 +386,7 @@ public int autoAlign(){
     }
 
     public void shootAuto(){
-        if(robot.leftShooter.getVelocity() > 1100 /*&& robot.rightShooter.getVelocity() > 900*/){
+        if(robot.leftShooter.getVelocity() > 1100 || robot.rightShooter.getVelocity() > 1100){
             robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
             robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
             shooterReady = true;
@@ -389,7 +402,7 @@ public int autoAlign(){
     }
 
     public void shootAutoFar(){
-        if(robot.leftShooter.getVelocity() > 1500 /*&& robot.rightShooter.getVelocity() > 1400*/){
+        if(robot.leftShooter.getVelocity() > 1500 || robot.rightShooter.getVelocity() > 1500){
             robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
             robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
             shooterReady = true;
@@ -405,7 +418,7 @@ public int autoAlign(){
     }
 
     public void shootCustom(int speed){
-        if(robot.leftShooter.getVelocity() > speed/* && robot.rightShooter.getVelocity() > speed*/){
+        if(robot.leftShooter.getVelocity() > speed || robot.rightShooter.getVelocity() > speed ){
             robot.leftShooter.setVelocity(robot.leftShooter.getVelocity());
             robot.rightShooter.setVelocity(robot.rightShooter.getVelocity());
             //shooterReady = true;
@@ -417,7 +430,7 @@ public int autoAlign(){
             //shooterReady = false;
         }
 
-        if(robot.leftShooter.getVelocity() > speed-20 /*&& robot.rightShooter.getVelocity() > speed-20*/){
+        if(robot.leftShooter.getVelocity() > speed-20 || robot.rightShooter.getVelocity() > speed-20 ){
             shooterReady = true;
         }else{
             shooterReady = false;

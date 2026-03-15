@@ -17,6 +17,9 @@ import com.seattlesolvers.solverslib.hardware.motors.MotorEx;
 import com.seattlesolvers.solverslib.hardware.motors.MotorGroup;
 import com.seattlesolvers.solverslib.hardware.servos.ServoEx;
 
+import org.firstinspires.ftc.teamcode.Prism.Color;
+import org.firstinspires.ftc.teamcode.Prism.Direction;
+import org.firstinspires.ftc.teamcode.Prism.GoBildaPrismDriver;
 import org.firstinspires.ftc.teamcode.Prism.PrismAnimations;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.subsystems.Intake;
@@ -62,9 +65,12 @@ public class Robot {
 
     public PrismAnimations.Snakes snake1, snake2;
 
+    public PrismAnimations.RainbowSnakes rainbowSnake1, rainbowSnakes2;
+
     public PrismAnimations.SineWave fading, fading2;
     private static Robot instance = new Robot();
     public boolean enabled;
+    public GoBildaPrismDriver prism;
 
     public static Robot getInstance() {
         if(instance == null){
@@ -112,30 +118,41 @@ public class Robot {
         //kickerServo = new ServoEx(hardwareMap, "kicker");
 
 
-        //prism = hardwareMap.get(GoBildaPrismDriver.class, "prism");
+        prism = hardwareMap.get(GoBildaPrismDriver.class, "prism");
 
-//        solid = new PrismAnimations.Solid(new Color (225, 30, 0));
+        solid = new PrismAnimations.Solid(new Color(225, 30, 0));
 //        transpo = new PrismAnimations.Solid(Color.TRANSPARENT);
-//        snake1 = new PrismAnimations.Snakes(3, 3, 5, Color.TRANSPARENT, (float) (Math.PI/120.0F), Direction.Forward, new Color (225, 30, 0));
-//        snake2 = new PrismAnimations.Snakes(3, 3, 5, Color.TRANSPARENT, (float) (Math.PI/120.0F), Direction.Forward, new Color (225, 30, 0));
+        snake1 = new PrismAnimations.Snakes(3, 3, 6, Color.TRANSPARENT, (float) (Math.PI/72.0F), Direction.Backward, new Color (225, 30, 0));
+        snake2 = new PrismAnimations.Snakes(3, 3, 6, Color.TRANSPARENT, (float) (Math.PI/72.0F), Direction.Forward, new Color (225, 30, 0));
+
+        //rainbowSnake1 = new PrismAnimations.RainbowSnakes(15, 45, 3, 6, 3, 6, Color.TRANSPARENT, 1, Direction.Forward);
+        //rainbowSnakes2 = new PrismAnimations.RainbowSnakes(15, 45, 3, 6, 3, 3, Color.TRANSPARENT, 1,  Direction.Backward);
 //        fading = new PrismAnimations.SineWave(new Color (225, 30, 0),  Color.TRANSPARENT, 6, (float) (Math.PI/36.0F), 0.3F, Direction.Forward);
 //        fading2 = new PrismAnimations.SineWave(new Color (225, 30, 0),  Color.TRANSPARENT, 6, (float) (Math.PI/36.0F), 0.3F, Direction.Forward);
 //
-//        solid.setBrightness(100);
-//        solid.setStartIndex(0);
-//        solid.setStopIndex(12);
+       solid.setBrightness(100);
+       solid.setStartIndex(0);
+       solid.setStopIndex(24);
 //
-//        snake1.setBrightness(100);
-//        snake1.setStartIndex(0);
-//        snake1.setStopIndex(5);
+        snake1.setBrightness(100);
+        snake1.setStartIndex(0);
+        snake1.setStopIndex(11);
 //
-//        snake2.setBrightness(100);
-//        snake2.setStartIndex(6);
-//        snake2.setStopIndex(11);
+        snake2.setBrightness(100);
+       snake2.setStartIndex(12);
+        snake2.setStopIndex(24);
+/*
+        rainbowSnake1.setBrightness(100);
+        rainbowSnake1.setStartIndex(0);
+        rainbowSnake1.setStopIndex(11);
+
+        rainbowSnakes2.setBrightness(100);
+        rainbowSnakes2.setStartIndex(12);
+        rainbowSnakes2.setStopIndex(24);
 //
 //        fading.setBrightness(100);
 //        fading2.setBrightness(100);
-
+*/
 
 
 

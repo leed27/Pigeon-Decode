@@ -21,19 +21,19 @@ import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 import org.firstinspires.ftc.teamcode.solverslib.commandbase.commands.AutoShootInAutoFAR;
 import org.firstinspires.ftc.teamcode.solverslib.globals.Robot;
 
-@Autonomous(name = "6+HPC \uD83D\uDD35", group = "auto")
-public class blue6HPC extends CommandOpMode{
+@Autonomous(name = "6+HPC (RED)", group = "auto")
+public class red6HPC extends CommandOpMode{
     private final Robot robot = Robot.getInstance();
     private ElapsedTime timer;
 
     //private final ArrayList<PathChain> paths = new ArrayList<>();
 
     // ALL PATHS
-    private final Pose startPose = new Pose(41.5, 6.5, Math.toRadians(180));
-    private final Pose shootPose = new Pose(47.5, 11, Math.toRadians(180));
-    private final Pose firstIntake = new Pose(9.5, 9, Math.toRadians(180));//e
-    private final Pose goBack = new Pose(24, 11, Math.toRadians(180));
-    private final Pose secondIntake = new Pose(9.5, 11, Math.toRadians(180));
+    private final Pose startPose = new Pose(41.5, 6.5, Math.toRadians(180)).mirror();
+    private final Pose shootPose = new Pose(47.5, 11, Math.toRadians(180)).mirror();
+    private final Pose firstIntake = new Pose(9.5, 9, Math.toRadians(180)).mirror();//e
+    private final Pose goBack = new Pose(24, 11, Math.toRadians(180)).mirror();
+    private final Pose secondIntake = new Pose(9.5, 11, Math.toRadians(180)).mirror();
     /// blue paths
     private PathChain firstShoot, goToIntake, backUp, goToIntake2, goToShoot;
 
@@ -143,8 +143,8 @@ public class blue6HPC extends CommandOpMode{
                 new RunCommand(() -> robot.follower.update()),
 
                 new SequentialCommandGroup(
-                       shootPreloads(), fullCycle(),
-                        fullCycle(),  fullCycle(), fullCycle(), fullCycle()
+                        shootPreloads(), fullCycle(),
+                        fullCycle(),  fullCycle(), fullCycle()
                 )
         );
 
@@ -165,7 +165,7 @@ public class blue6HPC extends CommandOpMode{
         super.run();
 
         robot.outtake.shootAutoFar();
-        robot.outtake.moveTurret(77);
+        robot.outtake.moveTurret(-77);
 
         telemetry.addData("timer", timer.milliseconds());
 
